@@ -1,0 +1,751 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
+void main() {
+  runApp(const ResumeApp());
+}
+
+class ResumeApp extends StatelessWidget {
+  const ResumeApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Resume',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const ResumeHomePage(),
+    );
+  }
+}
+
+class ResumeHomePage extends StatefulWidget {
+  const ResumeHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<ResumeHomePage> createState() => _ResumeHomePageState();
+}
+
+class _ResumeHomePageState extends State<ResumeHomePage> {
+  final TextEditingController _FirstnameController = TextEditingController();
+  final TextEditingController _LastnameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _aboutMeController = TextEditingController();
+  final List<TextEditingController> _websiteControllers = [];
+  List<TextEditingController> _websiteTitles = [];
+  final List<TextEditingController> _skillControllers = [];
+  final List<TextEditingController> _ExperienceControllers = [];
+  List<TextEditingController> _companyName = [];
+  List<TextEditingController> _jobTitle = [];
+  List<TextEditingController> _startdatejob = [];
+  List<TextEditingController> _enddatejob = [];
+  List<TextEditingController> _detailjob = [];
+  final ResumeDataStorage _storage = ResumeDataStorage();
+  File? _profileImage;
+  bool _isButton1Highlighted = false;
+  bool _isButton2Highlighted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData();
+  }
+
+  Future<void> _loadSavedData() async {
+    _FirstnameController.text = await _storage.loadData('name') ?? '';
+    _LastnameController.text = await _storage.loadData('lastname') ?? '';
+    _emailController.text = await _storage.loadData('email') ?? '';
+    _addressController.text = await _storage.loadData('address') ?? '';
+    _phoneNumberController.text = await _storage.loadData('phone') ?? '';
+    _aboutMeController.text = await _storage.loadData('aboutme') ?? '';
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<File> _generatePdf() async {
+    final pdf = pw.Document();
+
+    final bgImageData = await rootBundle.load('images/background.jpg');
+    final bgImageBytes = bgImageData.buffer.asUint8List();
+
+    final pageWidth = PdfPageFormat.a4.width;
+    final pageHeight = PdfPageFormat.a4.height;
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat(pageWidth, pageHeight),
+        build: (context) => pw.Stack(
+          children: [
+            pw.Positioned.fill(
+              child: pw.Image(
+                pw.MemoryImage(bgImageBytes),
+                fit: pw.BoxFit.fill,
+              ),
+            ),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                if (_profileImage != null)
+                  pw.Center(
+                    child: pw.ClipOval(
+                      child: pw.Container(
+                        width: 100,
+                        height: 100,
+                        child: pw.Image(
+                          pw.MemoryImage(_profileImage!.readAsBytesSync()),
+                          fit: pw.BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                pw.SizedBox(height: 20),
+                pw.Row(
+                  children: [
+                    pw.Text('Name: ${_FirstnameController.text}',
+                        style: pw.TextStyle(fontSize: 15)),
+                    pw.SizedBox(width: 8),
+                    pw.Text('LastName: ${_LastnameController.text}',
+                        style: pw.TextStyle(fontSize: 15)),
+                  ],
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text('Email: ${_emailController.text}',
+                    style: pw.TextStyle(fontSize: 15)),
+                pw.SizedBox(height: 10),
+                pw.Text('Address: ${_addressController.text}',
+                    style: pw.TextStyle(fontSize: 15)),
+                pw.SizedBox(height: 10),
+                pw.Text('Phone: ${_phoneNumberController.text}',
+                    style: pw.TextStyle(fontSize: 15)),
+                pw.SizedBox(height: 10),
+                if (_aboutMeController.text.isNotEmpty)
+                pw.Text('About Me: ${_aboutMeController.text}', style: pw.TextStyle(fontSize: 15)),
+                if (_aboutMeController.text.isNotEmpty)
+                pw.SizedBox(height: 10),
+                if (_websiteControllers.isNotEmpty)
+                  ..._websiteControllers.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    TextEditingController controller = entry.value;
+                    TextEditingController titleController =
+                        _websiteTitles[index];
+
+                    return pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Website Title: ${titleController.text}',
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.Text('Website URL: ${controller.text}',
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.SizedBox(height: 10),
+                      ],
+                    );
+                  }).toList(),
+                if (_skillControllers.isNotEmpty) ...[
+                  pw.Text('Skills:',
+                      style: pw.TextStyle(
+                          fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 5),
+                  ..._skillControllers.map((controller) {
+                    return pw.Text(controller.text,
+                        style: pw.TextStyle(fontSize: 15));
+                  }).toList(),
+                  pw.SizedBox(height: 10),
+                ],
+                if (_ExperienceControllers.isNotEmpty) ...[
+                  pw.Text('Experience:',
+                      style: pw.TextStyle(
+                          fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                  pw.SizedBox(height: 5),
+                  ..._ExperienceControllers.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    return pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Experience ${index + 1}',
+                            style: pw.TextStyle(
+                                fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                        pw.Text("Company: ${_companyName[index].text}",
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.Text("Job Title: ${_jobTitle[index].text}",
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.Text("Start Date: ${_startdatejob[index].text}",
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.Text("End Date: ${_enddatejob[index].text}",
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.Text("Description: ${_detailjob[index].text}",
+                            style: pw.TextStyle(fontSize: 15)),
+                        pw.SizedBox(height: 10),
+                      ],
+                    );
+                  }).toList(),
+                ],
+                pw.Divider(thickness: 1, color: PdfColors.grey),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/resume.pdf');
+    await file.writeAsBytes(await pdf.save());
+    return file;
+  }
+
+  Future<void> _saveData() async {
+    _isButton1Highlighted = true;
+    await _storage.saveData('name', _FirstnameController.text);
+    await _storage.saveData('lastname', _LastnameController.text);
+    await _storage.saveData('email', _emailController.text);
+    await _storage.saveData('address', _addressController.text);
+    await _storage.saveData('phone', _phoneNumberController.text);
+    await _storage.saveData('aboutme', _aboutMeController.text);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data saved successfully!')));
+    setState(() {
+      _isButton1Highlighted = false;
+    });
+    
+  }
+
+  Future<void> _sharePdf() async {
+    _isButton2Highlighted = true;
+    final pdfFile = await _generatePdf();
+    await Share.shareXFiles([XFile(pdfFile.path)], text: 'Check out my resume!');
+    setState(() {
+      _isButton2Highlighted = false;
+    });
+  }
+
+  void _addWebsiteField() {
+    if (_websiteControllers.length < 3) {
+      if (_websiteControllers.length != _websiteTitles.length) {
+        _websiteTitles = List.generate(
+            _websiteControllers.length, (index) => TextEditingController());
+      }
+      setState(() {
+        _websiteControllers.add(TextEditingController());
+        _websiteTitles.add(TextEditingController());
+      });
+    }
+  }
+
+  void _removeWebsiteField(int index) {
+    if (_websiteControllers.isNotEmpty) {
+      setState(() {
+        _websiteControllers.removeAt(index);
+        _websiteTitles.removeAt(index);
+      });
+    }
+  }
+
+  void _addSkillField() {
+    setState(() {
+      _skillControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeSkillField(int index) {
+    if (_skillControllers.isNotEmpty) {
+      setState(() {
+        _skillControllers.removeAt(index);
+      });
+    }
+  }
+
+  void _addExperienceField() {
+      setState(() {
+      _ExperienceControllers.add(TextEditingController());
+      _companyName.add(TextEditingController());
+      _jobTitle.add(TextEditingController());
+      _startdatejob.add(TextEditingController());
+      _enddatejob.add(TextEditingController());
+      _detailjob.add(TextEditingController());
+    });
+  }
+
+  void _removeExperienceField(int index) {
+    if (_ExperienceControllers.isNotEmpty) {
+      setState(() {
+        _ExperienceControllers.removeAt(index);
+        _companyName.removeAt(index);
+        _jobTitle.removeAt(index);
+        _startdatejob.removeAt(index);
+        _enddatejob.removeAt(index);
+        _detailjob.removeAt(index);
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context,bool check,int index) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      if(check){
+        setState(() {
+          _startdatejob[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        });
+      }else{
+        setState(() {
+          _enddatejob[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        });
+      }
+      
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Flutter Resume')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        _profileImage != null ? FileImage(_profileImage!) : null,
+                    child: _profileImage == null
+                        ? const Icon(Icons.add_a_photo, size: 50)
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _FirstnameController,
+                        decoration: const InputDecoration(
+                          labelText: 'FirstName',
+                          icon: Icon(Icons.person_outlined),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: TextField(
+                        controller: _LastnameController,
+                        decoration: const InputDecoration(
+                          labelText: 'LastName',
+                          icon: Icon(Icons.person_add_alt_1_outlined),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    icon: Icon(Icons.attach_email_outlined),
+                    labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _addressController,
+                  decoration: InputDecoration(
+                    labelText: 'Address',
+                    icon: const Icon(Icons.home_outlined),
+                    labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                          color: Color(0xFF6200EE),
+                          width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                          color: Color(0xFF6200EE),
+                          width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _phoneNumberController,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    icon: Icon(Icons.phone_outlined),
+                    labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _aboutMeController,
+                  decoration: InputDecoration(
+                    labelText: 'About Me',
+                    icon: const Icon(Icons.info_outline),
+                    labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                          color: Color(0xFF6200EE),
+                          width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                          color: Color(0xFF6200EE),
+                          width: 2),
+                    ),
+                  ),
+                  maxLines: 5,
+                ),
+                Row(
+                  children: [
+                    const Text('Website: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addWebsiteField,
+                    ),
+                  ],
+                ),
+                ..._websiteControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  TextEditingController controller = entry.value;
+                  TextEditingController titleController = _websiteTitles[index];
+      
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Website Title',
+                          icon: Icon(Icons.title),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: controller,
+                              decoration: const InputDecoration(
+                                labelText: 'Website URL',
+                                icon: Icon(Icons.link),
+                                labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeWebsiteField(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  );
+                }).toList(),
+                Row(
+                  children: [
+                    const Text('Skill: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addSkillField,
+                    ),
+                  ],
+                ),
+                ..._skillControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  TextEditingController controller = entry.value;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: controller,
+                              decoration: const InputDecoration(
+                                labelText: 'Skill',
+                                icon: Icon(Icons.note_add_outlined),
+                                labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeSkillField(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  );
+                }).toList(),
+                Row(
+                  children: [
+                    const Text('Experience: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addExperienceField,
+                    ),
+                  ],
+                ),
+                ..._ExperienceControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  TextEditingController companyNameController =
+                      _companyName[index];
+                  TextEditingController jobTitleController = _jobTitle[index];
+                  TextEditingController startDateController =
+                      _startdatejob[index];
+                  TextEditingController endDateController = _enddatejob[index];
+                  TextEditingController detailController = _detailjob[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Experience ${index + 1}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever_outlined,
+                                color: Colors.red),
+                            onPressed: () => _removeExperienceField(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+
+                      TextField(
+                        controller: companyNameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Company Name',
+                          icon: Icon(Icons.apartment_outlined),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: jobTitleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Job Title',
+                          icon: Icon(Icons.badge_outlined),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: startDateController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "Start Date",
+                                suffixIcon: const Icon(Icons.calendar_today),
+                                border: OutlineInputBorder(),
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                              onTap: () {
+                                _selectDate(context, true, index);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              controller: endDateController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "End Date",
+                                suffixIcon: const Icon(Icons.calendar_today),
+                                border: OutlineInputBorder(),
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                              onTap: () {
+                                _selectDate(context, false, index);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      SizedBox(
+                        height: 180,
+                        child: TextField(
+                          controller: detailController,
+                          decoration: InputDecoration(
+                            labelText: 'Job Description',
+                            icon: const Icon(Icons.description_outlined),
+                            labelStyle:
+                                const TextStyle(color: Color(0xFF6200EE)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          maxLines: null,
+                          expands: true,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Divider(thickness: 1),
+                    ],
+                  );
+                }).toList(),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: InkWell(
+                          onTap: _saveData,
+                          onHighlightChanged: (isHighlighted) {
+                            setState(() {
+                              _isButton1Highlighted = isHighlighted;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _isButton1Highlighted
+                                  ? Colors.blue[900]
+                                  : Colors.blue,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.save,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                                const Text(
+                                  'Save Data',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: InkWell(
+                          onTap: _sharePdf,
+                          onHighlightChanged: (isHighlighted) {
+                            setState(() {
+                              _isButton2Highlighted = isHighlighted;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: _isButton2Highlighted
+                                  ? Colors.green[900]
+                                  : Colors.green,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.picture_as_pdf,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                                const Text(
+                                  'Generate & Share PDF',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
