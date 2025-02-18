@@ -119,21 +119,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                 pw.Row(
                   children: [
                     pw.Text('Name: ${_FirstnameController.text}',
-                        style: pw.TextStyle(fontSize: 15)),
+                        style: pw.TextStyle(fontSize: 10)),
                     pw.SizedBox(width: 8),
                     pw.Text('LastName: ${_LastnameController.text}',
-                        style: pw.TextStyle(fontSize: 15)),
+                        style: pw.TextStyle(fontSize: 10)),
                   ],
                 ),
                 pw.SizedBox(height: 10),
                 pw.Text('Email: ${_emailController.text}',
-                    style: pw.TextStyle(fontSize: 15)),
+                    style: pw.TextStyle(fontSize: 10)),
                 pw.SizedBox(height: 10),
                 pw.Text('Address: ${_addressController.text}',
-                    style: pw.TextStyle(fontSize: 15)),
+                    style: pw.TextStyle(fontSize: 10)),
                 pw.SizedBox(height: 10),
                 pw.Text('Phone: ${_phoneNumberController.text}',
-                    style: pw.TextStyle(fontSize: 15)),
+                    style: pw.TextStyle(fontSize: 10)),
                 pw.SizedBox(height: 10),
                 if (_aboutMeController.text.isNotEmpty)
                 pw.Text('About Me: ${_aboutMeController.text}', style: pw.TextStyle(fontSize: 15)),
@@ -150,9 +150,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text('Website Title: ${titleController.text}',
-                            style: pw.TextStyle(fontSize: 15)),
+                            style: pw.TextStyle(fontSize: 10)),
                         pw.Text('Website URL: ${controller.text}',
-                            style: pw.TextStyle(fontSize: 15)),
+                            style: pw.TextStyle(fontSize: 10)),
                         pw.SizedBox(height: 10),
                       ],
                     );
