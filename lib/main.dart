@@ -14,7 +14,7 @@ void main() {
 }
 
 class ResumeApp extends StatelessWidget {
-  const ResumeApp({Key? key}) : super(key: key);
+  const ResumeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ResumeApp extends StatelessWidget {
 }
 
 class ResumeHomePage extends StatefulWidget {
-  const ResumeHomePage({Key? key}) : super(key: key);
+  const ResumeHomePage({super.key});
 
   @override
   State<ResumeHomePage> createState() => _ResumeHomePageState();
@@ -45,11 +45,13 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   List<TextEditingController> _websiteTitles = [];
   final List<TextEditingController> _skillControllers = [];
   final List<TextEditingController> _ExperienceControllers = [];
-  List<TextEditingController> _companyName = [];
-  List<TextEditingController> _jobTitle = [];
-  List<TextEditingController> _startdatejob = [];
-  List<TextEditingController> _enddatejob = [];
-  List<TextEditingController> _detailjob = [];
+  final List<TextEditingController> _companyName = [];
+  final List<TextEditingController> _jobTitle = [];
+  final List<TextEditingController> _startdatejob = [];
+  final List<TextEditingController> _enddatejob = [];
+  final List<TextEditingController> _detailjob = [];
+  final List<TextEditingController> _education = [];
+  final List<TextEditingController> _educationyear = [];
   final ResumeDataStorage _storage = ResumeDataStorage();
   File? _profileImage;
   bool _isButton1Highlighted = false;
@@ -156,7 +158,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         pw.SizedBox(height: 10),
                       ],
                     );
-                  }).toList(),
+                  }),
                 if (_skillControllers.isNotEmpty) ...[
                   pw.Text('Skills:',
                       style: pw.TextStyle(
@@ -165,7 +167,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   ..._skillControllers.map((controller) {
                     return pw.Text(controller.text,
                         style: pw.TextStyle(fontSize: 15));
-                  }).toList(),
+                  }),
                   pw.SizedBox(height: 10),
                 ],
                 if (_ExperienceControllers.isNotEmpty) ...[
@@ -194,7 +196,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         pw.SizedBox(height: 10),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
                 pw.Divider(thickness: 1, color: PdfColors.grey),
               ],
@@ -489,7 +491,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       const SizedBox(height: 10),
                     ],
                   );
-                }).toList(),
+                }),
                 Row(
                   children: [
                     const Text('Skill: '),
@@ -526,7 +528,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       const SizedBox(height: 20),
                     ],
                   );
-                }).toList(),
+                }),
                 Row(
                   children: [
                     const Text('Experience: '),
@@ -650,7 +652,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       Divider(thickness: 1),
                     ],
                   );
-                }).toList(),
+                }),
                 const SizedBox(height: 30),
                 Row(
                   children: [
