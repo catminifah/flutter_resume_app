@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'dart:typed_data';
 
 void main() {
   runApp(const ResumeApp());
@@ -50,8 +51,13 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   final List<TextEditingController> _startdatejob = [];
   final List<TextEditingController> _enddatejob = [];
   final List<TextEditingController> _detailjob = [];
-  final List<TextEditingController> _education = [];
-  final List<TextEditingController> _educationyear = [];
+
+  List<TextEditingController> _educationControllers = [];
+  List<TextEditingController> _degreeTitle = [];
+  List<TextEditingController> _universityName = [];
+  List<TextEditingController> _startEducation = [];
+  List<TextEditingController> _endEducation = [];
+
   final ResumeDataStorage _storage = ResumeDataStorage();
   File? _profileImage;
   bool _isButton1Highlighted = false;
@@ -81,6 +87,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     }
   }
 
+  Future<Uint8List> loadIcon(String path) async {
+    final ByteData data = await rootBundle.load(path);
+    return data.buffer.asUint8List();
+  }
+
   Future<File> _generatePdf() async {
     final pdf = pw.Document();
 
@@ -90,121 +101,214 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     final pageWidth = PdfPageFormat.a4.width;
     final pageHeight = PdfPageFormat.a4.height;
 
+    final emailIcon = await loadIcon('assets/icons/email.png');
+    final phoneIcon = await loadIcon('assets/icons/phone.png');
+    final addressIcon = await loadIcon('assets/icons/address.png');
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat(pageWidth, pageHeight),
-        build: (context) => pw.Stack(
-          children: [
-            pw.Positioned.fill(
-              child: pw.Image(
-                pw.MemoryImage(bgImageBytes),
-                fit: pw.BoxFit.fill,
-              ),
-            ),
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                if (_profileImage != null)
-                  pw.Center(
-                    child: pw.ClipOval(
-                      child: pw.Container(
-                        width: 100,
-                        height: 100,
-                        child: pw.Image(
-                          pw.MemoryImage(_profileImage!.readAsBytesSync()),
-                          fit: pw.BoxFit.cover,
+        build: (context) => pw.Container(
+          padding: pw.EdgeInsets.all(0),
+          child: pw.Row(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Left Column - Profile & Skills
+              pw.Container(
+                width: 200,
+                color: PdfColors.blue100,
+                padding: pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    // Profile Image
+                    if (_profileImage != null)
+                      pw.Center(
+                        child: pw.ClipOval(
+                          child: pw.Container(
+                            width: 100,
+                            height: 100,
+                            child: pw.Image(
+                              pw.MemoryImage(_profileImage!.readAsBytesSync()),
+                              fit: pw.BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
+                    pw.SizedBox(height: 10),
+                    pw.Text(
+                        '${_FirstnameController.text} ${_LastnameController.text}',
+                        style: pw.TextStyle(
+                            fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      children: [
+                        pw.Image(pw.MemoryImage(emailIcon),
+                            width: 12, height: 12),
+                        pw.SizedBox(width: 5),
+                        pw.Text(_emailController.text,
+                            style: pw.TextStyle(fontSize: 10)),
+                      ],
                     ),
-                  ),
-                pw.SizedBox(height: 20),
-                pw.Row(
-                  children: [
-                    pw.Text('Name: ${_FirstnameController.text}',
-                        style: pw.TextStyle(fontSize: 10)),
-                    pw.SizedBox(width: 8),
-                    pw.Text('LastName: ${_LastnameController.text}',
-                        style: pw.TextStyle(fontSize: 10)),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      children: [
+                        pw.Image(pw.MemoryImage(phoneIcon),
+                            width: 12, height: 12),
+                        pw.SizedBox(width: 5),
+                        pw.Text(_phoneNumberController.text,
+                            style: pw.TextStyle(fontSize: 10)),
+                      ],
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Row(
+                      children: [
+                        pw.Image(pw.MemoryImage(addressIcon),
+                            width: 12, height: 12),
+                        pw.SizedBox(width: 5),
+                        pw.Text(_addressController.text,
+                            style: pw.TextStyle(fontSize: 10)),
+                      ],
+                    ),
+                    pw.Divider(thickness: 1, color: PdfColors.grey),
+
+                    
+                    if (_websiteControllers.isNotEmpty)
+                      ..._websiteControllers.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        TextEditingController controller = entry.value;
+                        TextEditingController titleController =
+                            _websiteTitles[index];
+
+                        return pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text('Website Title: ${titleController.text}',
+                                style: pw.TextStyle(fontSize: 10)),
+                            pw.Text('Website URL: ${controller.text}',
+                                style: pw.TextStyle(fontSize: 10)),
+                            pw.SizedBox(height: 10),
+                          ],
+                        );
+                      }),
+
+                    // Skills Summary
+                    pw.Text('Skills',
+                        style: pw.TextStyle(
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.blue)),
+                    pw.SizedBox(height: 5),
+                    ..._skillControllers.map((controller) {
+                      return pw.Column(
+                        children: [
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Text(controller.text,
+                                  style: pw.TextStyle(fontSize: 12)),
+                              pw.Container(
+                                width: 50,
+                                height: 5,
+                                color: PdfColors.blue,
+                              ),
+                            ],
+                          ),
+                          pw.SizedBox(height: 5),
+                        ],
+                      );
+                    }),
                   ],
                 ),
-                pw.SizedBox(height: 10),
-                pw.Text('Email: ${_emailController.text}',
-                    style: pw.TextStyle(fontSize: 10)),
-                pw.SizedBox(height: 10),
-                pw.Text('Address: ${_addressController.text}',
-                    style: pw.TextStyle(fontSize: 10)),
-                pw.SizedBox(height: 10),
-                pw.Text('Phone: ${_phoneNumberController.text}',
-                    style: pw.TextStyle(fontSize: 10)),
-                pw.SizedBox(height: 10),
-                if (_aboutMeController.text.isNotEmpty)
-                pw.Text('About Me: ${_aboutMeController.text}', style: pw.TextStyle(fontSize: 15)),
-                if (_aboutMeController.text.isNotEmpty)
-                pw.SizedBox(height: 10),
-                if (_websiteControllers.isNotEmpty)
-                  ..._websiteControllers.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    TextEditingController controller = entry.value;
-                    TextEditingController titleController =
-                        _websiteTitles[index];
+              ),
 
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text('Website Title: ${titleController.text}',
-                            style: pw.TextStyle(fontSize: 10)),
-                        pw.Text('Website URL: ${controller.text}',
-                            style: pw.TextStyle(fontSize: 10)),
-                        pw.SizedBox(height: 10),
-                      ],
-                    );
-                  }),
-                if (_skillControllers.isNotEmpty) ...[
-                  pw.Text('Skills:',
-                      style: pw.TextStyle(
-                          fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                  pw.SizedBox(height: 5),
-                  ..._skillControllers.map((controller) {
-                    return pw.Text(controller.text,
-                        style: pw.TextStyle(fontSize: 15));
-                  }),
-                  pw.SizedBox(height: 10),
-                ],
-                if (_ExperienceControllers.isNotEmpty) ...[
-                  pw.Text('Experience:',
-                      style: pw.TextStyle(
-                          fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                  pw.SizedBox(height: 5),
-                  ..._ExperienceControllers.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text('Experience ${index + 1}',
+              // Right Column - Experience & Education
+              pw.Expanded(
+                child: pw.Container(
+                  padding: pw.EdgeInsets.only(left: 20,right: 20),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.SizedBox(height: 20),
+                      // PROFILLE
+                      if (_aboutMeController.text.isNotEmpty)
+                        pw.Text('PROFILLE',
                             style: pw.TextStyle(
-                                fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                        pw.Text("Company: ${_companyName[index].text}",
-                            style: pw.TextStyle(fontSize: 15)),
-                        pw.Text("Job Title: ${_jobTitle[index].text}",
-                            style: pw.TextStyle(fontSize: 15)),
-                        pw.Text("Start Date: ${_startdatejob[index].text}",
-                            style: pw.TextStyle(fontSize: 15)),
-                        pw.Text("End Date: ${_enddatejob[index].text}",
-                            style: pw.TextStyle(fontSize: 15)),
-                        pw.Text("Description: ${_detailjob[index].text}",
-                            style: pw.TextStyle(fontSize: 15)),
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.blue)),
+                      if (_aboutMeController.text.isNotEmpty)
+                        pw.Text('${_aboutMeController.text}',
+                            style: pw.TextStyle(
+                                fontSize: 12, color: PdfColors.grey)),
+                      if (_aboutMeController.text.isNotEmpty)
                         pw.SizedBox(height: 10),
-                      ],
-                    );
-                  }),
-                ],
-                pw.Divider(thickness: 1, color: PdfColors.grey),
-              ],
-            ),
-          ],
+                      // Work Experience
+                      pw.Text('Work Experience',
+                          style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue)),
+                      pw.SizedBox(height: 5),
+                      ..._ExperienceControllers.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        return pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                                '${_jobTitle[index].text} - ${_companyName[index].text}',
+                                style: pw.TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: pw.FontWeight.bold)),
+                            pw.Text(
+                                '${_startdatejob[index].text} - ${_enddatejob[index].text}',
+                                style: pw.TextStyle(
+                                    fontSize: 12, color: PdfColors.grey)),
+                            pw.Text('${_detailjob[index].text}',
+                                style: pw.TextStyle(fontSize: 12)),
+                            pw.SizedBox(height: 10),
+                          ],
+                        );
+                      }),
+
+                      pw.Divider(thickness: 1, color: PdfColors.grey),
+
+                      // Education
+                      pw.Text('Education',
+                          style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue)),
+                      pw.SizedBox(height: 5),
+                      ..._educationControllers.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        return pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                                '${_degreeTitle[index].text} - ${_universityName[index].text}',
+                                style: pw.TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: pw.FontWeight.bold)),
+                            pw.Text(
+                                '${_startEducation[index].text} - ${_endEducation[index].text}',
+                                style: pw.TextStyle(
+                                    fontSize: 12, color: PdfColors.grey)),
+                            pw.SizedBox(height: 10),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+
 
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/resume.pdf');
@@ -296,6 +400,26 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     }
   }
 
+  void _addEducationField() {
+    setState(() {
+      _educationControllers.add(TextEditingController());
+      _degreeTitle.add(TextEditingController());
+      _universityName.add(TextEditingController());
+      _startEducation.add(TextEditingController());
+      _endEducation.add(TextEditingController());
+    });
+  }
+
+  void _removeEducationField(int index) {
+    setState(() {
+      _educationControllers.removeAt(index);
+      _degreeTitle.removeAt(index);
+      _universityName.removeAt(index);
+      _startEducation.removeAt(index);
+      _endEducation.removeAt(index);
+    });
+  }
+
   Future<void> _selectDate(BuildContext context,bool check,int index) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -312,6 +436,28 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
       }else{
         setState(() {
           _enddatejob[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        });
+      }
+      
+    }
+  }
+
+  Future<void> _selectDateEducation(BuildContext context,bool check,int index) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      if(check){
+        setState(() {
+          _startEducation[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        });
+      }else{
+        setState(() {
+          _endEducation[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
         });
       }
       
@@ -492,6 +638,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ],
                   );
                 }),
+                //------------------------------------------------------Skill------------------------------------------------------//
                 Row(
                   children: [
                     const Text('Skill: '),
@@ -529,6 +676,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ],
                   );
                 }),
+                //------------------------------------------------------Skill------------------------------------------------------//
+                //------------------------------------------------------Experience------------------------------------------------------//
                 Row(
                   children: [
                     const Text('Experience: '),
@@ -543,8 +692,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   TextEditingController companyNameController =
                       _companyName[index];
                   TextEditingController jobTitleController = _jobTitle[index];
-                  TextEditingController startDateController =
-                      _startdatejob[index];
+                  TextEditingController startDateController = _startdatejob[index];
                   TextEditingController endDateController = _enddatejob[index];
                   TextEditingController detailController = _detailjob[index];
                   return Column(
@@ -653,7 +801,104 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ],
                   );
                 }),
+                //------------------------------------------------------Experience------------------------------------------------------//
+                //------------------------------------------------------Education------------------------------------------------------//
+                Row(
+                  children: [
+                    const Text('Education: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addEducationField,
+                    ),
+                  ],
+                ),
+                ..._educationControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  TextEditingController startDateEducationController = _startEducation[index];
+                  TextEditingController endDateEducationController   = _endEducation[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Education ${index + 1}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever_outlined,
+                                color: Colors.red),
+                            onPressed: () => _removeEducationField(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _degreeTitle[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Degree Title',
+                          icon: Icon(Icons.school),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _universityName[index],
+                        decoration: const InputDecoration(
+                          labelText: 'University Name',
+                          icon: Icon(Icons.account_balance),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: startDateEducationController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "Start Date",
+                                suffixIcon: const Icon(Icons.calendar_today),
+                                border: OutlineInputBorder(),
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                              onTap: () {
+                                _selectDateEducation(context, true, index);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              controller: endDateEducationController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: "End Date",
+                                suffixIcon: const Icon(Icons.calendar_today),
+                                border: OutlineInputBorder(),
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF6200EE)),
+                              ),
+                              onTap: () {
+                                _selectDateEducation(context, false, index);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Divider(thickness: 1),
+                    ],
+                  );
+                }),
+                //------------------------------------------------------Education------------------------------------------------------//
                 const SizedBox(height: 30),
+                //------------------------------------------------------button------------------------------------------------------//
                 Row(
                   children: [
                     Expanded(
@@ -742,6 +987,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ),
                   ],
                 ),
+                //------------------------------------------------------button------------------------------------------------------//
                 const SizedBox(height: 10),
               ],
             ),
