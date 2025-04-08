@@ -36,37 +36,40 @@ class ResumeHomePage extends StatefulWidget {
 }
 
 class _ResumeHomePageState extends State<ResumeHomePage> {
+  final List<TextEditingController> _ExperienceControllers = [];
   final TextEditingController _FirstnameController = TextEditingController();
   final TextEditingController _LastnameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _aboutMeController = TextEditingController();
-  final List<TextEditingController> _websiteControllers = [];
-  List<TextEditingController> _websiteTitles = [];
-  final List<TextEditingController> _skillControllers = [];
-  final List<TextEditingController> _ExperienceControllers = [];
+  final TextEditingController _addressController = TextEditingController();
   final List<TextEditingController> _companyName = [];
-  final List<TextEditingController> _jobTitle = [];
-  final List<TextEditingController> _startdatejob = [];
-  final List<TextEditingController> _enddatejob = [];
+  final List<TextEditingController> _degreeTitle = [];
   final List<TextEditingController> _detailjob = [];
-
-  List<TextEditingController> _educationControllers = [];
-  List<TextEditingController> _degreeTitle = [];
-  List<TextEditingController> _universityName = [];
-  List<TextEditingController> _startEducation = [];
-  List<TextEditingController> _endEducation = [];
-
-  final ResumeDataStorage _storage = ResumeDataStorage();
-  File? _profileImage;
+  final List<TextEditingController> _educationControllers = [];
+  final TextEditingController _emailController = TextEditingController();
+  final List<TextEditingController> _endEducation = [];
+  final List<TextEditingController> _enddatejob = [];
   bool _isButton1Highlighted = false;
   bool _isButton2Highlighted = false;
+  final List<TextEditingController> _jobTitle = [];
+  final TextEditingController _phoneNumberController = TextEditingController();
+  File? _profileImage;
+  final List<TextEditingController> _skillControllers = [];
+  final List<TextEditingController> _startEducation = [];
+  final List<TextEditingController> _startdatejob = [];
+  final ResumeDataStorage _storage = ResumeDataStorage();
+  final List<TextEditingController> _universityName = [];
+  final List<TextEditingController> _websiteControllers = [];
+  List<TextEditingController> _websiteTitles = [];
 
   @override
   void initState() {
     super.initState();
     _loadSavedData();
+  }
+
+  Future<Uint8List> loadIcon(String path) async {
+    final ByteData data = await rootBundle.load(path);
+    return data.buffer.asUint8List();
   }
 
   Future<void> _loadSavedData() async {
@@ -85,11 +88,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
         _profileImage = File(pickedFile.path);
       });
     }
-  }
-
-  Future<Uint8List> loadIcon(String path) async {
-    final ByteData data = await rootBundle.load(path);
-    return data.buffer.asUint8List();
   }
 
   Future<File> _generatePdf() async {
@@ -124,33 +122,73 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     // Profile Image
                     if (_profileImage != null)
                       pw.Center(
-                        child: pw.ClipOval(
-                          child: pw.Container(
-                            width: 100,
-                            height: 100,
-                            child: pw.Image(
-                              pw.MemoryImage(_profileImage!.readAsBytesSync()),
-                              fit: pw.BoxFit.cover,
+                        child: pw.Container(
+                          width: 120,
+                          height: 120,
+                          decoration: pw.BoxDecoration(
+                            shape: pw.BoxShape.circle,
+                            color: PdfColors.white,
+                          ),
+                          child: pw.Padding(
+                            padding: pw.EdgeInsets.all(2),
+                            child: pw.Container(
+                              width: 110,
+                              height: 110,
+                              decoration: pw.BoxDecoration(
+                                shape: pw.BoxShape.circle,
+                                color: PdfColors.blue100,
+                              ),
+                              child: pw.Padding(
+                                padding: pw.EdgeInsets.all(5),
+                                child: pw.ClipOval(
+                                  child: pw.Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: pw.Image(
+                                      pw.MemoryImage(
+                                          _profileImage!.readAsBytesSync()),
+                                      fit: pw.BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     pw.SizedBox(height: 10),
+                    // Name
                     pw.Text(
-                        '${_FirstnameController.text} ${_LastnameController.text}',
-                        style: pw.TextStyle(
-                            fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                      _FirstnameController.text,
+                      style: pw.TextStyle(
+                        fontSize: 20, 
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.white
+                      )
+                    ),
                     pw.SizedBox(height: 5),
+                    pw.Text(
+                      _LastnameController.text,
+                      style: pw.TextStyle(
+                        fontSize: 20, 
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.white
+                      )
+                    ),
+                    pw.SizedBox(height: 10),
+                    pw.Divider(thickness: 1, color: PdfColors.white),
+                    // Email
                     pw.Row(
                       children: [
                         pw.Image(pw.MemoryImage(emailIcon),
-                            width: 12, height: 12),
+                            width: 12, height: 12,),
                         pw.SizedBox(width: 5),
                         pw.Text(_emailController.text,
                             style: pw.TextStyle(fontSize: 10)),
                       ],
                     ),
                     pw.SizedBox(height: 5),
+                    // NumberPhone
                     pw.Row(
                       children: [
                         pw.Image(pw.MemoryImage(phoneIcon),
@@ -161,6 +199,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ],
                     ),
                     pw.SizedBox(height: 5),
+                    // Address
                     pw.Row(
                       children: [
                         pw.Image(pw.MemoryImage(addressIcon),
@@ -170,9 +209,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             style: pw.TextStyle(fontSize: 10)),
                       ],
                     ),
-                    pw.Divider(thickness: 1, color: PdfColors.grey),
 
-                    
+                    pw.Divider(thickness: 1, color: PdfColors.white),
+
                     if (_websiteControllers.isNotEmpty)
                       ..._websiteControllers.asMap().entries.map((entry) {
                         int index = entry.key;
@@ -191,6 +230,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           ],
                         );
                       }),
+
+                    if (_websiteControllers.isNotEmpty)
+                    pw.SizedBox(height: 10),
+                    if (_websiteControllers.isNotEmpty)
+                    pw.Divider(thickness: 1, color: PdfColors.white),
 
                     // Skills Summary
                     pw.Text('Skills',
@@ -239,11 +283,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
                       if (_aboutMeController.text.isNotEmpty)
-                        pw.Text('${_aboutMeController.text}',
+                        pw.SizedBox(height: 5),
+                      if (_aboutMeController.text.isNotEmpty)
+                        pw.Text(_aboutMeController.text,
                             style: pw.TextStyle(
                                 fontSize: 12, color: PdfColors.grey)),
                       if (_aboutMeController.text.isNotEmpty)
                         pw.SizedBox(height: 10),
+
+                      pw.Divider(thickness: 1, color: PdfColors.grey),
+                      
                       // Work Experience
                       pw.Text('Work Experience',
                           style: pw.TextStyle(
@@ -265,7 +314,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 '${_startdatejob[index].text} - ${_enddatejob[index].text}',
                                 style: pw.TextStyle(
                                     fontSize: 12, color: PdfColors.grey)),
-                            pw.Text('${_detailjob[index].text}',
+                            pw.Text(_detailjob[index].text,
                                 style: pw.TextStyle(fontSize: 12)),
                             pw.SizedBox(height: 10),
                           ],
