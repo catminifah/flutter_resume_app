@@ -1,16 +1,9 @@
 # flutter_resume_app
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### โปรเจค flutter แอปสร้างเรซูเม่ ทำเพื่อศึกษาการเขียนข้อมูลลงไฟล์ pdf (กำลังพัฒนาโปรเจคนี้อยู่)
+##### เป้าหมายโปรเจคนี้
+- ทำให้แอปสามารถสร้างไฟล์เรซูเม่ได้
+- แก้ ui หน้าแอป เข้าถึงง่ายและใช้งานง่าย
+- บันทึกไฟล์ลงในเครื่องมือถือได้
+- อาจจะบันทึกข้อมูลที่เคยเขียน
+- ถ้าโปรเจคนี้ทำเสร็จอาจจะทดลองทำแอปขึ้น google play
