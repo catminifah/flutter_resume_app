@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'dart:typed_data';
 
 void main() {
   runApp(const ResumeApp());
@@ -158,30 +157,27 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ),
                     pw.SizedBox(height: 10),
                     // Name
-                    pw.Text(
-                      _FirstnameController.text,
-                      style: pw.TextStyle(
-                        fontSize: 20, 
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.white
-                      )
-                    ),
+                    pw.Text(_FirstnameController.text,
+                        style: pw.TextStyle(
+                            fontSize: 20,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.white)),
                     pw.SizedBox(height: 5),
-                    pw.Text(
-                      _LastnameController.text,
-                      style: pw.TextStyle(
-                        fontSize: 20, 
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.white
-                      )
-                    ),
+                    pw.Text(_LastnameController.text,
+                        style: pw.TextStyle(
+                            fontSize: 20,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.white)),
                     pw.SizedBox(height: 10),
                     pw.Divider(thickness: 1, color: PdfColors.white),
                     // Email
                     pw.Row(
                       children: [
-                        pw.Image(pw.MemoryImage(emailIcon),
-                            width: 12, height: 12,),
+                        pw.Image(
+                          pw.MemoryImage(emailIcon),
+                          width: 12,
+                          height: 12,
+                        ),
                         pw.SizedBox(width: 5),
                         pw.Text(_emailController.text,
                             style: pw.TextStyle(fontSize: 10)),
@@ -201,14 +197,25 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     pw.SizedBox(height: 5),
                     // Address
                     pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Image(pw.MemoryImage(addressIcon),
-                            width: 12, height: 12),
+                        pw.Image(
+                          pw.MemoryImage(addressIcon),
+                          width: 12,
+                          height: 12,
+                        ),
                         pw.SizedBox(width: 5),
-                        pw.Text(_addressController.text,
-                            style: pw.TextStyle(fontSize: 10)),
+                        pw.Expanded(
+                          child: pw.Text(
+                            _addressController.text,
+                            style: pw.TextStyle(fontSize: 10),
+                            softWrap:
+                                true,
+                          ),
+                        ),
                       ],
                     ),
+
 
                     pw.Divider(thickness: 1, color: PdfColors.white),
 
@@ -222,19 +229,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         return pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Text('Website Title: ${titleController.text}',
-                                style: pw.TextStyle(fontSize: 10)),
-                            pw.Text('Website URL: ${controller.text}',
+                            /*pw.Text('Website Title: ${titleController.text}',
+                                style: pw.TextStyle(fontSize: 10)),*/
+                            pw.Text(controller.text,
                                 style: pw.TextStyle(fontSize: 10)),
                             pw.SizedBox(height: 10),
                           ],
                         );
                       }),
 
+                    if (_websiteControllers.isNotEmpty) pw.SizedBox(height: 10),
                     if (_websiteControllers.isNotEmpty)
-                    pw.SizedBox(height: 10),
-                    if (_websiteControllers.isNotEmpty)
-                    pw.Divider(thickness: 1, color: PdfColors.white),
+                      pw.Divider(thickness: 1, color: PdfColors.white),
 
                     // Skills Summary
                     pw.Text('Skills',
@@ -248,15 +254,19 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         children: [
                           pw.Row(
                             mainAxisAlignment:
-                                pw.MainAxisAlignment.spaceBetween,
+                                pw.MainAxisAlignment.start,
                             children: [
+                              pw.Container(
+                                width: 10,
+                                height: 10,
+                                decoration: pw.BoxDecoration(
+                                  color: PdfColors.blue,
+                                  shape: pw.BoxShape.circle,
+                                ),
+                              ),
+                              pw.SizedBox(width: 5),
                               pw.Text(controller.text,
                                   style: pw.TextStyle(fontSize: 12)),
-                              pw.Container(
-                                width: 50,
-                                height: 5,
-                                color: PdfColors.blue,
-                              ),
                             ],
                           ),
                           pw.SizedBox(height: 5),
@@ -270,7 +280,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
               // Right Column - Experience & Education
               pw.Expanded(
                 child: pw.Container(
-                  padding: pw.EdgeInsets.only(left: 20,right: 20),
+                  padding: pw.EdgeInsets.only(left: 20, right: 20),
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -292,7 +302,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         pw.SizedBox(height: 10),
 
                       pw.Divider(thickness: 1, color: PdfColors.grey),
-                      
+
                       // Work Experience
                       pw.Text('Work Experience',
                           style: pw.TextStyle(
@@ -358,7 +368,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
       ),
     );
 
-
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/resume.pdf');
     await file.writeAsBytes(await pdf.save());
@@ -373,17 +382,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     await _storage.saveData('address', _addressController.text);
     await _storage.saveData('phone', _phoneNumberController.text);
     await _storage.saveData('aboutme', _aboutMeController.text);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Data saved successfully!')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data saved successfully!')));
     setState(() {
       _isButton1Highlighted = false;
     });
-    
   }
 
   Future<void> _sharePdf() async {
     _isButton2Highlighted = true;
     final pdfFile = await _generatePdf();
-    await Share.shareXFiles([XFile(pdfFile.path)], text: 'Check out my resume!');
+    await Share.shareXFiles([XFile(pdfFile.path)],
+        text: 'Check out my resume!');
     setState(() {
       _isButton2Highlighted = false;
     });
@@ -426,7 +436,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   }
 
   void _addExperienceField() {
-      setState(() {
+    setState(() {
       _ExperienceControllers.add(TextEditingController());
       _companyName.add(TextEditingController());
       _jobTitle.add(TextEditingController());
@@ -469,7 +479,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     });
   }
 
-  Future<void> _selectDate(BuildContext context,bool check,int index) async {
+  Future<void> _selectDate(BuildContext context, bool check, int index) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -478,20 +488,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     );
 
     if (pickedDate != null) {
-      if(check){
+      if (check) {
         setState(() {
-          _startdatejob[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+          _startdatejob[index].text =
+              DateFormat('dd/MM/yyyy').format(pickedDate);
         });
-      }else{
+      } else {
         setState(() {
           _enddatejob[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
         });
       }
-      
     }
   }
 
-  Future<void> _selectDateEducation(BuildContext context,bool check,int index) async {
+  Future<void> _selectDateEducation(
+      BuildContext context, bool check, int index) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -500,16 +511,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     );
 
     if (pickedDate != null) {
-      if(check){
+      if (check) {
         setState(() {
-          _startEducation[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+          _startEducation[index].text =
+              DateFormat('dd/MM/yyyy').format(pickedDate);
         });
-      }else{
+      } else {
         setState(() {
-          _endEducation[index].text = DateFormat('dd/MM/yyyy').format(pickedDate);
+          _endEducation[index].text =
+              DateFormat('dd/MM/yyyy').format(pickedDate);
         });
       }
-      
     }
   }
 
@@ -530,8 +542,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   onTap: _pickImage,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage:
-                        _profileImage != null ? FileImage(_profileImage!) : null,
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : null,
                     child: _profileImage == null
                         ? const Icon(Icons.add_a_photo, size: 50)
                         : null,
@@ -581,9 +594,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     labelStyle: const TextStyle(color: Color(0xFF6200EE)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                          color: Color(0xFF6200EE),
-                          width: 1),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -592,9 +604,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                          color: Color(0xFF6200EE),
-                          width: 2),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 2),
                     ),
                   ),
                 ),
@@ -621,9 +632,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     labelStyle: const TextStyle(color: Color(0xFF6200EE)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                          color: Color(0xFF6200EE),
-                          width: 1),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -632,9 +642,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                          color: Color(0xFF6200EE),
-                          width: 2),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF6200EE), width: 2),
                     ),
                   ),
                   maxLines: 5,
@@ -652,7 +661,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   int index = entry.key;
                   TextEditingController controller = entry.value;
                   TextEditingController titleController = _websiteTitles[index];
-      
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -741,15 +750,15 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   TextEditingController companyNameController =
                       _companyName[index];
                   TextEditingController jobTitleController = _jobTitle[index];
-                  TextEditingController startDateController = _startdatejob[index];
+                  TextEditingController startDateController =
+                      _startdatejob[index];
                   TextEditingController endDateController = _enddatejob[index];
                   TextEditingController detailController = _detailjob[index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Experience ${index + 1}',
@@ -765,7 +774,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ],
                       ),
                       const SizedBox(height: 5),
-
                       TextField(
                         controller: companyNameController,
                         decoration: const InputDecoration(
@@ -863,8 +871,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                 ),
                 ..._educationControllers.asMap().entries.map((entry) {
                   int index = entry.key;
-                  TextEditingController startDateEducationController = _startEducation[index];
-                  TextEditingController endDateEducationController   = _endEducation[index];
+                  TextEditingController startDateEducationController =
+                      _startEducation[index];
+                  TextEditingController endDateEducationController =
+                      _endEducation[index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
