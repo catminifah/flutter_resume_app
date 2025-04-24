@@ -556,6 +556,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     Expanded(
                       child: TextField(
                         controller: _FirstnameController,
+                        textCapitalization: TextCapitalization.words,
                         decoration: const InputDecoration(
                           labelText: 'FirstName',
                           icon: Icon(Icons.person_outlined),
@@ -567,6 +568,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     Expanded(
                       child: TextField(
                         controller: _LastnameController,
+                        textCapitalization: TextCapitalization.words,
                         decoration: const InputDecoration(
                           labelText: 'LastName',
                           icon: Icon(Icons.person_add_alt_1_outlined),
