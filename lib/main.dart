@@ -315,15 +315,14 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
                       // Education
                       if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle
-                              .any((controller) => controller.text.isNotEmpty))
+                              (controller) => controller.text.isNotEmpty) &&
+                          _degreeTitle.any((controller) => controller.text.isNotEmpty))
                       pw.Text('Education',
                           style: pw.TextStyle(
                               fontSize: 16,
@@ -359,23 +358,22 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       }),
 
                       if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                              (controller) => controller.text.isNotEmpty) &&
                           _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle
-                              .any((controller) => controller.text.isNotEmpty))
+                              (controller) => controller.text.isNotEmpty) &&
+                          _degreeTitle.any((controller) => controller.text.isNotEmpty))
                       pw.Divider(thickness: 1, color: PdfColors.grey),
                       
                       // Work Experience
-                      if (_ExperienceControllers.any((controller) => controller.text.isNotEmpty) ||
-                          _jobTitle.any((controller) => controller.text.isNotEmpty) ||
-                          _companyName.any((controller) => controller.text.isNotEmpty) ||
-                          _startdatejob.any((controller) => controller.text.isNotEmpty) ||
-                          _enddatejob.any((controller) => controller.text.isNotEmpty) ||
+                      if (_ExperienceControllers.any((controller) => controller.text.isNotEmpty) &&
+                          _jobTitle.any((controller) => controller.text.isNotEmpty) &&
+                          _companyName.any((controller) => controller.text.isNotEmpty) &&
+                          _startdatejob.any((controller) => controller.text.isNotEmpty) &&
+                          _enddatejob.any((controller) => controller.text.isNotEmpty) &&
                           _detailjob.any((controller) => controller.text.isNotEmpty)
                           )
                       pw.Text('Work Experience',
