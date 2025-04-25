@@ -106,6 +106,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     final emailIcon = await loadIcon('assets/icons/email.png');
     final phoneIcon = await loadIcon('assets/icons/phone.png');
     final addressIcon = await loadIcon('assets/icons/address.png');
+    final wabIcon = await loadIcon('assets/icons/web.png');
 
     pdf.addPage(
       pw.Page(
@@ -171,6 +172,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         fontWeight: pw.FontWeight.bold,
                         color: PdfColors.white,
                       ),
+                      softWrap: true,
                     ),
                     pw.SizedBox(height: 5),
                     pw.Text(
@@ -182,21 +184,26 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         fontWeight: pw.FontWeight.bold,
                         color: PdfColors.white,
                       ),
+                      softWrap: true,
                     ),
                     pw.SizedBox(height: 10),
                     pw.Divider(thickness: 1, color: PdfColors.white),
                     // Email
+                    if (_emailController.text.isNotEmpty)
                     pw.Row(
                       children: [
                         pw.Image(pw.MemoryImage(emailIcon),
                             width: 12, height: 12),
                         pw.SizedBox(width: 5),
                         pw.Text(_emailController.text,
-                            style: pw.TextStyle(fontSize: 10)),
+                          style: pw.TextStyle(fontSize: 10),
+                          softWrap: true,
+                        ),
                       ],
                     ),
                     pw.SizedBox(height: 5),
                     // NumberPhone
+                    if (_phoneNumberController.text.isNotEmpty)
                     pw.Row(
                       children: [
                         pw.Image(pw.MemoryImage(phoneIcon),
@@ -208,6 +215,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ),
                     pw.SizedBox(height: 5),
                     // Address
+                    if (_addressController.text.isNotEmpty)
                     pw.Row(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
@@ -238,6 +246,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           children: [
                             /*pw.Text('Website Title: ${titleController.text}',
                                 style: pw.TextStyle(fontSize: 10)),*/
+                            pw.Image(pw.MemoryImage(wabIcon),
+                                width: 12, height: 12),
+                            pw.SizedBox(width: 5),
                             pw.Text('${controller.text}',
                                 style: pw.TextStyle(fontSize: 10)),
                             //pw.SizedBox(height: 10),
