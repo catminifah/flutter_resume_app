@@ -108,6 +108,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
+    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat(pageWidth, pageHeight),
@@ -119,205 +121,267 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
               // Left Column - Profile & Skills
               pw.Container(
                 width: 200,
-                color: PdfColors.blue100,
-                padding: pw.EdgeInsets.all(10),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    // Profile Image
-                    if (_profileImage != null)
-                      pw.Center(
-                        child: pw.Container(
-                          width: 120,
-                          height: 120,
-                          decoration: pw.BoxDecoration(
-                            shape: pw.BoxShape.circle,
-                            color: PdfColors.white,
-                          ),
-                          child: pw.Padding(
-                            padding: pw.EdgeInsets.all(2),
+                //color: PdfColors.blue100,
+                //padding: pw.EdgeInsets.all(10),
+                child: pw.Stack(children: [
+                  pw.Positioned.fill(
+                    child: pw.CustomPaint(
+                      painter: (PdfGraphics canvas, PdfPoint size) {
+                        final colors = [
+                          PdfColor.fromInt(0xFF021526), // #021526
+                          PdfColor.fromInt(0xFF03346E), // #03346E
+                          PdfColor.fromInt(0xFF6EACDA), // #6EACDA
+                          PdfColor.fromInt(0xFFE2E2B6), // #E2E2B6
+                        ];
+
+                        final steps = colors.length - 1;
+                        final segmentHeight = size.y / steps;
+
+                        for (int i = 0; i < steps; i++) {
+                          for (double y = 0; y < segmentHeight; y++) {
+                            final t = y / segmentHeight;
+                            final r = colors[i].red +
+                                t * (colors[i + 1].red - colors[i].red);
+                            final g = colors[i].green +
+                                t * (colors[i + 1].green - colors[i].green);
+                            final b = colors[i].blue +
+                                t * (colors[i + 1].blue - colors[i].blue);
+
+                            canvas
+                              ..setFillColor(PdfColor(r, g, b))
+                              ..drawRect(0, i * segmentHeight + y, size.x, 1)
+                              ..fillPath();
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.all(10),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        // Profile Image
+                        if (_profileImage != null)
+                          pw.Center(
                             child: pw.Container(
-                              width: 110,
-                              height: 110,
+                              width: 120,
+                              height: 120,
                               decoration: pw.BoxDecoration(
                                 shape: pw.BoxShape.circle,
-                                color: PdfColors.blue100,
+                                border: pw.Border.all(color: PdfColors.white, width: 2),
+                                //color: PdfColors.white,
                               ),
                               child: pw.Padding(
-                                padding: pw.EdgeInsets.all(5),
-                                child: pw.ClipOval(
-                                  child: pw.Container(
-                                    width: 100,
-                                    height: 100,
-                                    child: pw.Image(
-                                      pw.MemoryImage(
-                                          _profileImage!.readAsBytesSync()),
-                                      fit: pw.BoxFit.cover,
+                                padding: pw.EdgeInsets.all(2),
+                                child: pw.Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: pw.BoxDecoration(
+                                    shape: pw.BoxShape.circle,
+                                    //color: PdfColors.blue100,
+                                  ),
+                                  child: pw.Padding(
+                                    padding: pw.EdgeInsets.all(5),
+                                    child: pw.ClipOval(
+                                      child: pw.Container(
+                                        width: 100,
+                                        height: 100,
+                                        child: pw.Image(
+                                          pw.MemoryImage(
+                                              _profileImage!.readAsBytesSync()),
+                                          fit: pw.BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    pw.SizedBox(height: 10),
-                    // Name
-                    pw.Text(
-                      _FirstnameController.text.isNotEmpty
-                          ? '${_FirstnameController.text[0].toUpperCase()}${_FirstnameController.text.substring(1)}'
-                          : '',
-                      style: pw.TextStyle(
-                        fontSize: 20,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.white,
-                      ),
-                      softWrap: true,
-                    ),
-                    pw.SizedBox(height: 5),
-                    pw.Text(
-                      _LastnameController.text.isNotEmpty
-                          ? '${_LastnameController.text[0].toUpperCase()}${_LastnameController.text.substring(1)}'
-                          : '',
-                      style: pw.TextStyle(
-                        fontSize: 20,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.white,
-                      ),
-                      softWrap: true,
-                    ),
-                    if (_LastnameController.text.isNotEmpty && _FirstnameController.text.isNotEmpty || _FirstnameController.text.isNotEmpty)
-                    pw.SizedBox(height: 10),
-                    if (_LastnameController.text.isNotEmpty && _FirstnameController.text.isNotEmpty || _FirstnameController.text.isNotEmpty)
-                    pw.Divider(thickness: 1, color: PdfColors.white),
-                    // Email
-                    if (_emailController.text.isNotEmpty)
-                    pw.Row(
-                      children: [
-                        pw.Image(pw.MemoryImage(emailIcon),
-                            width: 12, height: 12),
-                        pw.SizedBox(width: 5),
-                        pw.Text(_emailController.text,
-                          style: pw.TextStyle(fontSize: 10),
+                        pw.SizedBox(height: 10),
+                        // Name
+                        pw.Text(
+                          _FirstnameController.text.isNotEmpty
+                              ? '${_FirstnameController.text[0].toUpperCase()}${_FirstnameController.text.substring(1)}'
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 22,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.white,
+                            font: ARIBLKFont,
+                          ),
                           softWrap: true,
                         ),
-                      ],
-                    ),
-                    if (_emailController.text.isNotEmpty)
-                      pw.SizedBox(height: 5),
-                    // NumberPhone
-                    if (_phoneNumberController.text.isNotEmpty)
-                    pw.Row(
-                      children: [
-                        pw.Image(pw.MemoryImage(phoneIcon),
-                            width: 12, height: 12),
-                        pw.SizedBox(width: 5),
-                        pw.Text(_phoneNumberController.text,
-                            style: pw.TextStyle(fontSize: 10)),
-                      ],
-                    ),
-                    if (_phoneNumberController.text.isNotEmpty)
-                      pw.SizedBox(height: 5),
-                    // Address
-                    if (_addressController.text.isNotEmpty)
-                    pw.Row(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Image(pw.MemoryImage(addressIcon),
-                            width: 12, height: 12),
-                        pw.SizedBox(width: 5),
-                        pw.Expanded(
-                          child: pw.Text(
-                            _addressController.text,
-                            style: pw.TextStyle(fontSize: 10),
-                            softWrap: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_addressController.text.isNotEmpty)
-                      pw.SizedBox(height: 5),
-
-                    //pw.Divider(thickness: 1, color: PdfColors.white),
-
-                    if (_websiteControllers.isNotEmpty)
-                      ..._websiteControllers.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        TextEditingController controller = entry.value;
-                        TextEditingController titleController = _websiteTitles[index];
-
-                        return pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            /*pw.Text('Website Title: ${titleController.text}',
-                                style: pw.TextStyle(fontSize: 10)),*/
-                            if (controller.text.isNotEmpty)
-                            pw.Row(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Image(pw.MemoryImage(wabIcon),
-                                    width: 12, height: 12),
-                                pw.SizedBox(width: 5),
-                                pw.Expanded(
-                                  child: pw.Text(
-                                    '${controller.text}',
-                                    style: pw.TextStyle(fontSize: 10),
-                                    softWrap: true,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            /*pw.Image(pw.MemoryImage(wabIcon),
-                                width: 12, height: 12),
-                            pw.SizedBox(width: 5),
-                            pw.Text('${controller.text}',
-                              style: pw.TextStyle(fontSize: 10),
-                              softWrap: true,
-                            ),*/
-                            //pw.SizedBox(height: 5),
-                          ],
-                        );
-                      }),
-
-                    if (_websiteControllers.isNotEmpty)
-                    pw.SizedBox(height: 10),
-                    if (_websiteControllers.isNotEmpty && _addressController.text.isNotEmpty && _phoneNumberController.text.isNotEmpty && _emailController.text.isNotEmpty)
-                    pw.Divider(thickness: 1, color: PdfColors.white),
-
-                    // Skills Summary
-                    if (_skillControllers.isNotEmpty)
-                    pw.Text('Skills',
-                        style: pw.TextStyle(
-                            fontSize: 16,
+                        pw.Text(
+                          _LastnameController.text.isNotEmpty
+                              ? '${_LastnameController.text[0].toUpperCase()}${_LastnameController.text.substring(1)}'
+                              : '',
+                          style: pw.TextStyle(
+                            fontSize: 22,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.blue)),
-                    pw.SizedBox(height: 5),
-                    ..._skillControllers.map((controller) {
-                      return pw.Column(
-                        children: [
-                          if (controller.text.isNotEmpty)
+                            color: PdfColors.white,
+                            font: ARIBLKFont,
+                          ),
+                          softWrap: true,
+                        ),
+                        if (_LastnameController.text.isNotEmpty &&
+                                _FirstnameController.text.isNotEmpty ||
+                            _FirstnameController.text.isNotEmpty)
+                          pw.SizedBox(height: 10),
+                        if (_LastnameController.text.isNotEmpty &&
+                                _FirstnameController.text.isNotEmpty ||
+                            _FirstnameController.text.isNotEmpty)
+                          pw.Divider(thickness: 1, color: PdfColors.white),
+                        // Email
+                        if (_emailController.text.isNotEmpty)
                           pw.Row(
-                            mainAxisAlignment:
-                                pw.MainAxisAlignment.start,
                             children: [
-                              pw.Container(
-                                width: 10,
-                                height: 10,
-                                decoration: pw.BoxDecoration(
-                                  color: PdfColors.blue,
-                                  shape: pw.BoxShape.circle,
-                                ),
-                              ),
+                              pw.Image(pw.MemoryImage(emailIcon),
+                                  width: 12, height: 12),
                               pw.SizedBox(width: 5),
-                              pw.Text(controller.text,
-                                  style: pw.TextStyle(fontSize: 12)),
+                              pw.Text(
+                                _emailController.text,
+                                style: pw.TextStyle(
+                                  fontSize: 10,
+                                  color: PdfColors.white,
+                                ),
+                                softWrap: true,
+                              ),
                             ],
                           ),
+                        if (_emailController.text.isNotEmpty)
                           pw.SizedBox(height: 5),
-                        ],
-                      );
-                    }),
-                  ],
+                        // NumberPhone
+                        if (_phoneNumberController.text.isNotEmpty)
+                          pw.Row(
+                            children: [
+                              pw.Image(pw.MemoryImage(phoneIcon),
+                                  width: 12, height: 12),
+                              pw.SizedBox(width: 5),
+                              pw.Text(_phoneNumberController.text,
+                                style: pw.TextStyle(
+                                  fontSize: 10,
+                                  color: PdfColors.white,
+                                )
+                              ),
+                            ],
+                          ),
+                        if (_phoneNumberController.text.isNotEmpty)
+                          pw.SizedBox(height: 5),
+                        // Address
+                        if (_addressController.text.isNotEmpty)
+                          pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Image(pw.MemoryImage(addressIcon),
+                                  width: 12, height: 12),
+                              pw.SizedBox(width: 5),
+                              pw.Expanded(
+                                child: pw.Text(
+                                  _addressController.text,
+                                  style: pw.TextStyle(
+                                    fontSize: 10,
+                                    color: PdfColors.white,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                        if (_addressController.text.isNotEmpty)
+                          pw.SizedBox(height: 5),
+
+                        //pw.Divider(thickness: 1, color: PdfColors.white),
+
+                        if (_websiteControllers.isNotEmpty)
+                          ..._websiteControllers.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            TextEditingController controller = entry.value;
+                            TextEditingController titleController =
+                                _websiteTitles[index];
+
+                            return pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                /*pw.Text('Website Title: ${titleController.text}',
+                                style: pw.TextStyle(fontSize: 10)),*/
+                                if (controller.text.isNotEmpty)
+                                  pw.Row(
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Image(pw.MemoryImage(wabIcon),
+                                          width: 12, height: 12),
+                                      pw.SizedBox(width: 5),
+                                      pw.Expanded(
+                                        child: pw.Text(
+                                          '${controller.text}',
+                                          style: pw.TextStyle(
+                                            fontSize: 10,
+                                            color: PdfColors.white,
+                                          ),
+                                          softWrap: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            );
+                          }),
+
+                        if (_websiteControllers.isNotEmpty)
+                          pw.SizedBox(height: 10),
+                        if (_websiteControllers.isNotEmpty ||
+                            _addressController.text.isNotEmpty ||
+                            _phoneNumberController.text.isNotEmpty ||
+                            _emailController.text.isNotEmpty)
+                          pw.Divider(thickness: 1, color: PdfColors.white),
+
+                        // Skills Summary
+                        if (_skillControllers.isNotEmpty)
+                          pw.Text('Skills',
+                            style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.blueGrey900
+                            )
+                          ),
+                        pw.SizedBox(height: 5),
+                        ..._skillControllers.map((controller) {
+                          return pw.Column(
+                            children: [
+                              if (controller.text.isNotEmpty)
+                                pw.Row(
+                                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                                  children: [
+                                    pw.Container(
+                                      width: 5,
+                                      height: 5,
+                                      decoration: pw.BoxDecoration(
+                                        color: PdfColor.fromInt(0xFFE2E2B6),
+                                        shape: pw.BoxShape.circle,
+                                      ),
+                                    ),
+                                    pw.SizedBox(width: 5),
+                                    pw.Text(controller.text,
+                                      style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.white,
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              pw.SizedBox(height: 2),
+                            ],
+                          );
+                        }),
+                        pw.SizedBox(height: 5),
+                      ],
+                    ),
+                  ),
+                  
+                  ]
                 ),
               ),
 
