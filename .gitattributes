@@ -1,9 +1,12 @@
-*.xml linguist-vendored
-*.g.dart linguist-generated
-*.pb.dart linguist-generated
+
 *.g.dart linguist-generated
 *.freezed.dart linguist-generated
-*.pb.dart linguist-generated
 *.mocks.dart linguist-generated
+*.pb.dart linguist-generated
+
 android/** linguist-vendored
 ios/** linguist-vendored
+macos/** linguist-vendored
+windows/** linguist-vendored
+linux/** linguist-vendored
+build/** linguist-generated

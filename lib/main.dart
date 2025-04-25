@@ -546,7 +546,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     }
   }
 
-  Future<void> _selectDateEducation(BuildContext context,bool check,int index) async {
+  /*Future<void> _selectDateEducation(BuildContext context,bool check,int index) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -566,7 +566,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
       }
       
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
