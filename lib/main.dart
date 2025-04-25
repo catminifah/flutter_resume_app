@@ -45,6 +45,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
   final List<TextEditingController> _websiteControllers = [];
   List<TextEditingController> _websiteTitles = [];
+  
+  final List<TextEditingController> __skillTitles = [];
   final List<TextEditingController> _skillControllers = [];
 
   final List<TextEditingController> _ExperienceControllers = [];
@@ -109,6 +111,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     final wabIcon = await loadIcon('assets/icons/web.png');
 
     final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
 
     pdf.addPage(
       pw.Page(
@@ -429,29 +433,40 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         return pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Text(
-                              _universityName[index].text.isNotEmpty ? 
-                                '${_universityName[index].text[0].toUpperCase()}${_universityName[index].text.substring(1)}' : '',
-                              style: pw.TextStyle(
-                                fontSize: 14,
-                                fontWeight: pw.FontWeight.bold,
+                            pw.Row(
+                              children: [
+                                pw.Text(
+                                _universityName[index].text.isNotEmpty
+                                    ? '${_universityName[index].text[0].toUpperCase()}${_universityName[index].text.substring(1)}'
+                                    : '',
+                                style: pw.TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: pw.FontWeight.bold,
+                                  font: EBGaramondBoldFont
+                                ),
                               ),
+                              pw.SizedBox(width: 5),
+                              pw.Text(
+                                _startEducation[index].text.isNotEmpty
+                                    ? '${_startEducation[index].text} - ${_endEducation[index].text}'
+                                    : _endEducation[index].text,
+                                style: pw.TextStyle(
+                                    fontSize: 8, color: PdfColors.grey),
+                              ),
+                              ]
                             ),
-                            if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),
-                            pw.Text(
-                              _startEducation[index].text.isNotEmpty ? 
-                                '${_startEducation[index].text} - ${_endEducation[index].text}' : _endEducation[index].text,
-                              style: pw.TextStyle(
-                                  fontSize: 8, color: PdfColors.grey),
-                            ),
-                            if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),
+                            /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),*/
+                            /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),*/
                             if (_degreeTitle[index].text.isNotEmpty)
                             pw.Text(
                                 _degreeTitle[index].text,
                                 style: pw.TextStyle(
-                                    fontSize: 13,)),
+                                    fontSize: 13,
+                                    color: PdfColors.grey900,
+                                    font: EBGaramondFont
+                                    )),
                             pw.SizedBox(height: 10),
                           ],
                         );
@@ -483,19 +498,38 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         return pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Text(
-                                '${_jobTitle[index].text} - ${_companyName[index].text}',
+                            pw.Row(
+                              children: [
+                                pw.Text(
+                                _companyName[index].text,
                                 style: pw.TextStyle(
                                     fontSize: 14,
-                                    fontWeight: pw.FontWeight.bold)
+                                    fontWeight: pw.FontWeight.bold,
+                                    font: EBGaramondBoldFont
+                                  )
                                 ),
-                            pw.SizedBox(height: 5),
+                                pw.SizedBox(width: 5),
+                                pw.Text(
+                                '${_startdatejob[index].text} - ${_enddatejob[index].text.isEmpty ? 'PRESENT' : _enddatejob[index].text}',
+                                style: pw.TextStyle(
+                                    fontSize: 8, color: PdfColors.grey),
+                              ),
+                              ]
+                            ),
+                            
                             pw.Text(
-                                '${_startdatejob[index].text} - ${_enddatejob[index].text}',
-                                style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                                _jobTitle[index].text,
+                                style: pw.TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: pw.FontWeight.normal,
+                                    color: PdfColors.grey900,
+                                    font: EBGaramondFont
+                                    )
+                                ),
+
                             pw.SizedBox(width: 5),
                             pw.Text('${_detailjob[index].text}',
-                                style: pw.TextStyle(fontSize: 10)),
+                                style: pw.TextStyle(fontSize: 10,color: PdfColors.grey800)),
                             pw.SizedBox(height: 10),
                           ],
                         );
@@ -792,6 +826,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   ),
                   maxLines: 5,
                 ),
+                //------------------------------------------------------Website------------------------------------------------------//
                 Row(
                   children: [
                     const Text('Website: '),
@@ -840,6 +875,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ],
                   );
                 }),
+                //------------------------------------------------------Website------------------------------------------------------//
                 //------------------------------------------------------Skill------------------------------------------------------//
                 Row(
                   children: [
