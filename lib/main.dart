@@ -186,7 +186,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ),
                       softWrap: true,
                     ),
+                    if (_LastnameController.text.isNotEmpty && _FirstnameController.text.isNotEmpty || _FirstnameController.text.isNotEmpty)
                     pw.SizedBox(height: 10),
+                    if (_LastnameController.text.isNotEmpty && _FirstnameController.text.isNotEmpty || _FirstnameController.text.isNotEmpty)
                     pw.Divider(thickness: 1, color: PdfColors.white),
                     // Email
                     if (_emailController.text.isNotEmpty)
@@ -201,7 +203,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ),
                       ],
                     ),
-                    pw.SizedBox(height: 5),
+                    if (_emailController.text.isNotEmpty)
+                      pw.SizedBox(height: 5),
                     // NumberPhone
                     if (_phoneNumberController.text.isNotEmpty)
                     pw.Row(
@@ -213,7 +216,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             style: pw.TextStyle(fontSize: 10)),
                       ],
                     ),
-                    pw.SizedBox(height: 5),
+                    if (_phoneNumberController.text.isNotEmpty)
+                      pw.SizedBox(height: 5),
                     // Address
                     if (_addressController.text.isNotEmpty)
                     pw.Row(
@@ -231,6 +235,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ),
                       ],
                     ),
+                    if (_addressController.text.isNotEmpty)
+                      pw.SizedBox(height: 5),
 
                     //pw.Divider(thickness: 1, color: PdfColors.white),
 
@@ -238,27 +244,44 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ..._websiteControllers.asMap().entries.map((entry) {
                         int index = entry.key;
                         TextEditingController controller = entry.value;
-                        TextEditingController titleController =
-                            _websiteTitles[index];
+                        TextEditingController titleController = _websiteTitles[index];
 
                         return pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             /*pw.Text('Website Title: ${titleController.text}',
                                 style: pw.TextStyle(fontSize: 10)),*/
-                            pw.Image(pw.MemoryImage(wabIcon),
+                            if (controller.text.isNotEmpty)
+                            pw.Row(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Image(pw.MemoryImage(wabIcon),
+                                    width: 12, height: 12),
+                                pw.SizedBox(width: 5),
+                                pw.Expanded(
+                                  child: pw.Text(
+                                    '${controller.text}',
+                                    style: pw.TextStyle(fontSize: 10),
+                                    softWrap: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            /*pw.Image(pw.MemoryImage(wabIcon),
                                 width: 12, height: 12),
                             pw.SizedBox(width: 5),
                             pw.Text('${controller.text}',
-                                style: pw.TextStyle(fontSize: 10)),
-                            //pw.SizedBox(height: 10),
+                              style: pw.TextStyle(fontSize: 10),
+                              softWrap: true,
+                            ),*/
+                            //pw.SizedBox(height: 5),
                           ],
                         );
                       }),
 
                     if (_websiteControllers.isNotEmpty)
                     pw.SizedBox(height: 10),
-                    if (_websiteControllers.isNotEmpty)
+                    if (_websiteControllers.isNotEmpty && _addressController.text.isNotEmpty && _phoneNumberController.text.isNotEmpty && _emailController.text.isNotEmpty)
                     pw.Divider(thickness: 1, color: PdfColors.white),
 
                     // Skills Summary
@@ -272,6 +295,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ..._skillControllers.map((controller) {
                       return pw.Column(
                         children: [
+                          if (controller.text.isNotEmpty)
                           pw.Row(
                             mainAxisAlignment:
                                 pw.MainAxisAlignment.start,
@@ -317,7 +341,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       if (_aboutMeController.text.isNotEmpty)
                         pw.Text('${_aboutMeController.text}',
                             style: pw.TextStyle(
-                                fontSize: 12, color: PdfColors.grey)),
+                                fontSize: 10, color: PdfColors.grey)),
                       if (_aboutMeController.text.isNotEmpty)
                         pw.SizedBox(height: 10),
 
@@ -325,14 +349,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Education
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) &&
+                      if (_educationControllers.any((controller) => controller.text.isNotEmpty) ||
+                          _startEducation.any((controller) => controller.text.isNotEmpty) ||
+                          _endEducation.any((controller) => controller.text.isNotEmpty) ||
+                          _universityName.any((controller) => controller.text.isNotEmpty) ||
                           _degreeTitle.any((controller) => controller.text.isNotEmpty))
                       pw.Text('Education',
                           style: pw.TextStyle(
@@ -346,12 +366,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             pw.Text(
-                              _startEducation[index].text.isNotEmpty ? 
-                                '${_startEducation[index].text} - ${_endEducation[index].text}' : _endEducation[index].text,
-                              style: pw.TextStyle(
-                                  fontSize: 12, color: PdfColors.grey),
-                            ),
-                            pw.Text(
                               _universityName[index].text.isNotEmpty ? 
                                 '${_universityName[index].text[0].toUpperCase()}${_universityName[index].text.substring(1)}' : '',
                               style: pw.TextStyle(
@@ -359,6 +373,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 fontWeight: pw.FontWeight.bold,
                               ),
                             ),
+                            if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),
+                            pw.Text(
+                              _startEducation[index].text.isNotEmpty ? 
+                                '${_startEducation[index].text} - ${_endEducation[index].text}' : _endEducation[index].text,
+                              style: pw.TextStyle(
+                                  fontSize: 8, color: PdfColors.grey),
+                            ),
+                            if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),
+                            if (_degreeTitle[index].text.isNotEmpty)
                             pw.Text(
                                 _degreeTitle[index].text,
                                 style: pw.TextStyle(
@@ -368,23 +393,19 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         );
                       }),
 
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) &&
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) &&
+                      if (_educationControllers.any((controller) => controller.text.isNotEmpty) ||
+                          _startEducation.any((controller) => controller.text.isNotEmpty) ||
+                          _endEducation.any((controller) => controller.text.isNotEmpty) ||
+                          _universityName.any((controller) => controller.text.isNotEmpty) ||
                           _degreeTitle.any((controller) => controller.text.isNotEmpty))
                       pw.Divider(thickness: 1, color: PdfColors.grey),
                       
                       // Work Experience
-                      if (_ExperienceControllers.any((controller) => controller.text.isNotEmpty) &&
-                          _jobTitle.any((controller) => controller.text.isNotEmpty) &&
-                          _companyName.any((controller) => controller.text.isNotEmpty) &&
-                          _startdatejob.any((controller) => controller.text.isNotEmpty) &&
-                          _enddatejob.any((controller) => controller.text.isNotEmpty) &&
+                      if (_ExperienceControllers.any((controller) => controller.text.isNotEmpty) ||
+                          _jobTitle.any((controller) => controller.text.isNotEmpty) ||
+                          _companyName.any((controller) => controller.text.isNotEmpty) ||
+                          _startdatejob.any((controller) => controller.text.isNotEmpty) ||
+                          _enddatejob.any((controller) => controller.text.isNotEmpty) ||
                           _detailjob.any((controller) => controller.text.isNotEmpty)
                           )
                       pw.Text('Work Experience',
@@ -402,13 +423,15 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 '${_jobTitle[index].text} - ${_companyName[index].text}',
                                 style: pw.TextStyle(
                                     fontSize: 14,
-                                    fontWeight: pw.FontWeight.bold)),
+                                    fontWeight: pw.FontWeight.bold)
+                                ),
+                            pw.SizedBox(height: 5),
                             pw.Text(
                                 '${_startdatejob[index].text} - ${_enddatejob[index].text}',
-                                style: pw.TextStyle(
-                                    fontSize: 12, color: PdfColors.grey)),
+                                style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                            pw.SizedBox(width: 5),
                             pw.Text('${_detailjob[index].text}',
-                                style: pw.TextStyle(fontSize: 12)),
+                                style: pw.TextStyle(fontSize: 10)),
                             pw.SizedBox(height: 10),
                           ],
                         );
