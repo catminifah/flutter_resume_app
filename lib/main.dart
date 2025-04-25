@@ -132,10 +132,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     child: pw.CustomPaint(
                       painter: (PdfGraphics canvas, PdfPoint size) {
                         final colors = [
-                          PdfColor.fromInt(0xFF021526), // #021526
-                          PdfColor.fromInt(0xFF03346E), // #03346E
-                          PdfColor.fromInt(0xFF6EACDA), // #6EACDA
                           PdfColor.fromInt(0xFFE2E2B6), // #E2E2B6
+                          PdfColor.fromInt(0xFF6EACDA), // #6EACDA
+                          PdfColor.fromInt(0xFF03346E), // #03346E
+                          PdfColor.fromInt(0xFF021526), // #021526
                         ];
 
                         final steps = colors.length - 1;
@@ -348,7 +348,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blueGrey900
+                                color: PdfColors.white
                             )
                           ),
                         pw.SizedBox(height: 5),
@@ -363,7 +363,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       width: 5,
                                       height: 5,
                                       decoration: pw.BoxDecoration(
-                                        color: PdfColor.fromInt(0xFFE2E2B6),
+                                        color: PdfColors.blueGrey900,
                                         shape: pw.BoxShape.circle,
                                       ),
                                     ),
