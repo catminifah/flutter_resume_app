@@ -36,6 +36,7 @@ class ResumeHomePage extends StatefulWidget {
 }
 
 class _ResumeHomePageState extends State<ResumeHomePage> {
+  // Personal Information
   final TextEditingController _FirstnameController = TextEditingController();
   final TextEditingController _LastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -43,12 +44,14 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _aboutMeController = TextEditingController();
 
+  // Personal Websites
   final List<TextEditingController> _websiteControllers = [];
   List<TextEditingController> _websiteTitles = [];
 
+  // Skills
   final List<TextEditingController> __skillTitles = [];
-  final List<TextEditingController> _skillControllers = [];
-
+  final List<List<TextEditingController>> _skillControllers = [];
+  // Work Experience
   final List<TextEditingController> _ExperienceControllers = [];
   final List<TextEditingController> _companyName = [];
   final List<TextEditingController> _jobTitle = [];
@@ -56,14 +59,33 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   final List<TextEditingController> _enddatejob = [];
   final List<TextEditingController> _detailjob = [];
 
+  // Education
   final List<TextEditingController> _educationControllers = [];
   final List<TextEditingController> _degreeTitle = [];
   final List<TextEditingController> _universityName = [];
   final List<TextEditingController> _startEducation = [];
   final List<TextEditingController> _endEducation = [];
 
-  final ResumeDataStorage _storage = ResumeDataStorage();
+  // Projects
+  final List<TextEditingController> _projectTitleControllers = [];
+  final List<TextEditingController> _projectDescriptionControllers = [];
+  final List<TextEditingController> _projectLinkControllers = [];
+  final List<TextEditingController> _projectTechControllers = [];
+
+  // Certifications
+  final List<TextEditingController> _certificationTitleControllers = [];
+  final List<TextEditingController> _certificationIssuerControllers = [];
+  final List<TextEditingController> _certificationDateControllers = [];
+
+  // Languages
+  final List<TextEditingController> _languageNameControllers = [];
+  final List<TextEditingController> _languageLevelControllers = [];
+
+  // Profile Image
   File? _profileImage;
+
+  // Resume Data Storage
+  final ResumeDataStorage _storage = ResumeDataStorage();
   bool _isButton1Highlighted = false;
   bool _isButton2Highlighted = false;
 
@@ -357,7 +379,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ..._skillControllers.map((controller) {
                           return pw.Column(
                             children: [
-                              if (controller.text.isNotEmpty)
+                              if (controller.isNotEmpty)
                                 pw.Row(
                                   mainAxisAlignment: pw.MainAxisAlignment.start,
                                   children: [
@@ -370,7 +392,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       ),
                                     ),
                                     pw.SizedBox(width: 5),
-                                    pw.Text(controller.text,
+                                    pw.Text(controller as String,
                                         style: pw.TextStyle(
                                           fontSize: 10,
                                           color: PdfColors.white,
@@ -599,16 +621,35 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
   void _addSkillField() {
     setState(() {
-      _skillControllers.add(TextEditingController());
+      __skillTitles.add(TextEditingController());
+      _skillControllers.add([]);
     });
   }
 
   void _removeSkillField(int index) {
-    if (_skillControllers.isNotEmpty) {
-      setState(() {
+    setState(() {
+      if (index >= 0 && index < __skillTitles.length) {
+        __skillTitles.removeAt(index);
         _skillControllers.removeAt(index);
-      });
-    }
+      }
+    });
+  }
+
+  void _addSkillItem(int categoryIndex) {
+    setState(() {
+      if (categoryIndex >= 0 && categoryIndex < _skillControllers.length) {
+        _skillControllers[categoryIndex].add(TextEditingController());
+      }
+    });
+  }
+
+  void _removeSkillItem(int categoryIndex, int itemIndex) {
+    setState(() {
+      if (categoryIndex < _skillControllers.length &&
+          itemIndex < _skillControllers[categoryIndex].length) {
+        _skillControllers[categoryIndex].removeAt(itemIndex);
+      }
+    });
   }
 
   void _addExperienceField() {
@@ -872,19 +913,22 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   );
                 }),
                 //------------------------------------------------------Website------------------------------------------------------//
-                //------------------------------------------------------Skill------------------------------------------------------//
+                //--------------------------- Skill Section ---------------------------//
                 Row(
                   children: [
-                    const Text('Skill: '),
+                    const Text('Skill Categories: '),
                     IconButton(
                       icon: const Icon(Icons.add_circle),
                       onPressed: _addSkillField,
                     ),
                   ],
                 ),
-                ..._skillControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController controller = entry.value;
+                ...__skillTitles.asMap().entries.map((entry) {
+                  int catIndex = entry.key;
+                  TextEditingController titleController = entry.value;
+                  List<TextEditingController> skillsInCategory =
+                      _skillControllers[catIndex];
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -892,25 +936,58 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         children: [
                           Expanded(
                             child: TextField(
-                              controller: controller,
+                              controller: titleController,
                               decoration: const InputDecoration(
-                                labelText: 'Skill',
-                                icon: Icon(Icons.note_add_outlined),
+                                labelText: 'Skill Category Title',
+                                icon: Icon(Icons.title),
                                 labelStyle: TextStyle(color: Color(0xFF6200EE)),
                               ),
                             ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeSkillField(index),
+                            onPressed: () => _removeSkillField(catIndex),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add_circle_outline),
+                            onPressed: () => _addSkillItem(catIndex),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 5),
+                      ...skillsInCategory.asMap().entries.map((skillEntry) {
+                        int skillIndex = skillEntry.key;
+                        TextEditingController skillController =
+                            skillEntry.value;
+
+                        return Row(
+                          children: [
+                            const SizedBox(width: 32), // for indentation
+                            Expanded(
+                              child: TextField(
+                                controller: skillController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Skill',
+                                  icon: Icon(Icons.check),
+                                  labelStyle:
+                                      TextStyle(color: Color(0xFF6200EE)),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.remove_circle_outline),
+                              onPressed: () =>
+                                  _removeSkillItem(catIndex, skillIndex),
+                            ),
+                          ],
+                        );
+                      }),
                       const SizedBox(height: 20),
                     ],
                   );
                 }),
-                //------------------------------------------------------Skill------------------------------------------------------//
+                //--------------------------- Skill Section ---------------------------//
+
                 //------------------------------------------------------Experience------------------------------------------------------//
                 Row(
                   children: [
