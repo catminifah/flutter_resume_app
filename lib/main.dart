@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'dart:typed_data';
 
 void main() {
   runApp(const ResumeApp());
@@ -49,8 +48,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   List<TextEditingController> _websiteTitles = [];
 
   // Skills
+  final List<String> _skillCategoryOptions = [
+    'Programming',
+    'Tools',
+    'Soft Skills',
+    'Hard Skills',
+    'Languages',
+    'Other',
+    'Custom'
+  ];
+
   final List<TextEditingController> __skillTitles = [];
   final List<List<TextEditingController>> _skillControllers = [];
+  final List<String?> _selectedSkillCategories = [];
+  final List<bool> _isCustomCategory = [];
+
   // Work Experience
   final List<TextEditingController> _ExperienceControllers = [];
   final List<TextEditingController> _companyName = [];
@@ -139,6 +151,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
         pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
     final EBGaramondFont =
         pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+
+    final languages = List.generate(
+      _languageNameControllers.length,
+      (index) => {
+        'name': _languageNameControllers[index].text.trim(),
+        'level': _languageLevelControllers[index].text.trim(),
+      },
+    );
+    final projects = getProjects();
+    final certifications = getCertifications();
 
     pdf.addPage(
       pw.Page(
@@ -265,7 +287,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             _FirstnameController.text.isNotEmpty)
                           pw.Divider(thickness: 1, color: PdfColors.white),
                         // Email
-                        if (_emailController.text.isNotEmpty)
+                        if (_emailController.text.isNotEmpty) ...[
                           pw.Row(
                             children: [
                               pw.Image(pw.MemoryImage(emailIcon),
@@ -281,10 +303,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               ),
                             ],
                           ),
-                        if (_emailController.text.isNotEmpty)
                           pw.SizedBox(height: 5),
+                        ],
+
                         // NumberPhone
-                        if (_phoneNumberController.text.isNotEmpty)
+                        if (_phoneNumberController.text.isNotEmpty) ...[
                           pw.Row(
                             children: [
                               pw.Image(pw.MemoryImage(phoneIcon),
@@ -297,10 +320,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   )),
                             ],
                           ),
-                        if (_phoneNumberController.text.isNotEmpty)
                           pw.SizedBox(height: 5),
+                        ],
+
                         // Address
-                        if (_addressController.text.isNotEmpty)
+                        if (_addressController.text.isNotEmpty) ...[
                           pw.Row(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
@@ -319,12 +343,12 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               ),
                             ],
                           ),
-                        if (_addressController.text.isNotEmpty)
                           pw.SizedBox(height: 5),
+                        ],
 
                         //pw.Divider(thickness: 1, color: PdfColors.white),
 
-                        if (_websiteControllers.isNotEmpty)
+                        if (_websiteControllers.isNotEmpty) ...[
                           ..._websiteControllers.asMap().entries.map((entry) {
                             int index = entry.key;
                             TextEditingController controller = entry.value;
@@ -359,47 +383,114 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               ],
                             );
                           }),
-
-                        if (_websiteControllers.isNotEmpty)
                           pw.SizedBox(height: 10),
-                        if (_websiteControllers.isNotEmpty ||
-                            _addressController.text.isNotEmpty ||
-                            _phoneNumberController.text.isNotEmpty ||
-                            _emailController.text.isNotEmpty)
                           pw.Divider(thickness: 1, color: PdfColors.white),
+                        ],
+
+                        // Languages
+                        if (languages
+                            .any((l) => l.values.any((v) => v.isNotEmpty))) ...[
+                          pw.Text(
+                            'Languages',
+                            style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.white,
+                            ),
+                          ),
+                          pw.SizedBox(height: 5),
+                          ...languages.map((lang) {
+                            final name = lang['name']?.trim() ?? '';
+                            final level = lang['level']?.trim() ?? '';
+                            if (name.isEmpty && level.isEmpty)
+                              return pw.SizedBox();
+
+                            return pw.Padding(
+                              padding:
+                                  const pw.EdgeInsets.only(left: 10, bottom: 2),
+                              child: pw.Row(
+                                children: [
+                                  pw.Container(
+                                    width: 5,
+                                    height: 5,
+                                    margin: const pw.EdgeInsets.only(top: 4),
+                                    decoration: pw.BoxDecoration(
+                                      color: PdfColors.blueGrey900,
+                                      shape: pw.BoxShape.circle,
+                                    ),
+                                  ),
+                                  pw.SizedBox(width: 5),
+                                  pw.Text(
+                                    level.isNotEmpty ? '$name ($level)' : name,
+                                    style: pw.TextStyle(
+                                        fontSize: 10, color: PdfColors.white),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          pw.SizedBox(height: 10),
+                        ],
 
                         // Skills Summary
-                        if (_skillControllers.isNotEmpty)
-                          pw.Text('Skills',
-                              style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold,
-                                  color: PdfColors.white)),
-                        pw.SizedBox(height: 5),
-                        ..._skillControllers.map((controller) {
+                        ..._skillControllers.asMap().entries.map((entry) {
+                          final int categoryIndex = entry.key;
+                          final List<TextEditingController> skills =
+                              entry.value;
+                          final String categoryTitle =
+                              __skillTitles[categoryIndex].text.trim();
+                          final bool allSkillsEmpty = skills.every(
+                              (controller) => controller.text.trim().isEmpty);
+                          final bool isCategoryEmpty =
+                              categoryTitle.isEmpty && allSkillsEmpty;
+
+                          if (isCategoryEmpty) return pw.SizedBox();
+
                           return pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              if (controller.isNotEmpty)
-                                pw.Row(
-                                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                                  children: [
-                                    pw.Container(
-                                      width: 5,
-                                      height: 5,
-                                      decoration: pw.BoxDecoration(
-                                        color: PdfColors.blueGrey900,
-                                        shape: pw.BoxShape.circle,
-                                      ),
-                                    ),
-                                    pw.SizedBox(width: 5),
-                                    pw.Text(controller as String,
-                                        style: pw.TextStyle(
-                                          fontSize: 10,
-                                          color: PdfColors.white,
-                                        )),
-                                  ],
+                              if (categoryTitle.isNotEmpty)
+                                pw.Text(
+                                  categoryTitle,
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: pw.FontWeight.bold,
+                                    color: PdfColors.white,
+                                  ),
                                 ),
-                              pw.SizedBox(height: 2),
+                              if (categoryTitle.isNotEmpty)
+                                pw.SizedBox(height: 5),
+                              ...skills.map((skillController) {
+                                final skillText = skillController.text.trim();
+                                if (skillText.isEmpty) return pw.SizedBox();
+
+                                return pw.Padding(
+                                  padding: const pw.EdgeInsets.only(
+                                      left: 10, bottom: 2),
+                                  child: pw.Row(
+                                    children: [
+                                      pw.Container(
+                                        width: 5,
+                                        height: 5,
+                                        margin:
+                                            const pw.EdgeInsets.only(top: 4),
+                                        decoration: pw.BoxDecoration(
+                                          color: PdfColors.blueGrey900,
+                                          shape: pw.BoxShape.circle,
+                                        ),
+                                      ),
+                                      pw.SizedBox(width: 5),
+                                      pw.Text(
+                                        skillText,
+                                        style: pw.TextStyle(
+                                            fontSize: 10,
+                                            color: PdfColors.white),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                              pw.SizedBox(height: 10),
                             ],
                           );
                         }),
@@ -446,52 +537,68 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               (controller) => controller.text.isNotEmpty) ||
                           _universityName.any(
                               (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle
-                              .any((controller) => controller.text.isNotEmpty))
+                          _degreeTitle.any(
+                              (controller) => controller.text.isNotEmpty)) ...[
                         pw.Text('Education',
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
-                      pw.SizedBox(height: 5),
-                      ..._educationControllers.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        return pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Row(children: [
-                              pw.Text(
-                                _universityName[index].text.isNotEmpty
-                                    ? '${_universityName[index].text[0].toUpperCase()}${_universityName[index].text.substring(1)}'
-                                    : '',
-                                style: pw.TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: pw.FontWeight.bold,
-                                    font: EBGaramondBoldFont),
-                              ),
-                              pw.SizedBox(width: 5),
-                              pw.Text(
-                                _startEducation[index].text.isNotEmpty
-                                    ? '${_startEducation[index].text} - ${_endEducation[index].text}'
-                                    : _endEducation[index].text,
-                                style: pw.TextStyle(
-                                    fontSize: 8, color: PdfColors.grey),
-                              ),
-                            ]),
-                            /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),*/
-                            /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),*/
-                            if (_degreeTitle[index].text.isNotEmpty)
-                              pw.Text(_degreeTitle[index].text,
+                        pw.SizedBox(height: 5),
+                        ..._educationControllers.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          return pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Row(children: [
+                                if (_startEducation[index]
+                                        .text
+                                        .trim()
+                                        .isNotEmpty ||
+                                    _endEducation[index].text.trim().isNotEmpty)
+                                  pw.Text(
+                                    _startEducation[index]
+                                                .text
+                                                .trim()
+                                                .isNotEmpty &&
+                                            _endEducation[index]
+                                                .text
+                                                .trim()
+                                                .isNotEmpty
+                                        ? '${_startEducation[index].text.trim()} - ${_endEducation[index].text.trim()}'
+                                        : _startEducation[index]
+                                                .text
+                                                .trim()
+                                                .isNotEmpty
+                                            ? _startEducation[index].text.trim()
+                                            : _endEducation[index].text.trim(),
+                                    style: pw.TextStyle(
+                                        fontSize: 8, color: PdfColors.grey),
+                                  ),
+                                pw.SizedBox(width: 5),
+                                pw.Text(
+                                  _startEducation[index].text.isNotEmpty
+                                      ? '${_startEducation[index].text} - ${_endEducation[index].text}'
+                                      : _endEducation[index].text,
                                   style: pw.TextStyle(
-                                      fontSize: 13,
-                                      color: PdfColors.grey900,
-                                      font: EBGaramondFont)),
-                            pw.SizedBox(height: 10),
-                          ],
-                        );
-                      }),
+                                      fontSize: 8, color: PdfColors.grey),
+                                ),
+                              ]),
+                              /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),*/
+                              /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
+                            pw.SizedBox(height: 5),*/
+                              if (_degreeTitle[index].text.isNotEmpty)
+                                pw.Text(_degreeTitle[index].text,
+                                    style: pw.TextStyle(
+                                        fontSize: 13,
+                                        color: PdfColors.grey900,
+                                        font: EBGaramondFont)),
+                              pw.SizedBox(height: 10),
+                            ],
+                          );
+                        }),
+                      ],
 
                       if (_educationControllers.any(
                               (controller) => controller.text.isNotEmpty) ||
@@ -516,46 +623,125 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               (controller) => controller.text.isNotEmpty) ||
                           _enddatejob.any(
                               (controller) => controller.text.isNotEmpty) ||
-                          _detailjob
-                              .any((controller) => controller.text.isNotEmpty))
+                          _detailjob.any(
+                              (controller) => controller.text.isNotEmpty)) ...[
                         pw.Text('Work Experience',
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
-                      pw.SizedBox(height: 5),
-                      ..._ExperienceControllers.asMap().entries.map((entry) {
-                        int index = entry.key;
-                        return pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Row(children: [
-                              pw.Text(_companyName[index].text,
+                        pw.SizedBox(height: 5),
+                        ..._ExperienceControllers.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          final safeIndex =
+                              index < _companyName.length ? index : 0;
+                          return pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Row(children: [
+                                pw.Text(_companyName[safeIndex].text,
+                                    style: pw.TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: pw.FontWeight.bold,
+                                        font: EBGaramondBoldFont)),
+                                pw.SizedBox(width: 5),
+                                pw.Text(
+                                  '${_startdatejob[safeIndex].text} - ${_enddatejob[safeIndex].text.isEmpty ? 'PRESENT' : _enddatejob[safeIndex].text}',
                                   style: pw.TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: pw.FontWeight.bold,
-                                      font: EBGaramondBoldFont)),
+                                      fontSize: 8, color: PdfColors.grey),
+                                ),
+                              ]),
+                              pw.Text(_jobTitle[safeIndex].text,
+                                  style: pw.TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: pw.FontWeight.normal,
+                                      color: PdfColors.grey900,
+                                      font: EBGaramondFont)),
                               pw.SizedBox(width: 5),
-                              pw.Text(
-                                '${_startdatejob[index].text} - ${_enddatejob[index].text.isEmpty ? 'PRESENT' : _enddatejob[index].text}',
-                                style: pw.TextStyle(
-                                    fontSize: 8, color: PdfColors.grey),
-                              ),
-                            ]),
-                            pw.Text(_jobTitle[index].text,
-                                style: pw.TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: pw.FontWeight.normal,
-                                    color: PdfColors.grey900,
-                                    font: EBGaramondFont)),
-                            pw.SizedBox(width: 5),
-                            pw.Text(_detailjob[index].text,
-                                style: pw.TextStyle(
-                                    fontSize: 10, color: PdfColors.grey800)),
-                            pw.SizedBox(height: 10),
-                          ],
-                        );
-                      }),
+                              pw.Text(_detailjob[safeIndex].text,
+                                  style: pw.TextStyle(
+                                      fontSize: 10, color: PdfColors.grey800)),
+                              pw.SizedBox(height: 10),
+                            ],
+                          );
+                        }),
+                        pw.Divider(thickness: 1, color: PdfColors.grey),
+                      ],
+
+                      //Project
+                      if (projects
+                          .any((p) => p.values.any((v) => v.isNotEmpty))) ...[
+                        pw.Text('Projects',
+                            style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.blue)),
+                        pw.SizedBox(height: 5),
+                        ...projects.map((project) {
+                          return pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              if (project['title']!.isNotEmpty)
+                                pw.Text(project['title']!,
+                                    style: pw.TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: pw.FontWeight.bold,
+                                        font: EBGaramondBoldFont)),
+                              if (project['tech']!.isNotEmpty)
+                                pw.Text('Tech: ${project['tech']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
+                              if (project['description']!.isNotEmpty)
+                                pw.Text(project['description']!,
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
+                              if (project['link']!.isNotEmpty)
+                                pw.Text('Link: ${project['link']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10, color: PdfColors.blue)),
+                              pw.SizedBox(height: 10),
+                            ],
+                          );
+                        }),
+                        pw.Divider(thickness: 1, color: PdfColors.grey),
+                      ],
+                      // Certifications
+                      if (certifications
+                          .any((c) => c.values.any((v) => v.isNotEmpty))) ...[
+                        pw.Text('Certifications',
+                            style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.blue)),
+                        pw.SizedBox(height: 5),
+                        ...certifications.map((cert) {
+                          return pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              if (cert['title']!.isNotEmpty)
+                                pw.Text(cert['title']!,
+                                    style: pw.TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: pw.FontWeight.bold,
+                                        font: EBGaramondBoldFont)),
+                              if (cert['issuer']!.isNotEmpty)
+                                pw.Text('Issued by: ${cert['issuer']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
+                              if (cert['date']!.isNotEmpty)
+                                pw.Text('Date: ${cert['date']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
+                              pw.SizedBox(height: 10),
+                            ],
+                          );
+                        }),
+                        pw.Divider(thickness: 1, color: PdfColors.grey),
+                      ]
                     ],
                   ),
                 ),
@@ -588,13 +774,24 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   }
 
   Future<void> _sharePdf() async {
-    _isButton2Highlighted = true;
-    final pdfFile = await _generatePdf();
-    await Share.shareXFiles([XFile(pdfFile.path)],
-        text: 'Check out my resume!');
     setState(() {
-      _isButton2Highlighted = false;
+      _isButton2Highlighted = true;
     });
+
+    try {
+      final pdfFile = await _generatePdf();
+      await Share.shareXFiles([XFile(pdfFile.path)],
+          text: 'Check out my resume!');
+    } catch (e) {
+      print('Error sharing PDF: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to generate or share PDF')),
+      );
+    } finally {
+      setState(() {
+        _isButton2Highlighted = false;
+      });
+    }
   }
 
   void _addWebsiteField() {
@@ -619,18 +816,22 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     }
   }
 
-  void _addSkillField() {
+  void _addSkillCategoryWithItem() {
     setState(() {
       __skillTitles.add(TextEditingController());
-      _skillControllers.add([]);
+      _skillControllers.add([TextEditingController()]);
+      _selectedSkillCategories.add(null);
+      _isCustomCategory.add(false);
     });
   }
 
-  void _removeSkillField(int index) {
+  void _removeSkillCategoryWithItems(int index) {
     setState(() {
       if (index >= 0 && index < __skillTitles.length) {
         __skillTitles.removeAt(index);
         _skillControllers.removeAt(index);
+        _selectedSkillCategories.removeAt(index);
+        _isCustomCategory.removeAt(index);
       }
     });
   }
@@ -650,6 +851,31 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
         _skillControllers[categoryIndex].removeAt(itemIndex);
       }
     });
+  }
+
+  void _addLanguageField() {
+    setState(() {
+      _languageNameControllers.add(TextEditingController());
+      _languageLevelControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeLanguageField(int index) {
+    setState(() {
+      _languageNameControllers.removeAt(index);
+      _languageLevelControllers.removeAt(index);
+    });
+  }
+
+  List<Map<String, String>> getLanguages() {
+    final List<Map<String, String>> languages = [];
+    for (int i = 0; i < _languageNameControllers.length; i++) {
+      languages.add({
+        'name': _languageNameControllers[i].text.trim(),
+        'level': _languageLevelControllers[i].text.trim(),
+      });
+    }
+    return languages;
   }
 
   void _addExperienceField() {
@@ -739,6 +965,65 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
       
     }
   }*/
+
+  void _addProjectField() {
+    setState(() {
+      _projectTitleControllers.add(TextEditingController());
+      _projectDescriptionControllers.add(TextEditingController());
+      _projectLinkControllers.add(TextEditingController());
+      _projectTechControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeProjectField(int index) {
+    setState(() {
+      _projectTitleControllers.removeAt(index);
+      _projectDescriptionControllers.removeAt(index);
+      _projectLinkControllers.removeAt(index);
+      _projectTechControllers.removeAt(index);
+    });
+  }
+
+  void _addCertificationField() {
+    setState(() {
+      _certificationTitleControllers.add(TextEditingController());
+      _certificationIssuerControllers.add(TextEditingController());
+      _certificationDateControllers.add(TextEditingController());
+    });
+  }
+
+  void _removeCertificationField(int index) {
+    setState(() {
+      _certificationTitleControllers.removeAt(index);
+      _certificationIssuerControllers.removeAt(index);
+      _certificationDateControllers.removeAt(index);
+    });
+  }
+
+  List<Map<String, String>> getProjects() {
+    final List<Map<String, String>> projects = [];
+    for (int i = 0; i < _projectTitleControllers.length; i++) {
+      projects.add({
+        'title': _projectTitleControllers[i].text.trim(),
+        'description': _projectDescriptionControllers[i].text.trim(),
+        'link': _projectLinkControllers[i].text.trim(),
+        'tech': _projectTechControllers[i].text.trim(),
+      });
+    }
+    return projects;
+  }
+
+  List<Map<String, String>> getCertifications() {
+    final List<Map<String, String>> certifications = [];
+    for (int i = 0; i < _certificationTitleControllers.length; i++) {
+      certifications.add({
+        'title': _certificationTitleControllers[i].text.trim(),
+        'issuer': _certificationIssuerControllers[i].text.trim(),
+        'date': _certificationDateControllers[i].text.trim(),
+      });
+    }
+    return certifications;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -913,21 +1198,19 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   );
                 }),
                 //------------------------------------------------------Website------------------------------------------------------//
-                //--------------------------- Skill Section ---------------------------//
+                //---------------------------------------------- Skill Section ------------------------------------------------------//
                 Row(
                   children: [
                     const Text('Skill Categories: '),
                     IconButton(
                       icon: const Icon(Icons.add_circle),
-                      onPressed: _addSkillField,
+                      onPressed: _addSkillCategoryWithItem,
                     ),
                   ],
                 ),
                 ...__skillTitles.asMap().entries.map((entry) {
-                  int catIndex = entry.key;
-                  TextEditingController titleController = entry.value;
-                  List<TextEditingController> skillsInCategory =
-                      _skillControllers[catIndex];
+                  int index = entry.key;
+                  TextEditingController customTitleController = entry.value;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -935,49 +1218,77 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       Row(
                         children: [
                           Expanded(
-                            child: TextField(
-                              controller: titleController,
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedSkillCategories[index],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedSkillCategories[index] = value;
+                                  _isCustomCategory[index] = value == 'Custom';
+                                  if (value != 'Custom') {
+                                    customTitleController.text = value!;
+                                  } else {
+                                    customTitleController.clear();
+                                  }
+                                });
+                              },
+                              items: _skillCategoryOptions.map((category) {
+                                return DropdownMenuItem<String>(
+                                  value: category,
+                                  child: Text(category),
+                                );
+                              }).toList(),
                               decoration: const InputDecoration(
-                                labelText: 'Skill Category Title',
-                                icon: Icon(Icons.title),
-                                labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                                labelText: 'Skill Category',
+                                icon: Icon(Icons.category),
                               ),
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeSkillField(catIndex),
+                            icon: const Icon(Icons.add_circle_outline),
+                            onPressed: () => _addSkillItem(index),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.add_circle_outline),
-                            onPressed: () => _addSkillItem(catIndex),
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () =>
+                                _removeSkillCategoryWithItems(index),
                           ),
                         ],
                       ),
+                      if (_isCustomCategory[index]) ...[
+                        const SizedBox(height: 5),
+                        TextField(
+                          controller: customTitleController,
+                          decoration: const InputDecoration(
+                            labelText: 'Custom Category Name',
+                            icon: Icon(Icons.edit),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 5),
-                      ...skillsInCategory.asMap().entries.map((skillEntry) {
+                      ..._skillControllers[index]
+                          .asMap()
+                          .entries
+                          .map((skillEntry) {
                         int skillIndex = skillEntry.key;
                         TextEditingController skillController =
                             skillEntry.value;
 
                         return Row(
                           children: [
-                            const SizedBox(width: 32), // for indentation
+                            const SizedBox(width: 32),
                             Expanded(
                               child: TextField(
                                 controller: skillController,
                                 decoration: const InputDecoration(
                                   labelText: 'Skill',
                                   icon: Icon(Icons.check),
-                                  labelStyle:
-                                      TextStyle(color: Color(0xFF6200EE)),
                                 ),
                               ),
                             ),
                             IconButton(
                               icon: const Icon(Icons.remove_circle_outline),
                               onPressed: () =>
-                                  _removeSkillItem(catIndex, skillIndex),
+                                  _removeSkillItem(index, skillIndex),
                             ),
                           ],
                         );
@@ -986,7 +1297,67 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                     ],
                   );
                 }),
-                //--------------------------- Skill Section ---------------------------//
+                //---------------------------------------------- Skill Section ------------------------------------------------------//
+                //----------------------------------------------------Languages------------------------------------------------------//
+                Row(
+                  children: [
+                    const Text('Languages: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addLanguageField,
+                    ),
+                  ],
+                ),
+                ..._languageNameControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  TextEditingController nameController =
+                      _languageNameControllers[index];
+                  TextEditingController levelController =
+                      _languageLevelControllers[index];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Language ${index + 1}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever_outlined,
+                                color: Colors.red),
+                            onPressed: () => _removeLanguageField(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Language Name',
+                          icon: Icon(Icons.language),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: levelController,
+                        decoration: const InputDecoration(
+                          labelText: 'Proficiency Level',
+                          icon: Icon(Icons.bar_chart),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Divider(thickness: 1),
+                    ],
+                  );
+                }),
+                //-------------------------------------------------------Languages------------------------------------------------------//
 
                 //------------------------------------------------------Experience------------------------------------------------------//
                 Row(
@@ -1263,6 +1634,145 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                   );
                 }),
                 //------------------------------------------------------Education------------------------------------------------------//
+                //------------------------------------------------------Projects------------------------------------------------------//
+                Row(
+                  children: [
+                    const Text('Projects: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addProjectField, // ต้องสร้าง
+                    ),
+                  ],
+                ),
+                ..._projectTitleControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Project ${index + 1}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever_outlined,
+                                color: Colors.red),
+                            onPressed: () =>
+                                _removeProjectField(index), // ต้องสร้าง
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _projectTitleControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Project Title',
+                          icon: Icon(Icons.title),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _projectDescriptionControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          icon: Icon(Icons.description),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _projectLinkControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Link',
+                          icon: Icon(Icons.link),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _projectTechControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Technologies',
+                          icon: Icon(Icons.code),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Divider(thickness: 1),
+                    ],
+                  );
+                }),
+                //------------------------------------------------------Projects------------------------------------------------------//
+                //-------------------------------------------------Certifications-----------------------------------------------------//
+                Row(
+                  children: [
+                    const Text('Certifications: '),
+                    IconButton(
+                      icon: const Icon(Icons.add_circle),
+                      onPressed: _addCertificationField, // ต้องสร้าง
+                    ),
+                  ],
+                ),
+                ..._certificationTitleControllers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Certification ${index + 1}',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.delete_forever_outlined,
+                                color: Colors.red),
+                            onPressed: () =>
+                                _removeCertificationField(index), // ต้องสร้าง
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _certificationTitleControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                          icon: Icon(Icons.card_membership),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _certificationIssuerControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Issuer',
+                          icon: Icon(Icons.business),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        controller: _certificationDateControllers[index],
+                        decoration: const InputDecoration(
+                          labelText: 'Date',
+                          icon: Icon(Icons.calendar_today),
+                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Divider(thickness: 1),
+                    ],
+                  );
+                }),
+                //-------------------------------------------------Certifications-----------------------------------------------------//
                 const SizedBox(height: 30),
                 //------------------------------------------------------button------------------------------------------------------//
                 Row(
