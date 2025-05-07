@@ -1527,108 +1527,227 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ),
                       ),
                     ),
-
                     //------------------------------------------------------Website------------------------------------------------------//
+                    const SizedBox(height: 10),
                     //---------------------------------------------- Skill Section ------------------------------------------------------//
-                    Row(
-                      children: [
-                        const Text('Skill Categories: '),
-                        IconButton(
-                          icon: const Icon(Icons.add_circle),
-                          onPressed: _addSkillCategoryWithItem,
-                        ),
-                      ],
-                    ),
-                    ...__skillTitles.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      TextEditingController customTitleController = entry.value;
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.05),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  value: _selectedSkillCategories[index],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedSkillCategories[index] = value;
-                                      _isCustomCategory[index] =
-                                          value == 'Custom';
-                                      if (value != 'Custom') {
-                                        customTitleController.text = value!;
-                                      } else {
-                                        customTitleController.clear();
-                                      }
-                                    });
-                                  },
-                                  items: _skillCategoryOptions.map((category) {
-                                    return DropdownMenuItem<String>(
-                                      value: category,
-                                      child: Text(category),
-                                    );
-                                  }).toList(),
-                                  decoration: const InputDecoration(
-                                    labelText: 'Skill Category',
-                                    icon: Icon(Icons.category),
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child:
+                                        Icon(Icons.build, color: Colors.white),
                                   ),
-                                ),
+                                  const Text(
+                                    'Skills:',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  const Spacer(),
+                                  IconButton(
+                                    icon: const Icon(Icons.add_circle,
+                                        color: Colors.white),
+                                    onPressed: _addSkillCategoryWithItem,
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.add_circle_outline),
-                                onPressed: () => _addSkillItem(index),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.remove_circle),
-                                onPressed: () =>
-                                    _removeSkillCategoryWithItems(index),
-                              ),
+                              ...__skillTitles.asMap().entries.map((entry) {
+                                int index = entry.key;
+                                TextEditingController customTitleController =
+                                    entry.value;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.category,
+                                              color: Colors.white),
+                                        ),
+                                        Expanded(
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                              canvasColor:
+                                                  Colors.white.withOpacity(0.2),
+                                            ),
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: DropdownButtonFormField<
+                                                  String>(
+                                                value: _selectedSkillCategories[
+                                                    index],
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                dropdownColor: Colors.white
+                                                    .withOpacity(0.2),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _selectedSkillCategories[
+                                                        index] = value;
+                                                    _isCustomCategory[index] =
+                                                        value == 'Custom';
+                                                    if (value != 'Custom') {
+                                                      customTitleController
+                                                          .text = value!;
+                                                    } else {
+                                                      customTitleController
+                                                          .clear();
+                                                    }
+                                                  });
+                                                },
+                                                items: _skillCategoryOptions
+                                                    .map((item) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style: const TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.white
+                                                      .withOpacity(0.1),
+                                                  hintText: 'Skill Category',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.white54),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    borderSide: BorderSide.none,
+                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 10),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(
+                                              Icons.add_circle_outline,
+                                              color: Colors.white),
+                                          onPressed: () => _addSkillItem(index),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeSkillCategoryWithItems(
+                                                  index),
+                                        ),
+                                      ],
+                                    ),
+                                    if (_isCustomCategory[index]) ...[
+                                      const SizedBox(height: 5),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: TextField(
+                                          controller: customTitleController,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor:
+                                                Colors.white.withOpacity(0.1),
+                                            hintText: 'Custom Category Name',
+                                            hintStyle: const TextStyle(
+                                                color: Colors.white54),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 10),
+                                            prefixIcon: const Icon(Icons.edit,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 5),
+                                    ..._skillControllers[index]
+                                        .asMap()
+                                        .entries
+                                        .map((skillEntry) {
+                                      int skillIndex = skillEntry.key;
+                                      TextEditingController skillController =
+                                          skillEntry.value;
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: TextField(
+                                                controller: skillController,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Skill',
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.white54),
+                                                  border: InputBorder.none,
+                                                ),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                  Icons.remove_circle_outline,
+                                                  color: Colors.white),
+                                              onPressed: () => _removeSkillItem(
+                                                  index, skillIndex),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                    const SizedBox(height: 20),
+                                  ],
+                                );
+                              }),
                             ],
                           ),
-                          if (_isCustomCategory[index]) ...[
-                            const SizedBox(height: 5),
-                            TextField(
-                              controller: customTitleController,
-                              decoration: const InputDecoration(
-                                labelText: 'Custom Category Name',
-                                icon: Icon(Icons.edit),
-                              ),
-                            ),
-                          ],
-                          const SizedBox(height: 5),
-                          ..._skillControllers[index]
-                              .asMap()
-                              .entries
-                              .map((skillEntry) {
-                            int skillIndex = skillEntry.key;
-                            TextEditingController skillController =
-                                skillEntry.value;
-
-                            return Row(
-                              children: [
-                                const SizedBox(width: 32),
-                                Expanded(
-                                  child: TextField(
-                                    controller: skillController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Skill',
-                                      icon: Icon(Icons.check),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  onPressed: () =>
-                                      _removeSkillItem(index, skillIndex),
-                                ),
-                              ],
-                            );
-                          }),
-                          const SizedBox(height: 20),
-                        ],
-                      );
-                    }),
+                        ),
+                      ),
+                    ),
                     //---------------------------------------------- Skill Section ------------------------------------------------------//
                     //----------------------------------------------------Languages------------------------------------------------------//
                     Row(
