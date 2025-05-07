@@ -1027,849 +1027,900 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Flutter Resume')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : null,
-                    child: _profileImage == null
-                        ? const Icon(Icons.add_a_photo, size: 50)
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _FirstnameController,
-                        decoration: const InputDecoration(
-                          labelText: 'FirstName',
-                          icon: Icon(Icons.person_outlined),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        controller: _LastnameController,
-                        decoration: const InputDecoration(
-                          labelText: 'LastName',
-                          icon: Icon(Icons.person_add_alt_1_outlined),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    icon: Icon(Icons.attach_email_outlined),
-                    labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    labelText: 'Address',
-                    icon: const Icon(Icons.home_outlined),
-                    labelStyle: const TextStyle(color: Color(0xFF6200EE)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _phoneNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    icon: Icon(Icons.phone_outlined),
-                    labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _aboutMeController,
-                  decoration: InputDecoration(
-                    labelText: 'About Me',
-                    icon: const Icon(Icons.info_outline),
-                    labelStyle: const TextStyle(color: Color(0xFF6200EE)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF6200EE), width: 2),
-                    ),
-                  ),
-                  maxLines: 5,
-                ),
-                //------------------------------------------------------Website------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Website: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addWebsiteField,
-                    ),
-                  ],
-                ),
-                ..._websiteControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController controller = entry.value;
-                  TextEditingController titleController = _websiteTitles[index];
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                        controller: titleController,
-                        decoration: const InputDecoration(
-                          labelText: 'Website Title',
-                          icon: Icon(Icons.title),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: controller,
-                              decoration: const InputDecoration(
-                                labelText: 'Website URL',
-                                icon: Icon(Icons.link),
-                                labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeWebsiteField(index),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  );
-                }),
-                //------------------------------------------------------Website------------------------------------------------------//
-                //---------------------------------------------- Skill Section ------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Skill Categories: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addSkillCategoryWithItem,
-                    ),
-                  ],
-                ),
-                ...__skillTitles.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController customTitleController = entry.value;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              value: _selectedSkillCategories[index],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedSkillCategories[index] = value;
-                                  _isCustomCategory[index] = value == 'Custom';
-                                  if (value != 'Custom') {
-                                    customTitleController.text = value!;
-                                  } else {
-                                    customTitleController.clear();
-                                  }
-                                });
-                              },
-                              items: _skillCategoryOptions.map((category) {
-                                return DropdownMenuItem<String>(
-                                  value: category,
-                                  child: Text(category),
-                                );
-                              }).toList(),
-                              decoration: const InputDecoration(
-                                labelText: 'Skill Category',
-                                icon: Icon(Icons.category),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add_circle_outline),
-                            onPressed: () => _addSkillItem(index),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () =>
-                                _removeSkillCategoryWithItems(index),
-                          ),
-                        ],
-                      ),
-                      if (_isCustomCategory[index]) ...[
-                        const SizedBox(height: 5),
-                        TextField(
-                          controller: customTitleController,
-                          decoration: const InputDecoration(
-                            labelText: 'Custom Category Name',
-                            icon: Icon(Icons.edit),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 5),
-                      ..._skillControllers[index]
-                          .asMap()
-                          .entries
-                          .map((skillEntry) {
-                        int skillIndex = skillEntry.key;
-                        TextEditingController skillController =
-                            skillEntry.value;
-
-                        return Row(
-                          children: [
-                            const SizedBox(width: 32),
-                            Expanded(
-                              child: TextField(
-                                controller: skillController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Skill',
-                                  icon: Icon(Icons.check),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.remove_circle_outline),
-                              onPressed: () =>
-                                  _removeSkillItem(index, skillIndex),
-                            ),
-                          ],
-                        );
-                      }),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                }),
-                //---------------------------------------------- Skill Section ------------------------------------------------------//
-                //----------------------------------------------------Languages------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Languages: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addLanguageField,
-                    ),
-                  ],
-                ),
-                ..._languageNameControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController nameController =
-                      _languageNameControllers[index];
-                  TextEditingController levelController =
-                      _languageLevelControllers[index];
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Language ${index + 1}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            onPressed: () => _removeLanguageField(index),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Language Name',
-                          icon: Icon(Icons.language),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: levelController,
-                        decoration: const InputDecoration(
-                          labelText: 'Proficiency Level',
-                          icon: Icon(Icons.bar_chart),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(thickness: 1),
-                    ],
-                  );
-                }),
-                //-------------------------------------------------------Languages------------------------------------------------------//
-
-                //------------------------------------------------------Experience------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Experience: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addExperienceField,
-                    ),
-                  ],
-                ),
-                ..._ExperienceControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController companyNameController =
-                      _companyName[index];
-                  TextEditingController jobTitleController = _jobTitle[index];
-                  TextEditingController startDateController =
-                      _startdatejob[index];
-                  TextEditingController endDateController = _enddatejob[index];
-                  TextEditingController detailController = _detailjob[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Experience ${index + 1}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            onPressed: () => _removeExperienceField(index),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: companyNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Company Name',
-                          icon: Icon(Icons.apartment_outlined),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: jobTitleController,
-                        decoration: const InputDecoration(
-                          labelText: 'Job Title',
-                          icon: Icon(Icons.badge_outlined),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: startDateController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: "Start Date",
-                                suffixIcon: const Icon(Icons.calendar_today),
-                                border: OutlineInputBorder(),
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFF6200EE)),
-                              ),
-                              onTap: () {
-                                _selectDate(context, true, index);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              controller: endDateController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: "End Date",
-                                suffixIcon: const Icon(Icons.calendar_today),
-                                border: OutlineInputBorder(),
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFF6200EE)),
-                              ),
-                              onTap: () {
-                                _selectDate(context, false, index);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        height: 180,
-                        child: TextField(
-                          controller: detailController,
-                          decoration: InputDecoration(
-                            labelText: 'Job Description',
-                            icon: const Icon(Icons.description_outlined),
-                            labelStyle:
-                                const TextStyle(color: Color(0xFF6200EE)),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          maxLines: null,
-                          expands: true,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(thickness: 1),
-                    ],
-                  );
-                }),
-                //------------------------------------------------------Experience------------------------------------------------------//
-                //------------------------------------------------------Education------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Education: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addEducationField,
-                    ),
-                  ],
-                ),
-                ..._educationControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  TextEditingController startDateEducationController =
-                      _startEducation[index];
-                  TextEditingController endDateEducationController =
-                      _endEducation[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Education ${index + 1}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            onPressed: () => _removeEducationField(index),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _degreeTitle[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Degree Title',
-                          icon: Icon(Icons.school),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _universityName[index],
-                        decoration: const InputDecoration(
-                          labelText: 'University Name',
-                          icon: Icon(Icons.account_balance),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: startDateEducationController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: "Start Year",
-                                suffixIcon: const Icon(Icons.calendar_today),
-                                border: OutlineInputBorder(),
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFF6200EE)),
-                              ),
-                              onTap: () async {
-                                int selectedYear = DateTime.now().year;
-                                await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Select Year'),
-                                      content: SizedBox(
-                                        width: 300,
-                                        height: 300,
-                                        child: YearPicker(
-                                          firstDate: DateTime(1950),
-                                          lastDate:
-                                              DateTime(DateTime.now().year),
-                                          initialDate: DateTime(selectedYear),
-                                          selectedDate: DateTime(selectedYear),
-                                          onChanged: (DateTime dateTime) {
-                                            Navigator.pop(context);
-                                            setState(() {
-                                              startDateEducationController
-                                                      .text =
-                                                  dateTime.year.toString();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              controller: endDateEducationController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: "End Year",
-                                suffixIcon: const Icon(Icons.calendar_today),
-                                border: OutlineInputBorder(),
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFF6200EE)),
-                              ),
-                              onTap: () async {
-                                int selectedYear = DateTime.now().year;
-
-                                await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Select Year'),
-                                      content: SizedBox(
-                                        width: 300,
-                                        height: 300,
-                                        child: YearPicker(
-                                          firstDate: DateTime(1950),
-                                          lastDate:
-                                              DateTime(DateTime.now().year),
-                                          initialDate: DateTime(selectedYear),
-                                          selectedDate: DateTime(selectedYear),
-                                          onChanged: (DateTime dateTime) {
-                                            Navigator.pop(context);
-                                            setState(() {
-                                              endDateEducationController.text =
-                                                  dateTime.year.toString();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(thickness: 1),
-                    ],
-                  );
-                }),
-                //------------------------------------------------------Education------------------------------------------------------//
-                //------------------------------------------------------Projects------------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Projects: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addProjectField, // ต้องสร้าง
-                    ),
-                  ],
-                ),
-                ..._projectTitleControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Project ${index + 1}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            onPressed: () =>
-                                _removeProjectField(index), // ต้องสร้าง
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _projectTitleControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Project Title',
-                          icon: Icon(Icons.title),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _projectDescriptionControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                          icon: Icon(Icons.description),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _projectLinkControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Link',
-                          icon: Icon(Icons.link),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _projectTechControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Technologies',
-                          icon: Icon(Icons.code),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(thickness: 1),
-                    ],
-                  );
-                }),
-                //------------------------------------------------------Projects------------------------------------------------------//
-                //-------------------------------------------------Certifications-----------------------------------------------------//
-                Row(
-                  children: [
-                    const Text('Certifications: '),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle),
-                      onPressed: _addCertificationField, // ต้องสร้าง
-                    ),
-                  ],
-                ),
-                ..._certificationTitleControllers.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Certification ${index + 1}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            onPressed: () =>
-                                _removeCertificationField(index), // ต้องสร้าง
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _certificationTitleControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Title',
-                          icon: Icon(Icons.card_membership),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _certificationIssuerControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Issuer',
-                          icon: Icon(Icons.business),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: _certificationDateControllers[index],
-                        decoration: const InputDecoration(
-                          labelText: 'Date',
-                          icon: Icon(Icons.calendar_today),
-                          labelStyle: TextStyle(color: Color(0xFF6200EE)),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Divider(thickness: 1),
-                    ],
-                  );
-                }),
-                //-------------------------------------------------Certifications-----------------------------------------------------//
-                const SizedBox(height: 30),
-                //------------------------------------------------------button------------------------------------------------------//
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: InkWell(
-                          onTap: _saveData,
-                          onHighlightChanged: (isHighlighted) {
-                            setState(() {
-                              _isButton1Highlighted = isHighlighted;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: _isButton1Highlighted
-                                  ? Colors.blue[900]
-                                  : Colors.blue,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.save,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                                const Text(
-                                  'Save Data',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: InkWell(
-                          onTap: _sharePdf,
-                          onHighlightChanged: (isHighlighted) {
-                            setState(() {
-                              _isButton2Highlighted = isHighlighted;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: _isButton2Highlighted
-                                  ? Colors.green[900]
-                                  : Colors.green,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.picture_as_pdf,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                                const Text(
-                                  'Generate & Share PDF',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                //------------------------------------------------------button------------------------------------------------------//
-                const SizedBox(height: 10),
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xff183058),
+                Color(0xff1E3C72),
+                Color(0xff2A5298),
               ],
             ),
           ),
-        ),
-      ),
-    );
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            //appBar: AppBar(title: const Text('Flutter')),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20), // เว้นขอบบน
+                        child: Text(
+                          'Pikpak',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                            wordSpacing: 4,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _profileImage != null
+                            ? FileImage(_profileImage!)
+                            : null,
+                        child: _profileImage == null
+                            ? const Icon(Icons.add_a_photo, size: 50)
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _FirstnameController,
+                            decoration: const InputDecoration(
+                              labelText: 'FirstName',
+                              icon: Icon(Icons.person_outlined),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _LastnameController,
+                            decoration: const InputDecoration(
+                              labelText: 'LastName',
+                              icon: Icon(Icons.person_add_alt_1_outlined),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        icon: Icon(Icons.attach_email_outlined),
+                        labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _addressController,
+                      decoration: InputDecoration(
+                        labelText: 'Address',
+                        icon: const Icon(Icons.home_outlined),
+                        labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _phoneNumberController,
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                        icon: Icon(Icons.phone_outlined),
+                        labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _aboutMeController,
+                      decoration: InputDecoration(
+                        labelText: 'About Me',
+                        icon: const Icon(Icons.info_outline),
+                        labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6200EE), width: 2),
+                        ),
+                      ),
+                      maxLines: 5,
+                    ),
+                    //------------------------------------------------------Website------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Website: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addWebsiteField,
+                        ),
+                      ],
+                    ),
+                    ..._websiteControllers.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      TextEditingController controller = entry.value;
+                      TextEditingController titleController =
+                          _websiteTitles[index];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: titleController,
+                            decoration: const InputDecoration(
+                              labelText: 'Website Title',
+                              icon: Icon(Icons.title),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: controller,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Website URL',
+                                    icon: Icon(Icons.link),
+                                    labelStyle:
+                                        TextStyle(color: Color(0xFF6200EE)),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle),
+                                onPressed: () => _removeWebsiteField(index),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    }),
+                    //------------------------------------------------------Website------------------------------------------------------//
+                    //---------------------------------------------- Skill Section ------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Skill Categories: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addSkillCategoryWithItem,
+                        ),
+                      ],
+                    ),
+                    ...__skillTitles.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      TextEditingController customTitleController = entry.value;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  value: _selectedSkillCategories[index],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedSkillCategories[index] = value;
+                                      _isCustomCategory[index] =
+                                          value == 'Custom';
+                                      if (value != 'Custom') {
+                                        customTitleController.text = value!;
+                                      } else {
+                                        customTitleController.clear();
+                                      }
+                                    });
+                                  },
+                                  items: _skillCategoryOptions.map((category) {
+                                    return DropdownMenuItem<String>(
+                                      value: category,
+                                      child: Text(category),
+                                    );
+                                  }).toList(),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Skill Category',
+                                    icon: Icon(Icons.category),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add_circle_outline),
+                                onPressed: () => _addSkillItem(index),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.remove_circle),
+                                onPressed: () =>
+                                    _removeSkillCategoryWithItems(index),
+                              ),
+                            ],
+                          ),
+                          if (_isCustomCategory[index]) ...[
+                            const SizedBox(height: 5),
+                            TextField(
+                              controller: customTitleController,
+                              decoration: const InputDecoration(
+                                labelText: 'Custom Category Name',
+                                icon: Icon(Icons.edit),
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 5),
+                          ..._skillControllers[index]
+                              .asMap()
+                              .entries
+                              .map((skillEntry) {
+                            int skillIndex = skillEntry.key;
+                            TextEditingController skillController =
+                                skillEntry.value;
+
+                            return Row(
+                              children: [
+                                const SizedBox(width: 32),
+                                Expanded(
+                                  child: TextField(
+                                    controller: skillController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Skill',
+                                      icon: Icon(Icons.check),
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                  onPressed: () =>
+                                      _removeSkillItem(index, skillIndex),
+                                ),
+                              ],
+                            );
+                          }),
+                          const SizedBox(height: 20),
+                        ],
+                      );
+                    }),
+                    //---------------------------------------------- Skill Section ------------------------------------------------------//
+                    //----------------------------------------------------Languages------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Languages: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addLanguageField,
+                        ),
+                      ],
+                    ),
+                    ..._languageNameControllers.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      TextEditingController nameController =
+                          _languageNameControllers[index];
+                      TextEditingController levelController =
+                          _languageLevelControllers[index];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Language ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(Icons.delete_forever_outlined,
+                                    color: Colors.red),
+                                onPressed: () => _removeLanguageField(index),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Language Name',
+                              icon: Icon(Icons.language),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: levelController,
+                            decoration: const InputDecoration(
+                              labelText: 'Proficiency Level',
+                              icon: Icon(Icons.bar_chart),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Divider(thickness: 1),
+                        ],
+                      );
+                    }),
+                    //-------------------------------------------------------Languages------------------------------------------------------//
+
+                    //------------------------------------------------------Experience------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Experience: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addExperienceField,
+                        ),
+                      ],
+                    ),
+                    ..._ExperienceControllers.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      TextEditingController companyNameController =
+                          _companyName[index];
+                      TextEditingController jobTitleController =
+                          _jobTitle[index];
+                      TextEditingController startDateController =
+                          _startdatejob[index];
+                      TextEditingController endDateController =
+                          _enddatejob[index];
+                      TextEditingController detailController =
+                          _detailjob[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Experience ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(Icons.delete_forever_outlined,
+                                    color: Colors.red),
+                                onPressed: () => _removeExperienceField(index),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: companyNameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Company Name',
+                              icon: Icon(Icons.apartment_outlined),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: jobTitleController,
+                            decoration: const InputDecoration(
+                              labelText: 'Job Title',
+                              icon: Icon(Icons.badge_outlined),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: startDateController,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: "Start Date",
+                                    suffixIcon:
+                                        const Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xFF6200EE)),
+                                  ),
+                                  onTap: () {
+                                    _selectDate(context, true, index);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: TextField(
+                                  controller: endDateController,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: "End Date",
+                                    suffixIcon:
+                                        const Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xFF6200EE)),
+                                  ),
+                                  onTap: () {
+                                    _selectDate(context, false, index);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          SizedBox(
+                            height: 180,
+                            child: TextField(
+                              controller: detailController,
+                              decoration: InputDecoration(
+                                labelText: 'Job Description',
+                                icon: const Icon(Icons.description_outlined),
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF6200EE)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              maxLines: null,
+                              expands: true,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Divider(thickness: 1),
+                        ],
+                      );
+                    }),
+                    //------------------------------------------------------Experience------------------------------------------------------//
+                    //------------------------------------------------------Education------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Education: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addEducationField,
+                        ),
+                      ],
+                    ),
+                    ..._educationControllers.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      TextEditingController startDateEducationController =
+                          _startEducation[index];
+                      TextEditingController endDateEducationController =
+                          _endEducation[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Education ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(Icons.delete_forever_outlined,
+                                    color: Colors.red),
+                                onPressed: () => _removeEducationField(index),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _degreeTitle[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Degree Title',
+                              icon: Icon(Icons.school),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _universityName[index],
+                            decoration: const InputDecoration(
+                              labelText: 'University Name',
+                              icon: Icon(Icons.account_balance),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: startDateEducationController,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: "Start Year",
+                                    suffixIcon:
+                                        const Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xFF6200EE)),
+                                  ),
+                                  onTap: () async {
+                                    int selectedYear = DateTime.now().year;
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Select Year'),
+                                          content: SizedBox(
+                                            width: 300,
+                                            height: 300,
+                                            child: YearPicker(
+                                              firstDate: DateTime(1950),
+                                              lastDate:
+                                                  DateTime(DateTime.now().year),
+                                              initialDate:
+                                                  DateTime(selectedYear),
+                                              selectedDate:
+                                                  DateTime(selectedYear),
+                                              onChanged: (DateTime dateTime) {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  startDateEducationController
+                                                          .text =
+                                                      dateTime.year.toString();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: TextField(
+                                  controller: endDateEducationController,
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: "End Year",
+                                    suffixIcon:
+                                        const Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xFF6200EE)),
+                                  ),
+                                  onTap: () async {
+                                    int selectedYear = DateTime.now().year;
+
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Select Year'),
+                                          content: SizedBox(
+                                            width: 300,
+                                            height: 300,
+                                            child: YearPicker(
+                                              firstDate: DateTime(1950),
+                                              lastDate:
+                                                  DateTime(DateTime.now().year),
+                                              initialDate:
+                                                  DateTime(selectedYear),
+                                              selectedDate:
+                                                  DateTime(selectedYear),
+                                              onChanged: (DateTime dateTime) {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  endDateEducationController
+                                                          .text =
+                                                      dateTime.year.toString();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Divider(thickness: 1),
+                        ],
+                      );
+                    }),
+                    //------------------------------------------------------Education------------------------------------------------------//
+                    //------------------------------------------------------Projects------------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Projects: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addProjectField, // ต้องสร้าง
+                        ),
+                      ],
+                    ),
+                    ..._projectTitleControllers.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Project ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(Icons.delete_forever_outlined,
+                                    color: Colors.red),
+                                onPressed: () =>
+                                    _removeProjectField(index), // ต้องสร้าง
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _projectTitleControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Project Title',
+                              icon: Icon(Icons.title),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _projectDescriptionControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Description',
+                              icon: Icon(Icons.description),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _projectLinkControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Link',
+                              icon: Icon(Icons.link),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _projectTechControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Technologies',
+                              icon: Icon(Icons.code),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Divider(thickness: 1),
+                        ],
+                      );
+                    }),
+                    //------------------------------------------------------Projects------------------------------------------------------//
+                    //-------------------------------------------------Certifications-----------------------------------------------------//
+                    Row(
+                      children: [
+                        const Text('Certifications: '),
+                        IconButton(
+                          icon: const Icon(Icons.add_circle),
+                          onPressed: _addCertificationField, // ต้องสร้าง
+                        ),
+                      ],
+                    ),
+                    ..._certificationTitleControllers
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      int index = entry.key;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Certification ${index + 1}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
+                              IconButton(
+                                icon: const Icon(Icons.delete_forever_outlined,
+                                    color: Colors.red),
+                                onPressed: () => _removeCertificationField(
+                                    index), // ต้องสร้าง
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _certificationTitleControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Title',
+                              icon: Icon(Icons.card_membership),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _certificationIssuerControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Issuer',
+                              icon: Icon(Icons.business),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          TextField(
+                            controller: _certificationDateControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Date',
+                              icon: Icon(Icons.calendar_today),
+                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Divider(thickness: 1),
+                        ],
+                      );
+                    }),
+                    //-------------------------------------------------Certifications-----------------------------------------------------//
+                    const SizedBox(height: 30),
+                    //------------------------------------------------------button------------------------------------------------------//
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: InkWell(
+                              onTap: _saveData,
+                              onHighlightChanged: (isHighlighted) {
+                                setState(() {
+                                  _isButton1Highlighted = isHighlighted;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: _isButton1Highlighted
+                                      ? Colors.blue[900]
+                                      : Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.save,
+                                      size: 40,
+                                      color: Colors.white,
+                                    ),
+                                    const Text(
+                                      'Save Data',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: InkWell(
+                              onTap: _sharePdf,
+                              onHighlightChanged: (isHighlighted) {
+                                setState(() {
+                                  _isButton2Highlighted = isHighlighted;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: _isButton2Highlighted
+                                      ? Colors.green[900]
+                                      : Colors.green,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.picture_as_pdf,
+                                      size: 40,
+                                      color: Colors.white,
+                                    ),
+                                    const Text(
+                                      'Generate & Share PDF',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    //------------------------------------------------------button------------------------------------------------------//
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 }
