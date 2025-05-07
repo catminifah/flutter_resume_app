@@ -10,8 +10,18 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ),
+  );
   runApp(const ResumeApp());
 }
 
@@ -47,8 +57,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
   // Personal Websites
   final List<TextEditingController> _websiteControllers = [];
-  List<TextEditingController> _websiteTitles = [];
-
   // Skills
   final List<String> _skillCategoryOptions = [
     'Programming',
@@ -106,6 +114,12 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
     _loadSavedData();
   }
 
@@ -387,8 +401,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           ..._websiteControllers.asMap().entries.map((entry) {
                             int index = entry.key;
                             TextEditingController controller = entry.value;
-                            TextEditingController titleController =
-                                _websiteTitles[index];
 
                             return pw.Column(
                               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -831,13 +843,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
 
   void _addWebsiteField() {
     if (_websiteControllers.length < 3) {
-      if (_websiteControllers.length != _websiteTitles.length) {
-        _websiteTitles = List.generate(
-            _websiteControllers.length, (index) => TextEditingController());
-      }
       setState(() {
         _websiteControllers.add(TextEditingController());
-        _websiteTitles.add(TextEditingController());
       });
     }
   }
@@ -846,7 +853,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     if (_websiteControllers.isNotEmpty) {
       setState(() {
         _websiteControllers.removeAt(index);
-        _websiteTitles.removeAt(index);
       });
     }
   }
@@ -1098,6 +1104,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 25,
+                            fontFamily: 'SweetLollipop',
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
                             wordSpacing: 4,
@@ -1116,14 +1123,14 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
                               child: Container(
-                                width: 100,
-                                height: 100,
+                                width: 120,
+                                height: 120,
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.05),
                                   shape: BoxShape.circle,
-                                  border: Border.all(
+                                  /*border: Border.all(
                                       color: Colors.white.withOpacity(0.2),
-                                      width: 1),
+                                      width: 1),*/
                                 ),
                                 child: _profileImage != null
                                     ? CircleAvatar(
@@ -1156,25 +1163,19 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               child: Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  color: Colors.white
-                                      .withOpacity(0.5),
+                                  color: Colors.white.withOpacity(0.15),
                                   shape: BoxShape.circle,
-                                  /*border: Border.all(
-                                      color: Colors.grey.shade300,
-                                      width: 1),*/
                                 ),
                                 child: const Icon(
-                                  Icons.close,
-                                  size: 13,
-                                  color: Colors.black54,
+                                  Icons.remove,
+                                  size: 15,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                           ),
-
                       ],
                     ),
-
                     const SizedBox(height: 20),
                     Row(
                       children: [
@@ -1268,127 +1269,265 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    TextField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        icon: Icon(Icons.attach_email_outlined),
-                        labelStyle: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                        labelText: 'Address',
-                        icon: const Icon(Icons.home_outlined),
-                        labelStyle: const TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 2),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _phoneNumberController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                        icon: Icon(Icons.phone_outlined),
-                        labelStyle: TextStyle(color: Colors.white),
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _aboutMeController,
-                      decoration: InputDecoration(
-                        labelText: 'About Me',
-                        icon: const Icon(Icons.info_outline),
-                        labelStyle: const TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.white, width: 2),
-                        ),
-                      ),
-                      maxLines: 5,
-                    ),
-                    //------------------------------------------------------Website------------------------------------------------------//
-                    Row(
-                      children: [
-                        const Text('Website: '),
-                        IconButton(
-                          icon: const Icon(Icons.add_circle),
-                          onPressed: _addWebsiteField,
-                        ),
-                      ],
-                    ),
-                    ..._websiteControllers.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      TextEditingController controller = entry.value;
-                      TextEditingController titleController =
-                          _websiteTitles[index];
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextField(
-                            controller: titleController,
-                            decoration: const InputDecoration(
-                              labelText: 'Website Title',
-                              icon: Icon(Icons.title),
-                              labelStyle: TextStyle(color: Colors.white),
-                            ),
+                    SizedBox(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaY: 15,
+                            sigmaX: 15,
                           ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: controller,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Website URL',
-                                    icon: Icon(Icons.link),
-                                    labelStyle: TextStyle(color: Colors.white),
-                                  ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextField(
+                              style:
+                                  TextStyle(color: Colors.white.withOpacity(1)),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintMaxLines: 1,
+                                hintText: 'Email',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.attach_email_outlined,
+                                  color: Colors.white,
+                                ),
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.remove_circle),
-                                onPressed: () => _removeWebsiteField(index),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaY: 15,
+                            sigmaX: 15,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextField(
+                              controller: _addressController,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintMaxLines: 1,
+                                hintText: 'Address',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.home_outlined,
+                                  color: Colors.white,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaY: 15,
+                            sigmaX: 15,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextField(
+                              controller: _phoneNumberController,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(10),
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintMaxLines: 1,
+                                hintText: 'Phone Number',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.phone_outlined,
+                                  color: Colors.white,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaY: 15,
+                          sigmaX: 15,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.05),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextField(
+                            controller: _aboutMeController,
+                            style: TextStyle(color: Colors.white),
+                            cursorColor: Colors.white,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 5,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'About Me',
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.info_outline,
+                                color: Colors.white,
+                              ),
+                              contentPadding: EdgeInsets.all(16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    //------------------------------------------------------Website------------------------------------------------------//
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.05),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: Icon(
+                                      Icons.language,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    'Website: ',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: const Icon(Icons.add_circle,
+                                        color: Colors.white),
+                                    onPressed: _addWebsiteField,
+                                  ),
+                                ],
+                              ),
+                              // การแสดง _websiteControllers
+                              ..._websiteControllers
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                final index = entry.key;
+                                final controller = entry.value;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.link,
+                                              color: Colors.white),
+                                        ),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: controller,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            cursorColor: Colors.white,
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: 'Website URL',
+                                              hintStyle: TextStyle(
+                                                color: Colors.white54,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeWebsiteField(index),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                        ],
-                      );
-                    }),
+                        ),
+                      ),
+                    ),
+
                     //------------------------------------------------------Website------------------------------------------------------//
                     //---------------------------------------------- Skill Section ------------------------------------------------------//
                     Row(
