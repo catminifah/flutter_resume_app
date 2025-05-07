@@ -1566,7 +1566,6 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 int index = entry.key;
                                 TextEditingController customTitleController =
                                     entry.value;
-
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1584,6 +1583,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                             data: Theme.of(context).copyWith(
                                               canvasColor:
                                                   Colors.white.withOpacity(0.2),
+                                              dividerColor: Colors.transparent,
                                             ),
                                             child: Material(
                                               color: Colors.transparent,
@@ -1593,8 +1593,12 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                     index],
                                                 style: const TextStyle(
                                                     color: Colors.white),
-                                                dropdownColor: Colors.white
-                                                    .withOpacity(0.2),
+                                                dropdownColor:
+                                                    const Color.fromARGB(
+                                                            255, 228, 228, 228)
+                                                        .withOpacity(0.8),
+                                                elevation: 0,
+                                                isDense: true,
                                                 onChanged: (value) {
                                                   setState(() {
                                                     _selectedSkillCategories[
@@ -1618,7 +1622,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                     child: Text(
                                                       item,
                                                       style: const TextStyle(
-                                                          color: Colors.white),
+                                                          color:
+                                                              Colors.black54),
                                                     ),
                                                   );
                                                 }).toList(),
@@ -1627,8 +1632,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                   fillColor: Colors.white
                                                       .withOpacity(0.1),
                                                   hintText: 'Skill Category',
-                                                  hintStyle: const TextStyle(
-                                                      color: Colors.white54),
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                   border: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -1705,6 +1713,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                             horizontal: 8),
                                         child: Row(
                                           children: [
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    30, 0, 0, 0)),
                                             Container(
                                               width: 8,
                                               height: 8,
@@ -2103,7 +2114,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         const Text('Projects: '),
                         IconButton(
                           icon: const Icon(Icons.add_circle),
-                          onPressed: _addProjectField, // ต้องสร้าง
+                          onPressed: _addProjectField,
                         ),
                       ],
                     ),
@@ -2124,8 +2135,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               IconButton(
                                 icon: const Icon(Icons.delete_forever_outlined,
                                     color: Colors.red),
-                                onPressed: () =>
-                                    _removeProjectField(index), // ต้องสร้าง
+                                onPressed: () => _removeProjectField(index),
                               ),
                             ],
                           ),
@@ -2177,7 +2187,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         const Text('Certifications: '),
                         IconButton(
                           icon: const Icon(Icons.add_circle),
-                          onPressed: _addCertificationField, // ต้องสร้าง
+                          onPressed: _addCertificationField,
                         ),
                       ],
                     ),
