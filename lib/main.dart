@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/shared_preferences.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -117,12 +119,45 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.deepPurple,
+              toolbarWidgetColor: Colors.white,
+              hideBottomControls: true,
+            ),
+            IOSUiSettings(
+              title: 'Crop Image',
+            ),
+          ],
+        );
+
+        if (croppedFile != null) {
+          setState(() {
+            _profileImage = File(croppedFile.path);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Image cropping failed.')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No image selected.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     }
   }
 
@@ -1038,9 +1073,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xff183058),
-                Color(0xff1E3C72),
-                Color(0xff2A5298),
+                Color(0xFF021526),
+                Color(0xFF03346E),
+                Color(0xFF6EACDA),
+                Color(0xFFE2E2B6),
               ],
             ),
           ),
@@ -1070,39 +1106,162 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       ),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: _profileImage != null
-                            ? FileImage(_profileImage!)
-                            : null,
-                        child: _profileImage == null
-                            ? const Icon(Icons.add_a_photo, size: 50)
-                            : null,
-                      ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Avatar + photo
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: ClipOval(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.05),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Colors.white.withOpacity(0.2),
+                                      width: 1),
+                                ),
+                                child: _profileImage != null
+                                    ? CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage:
+                                            FileImage(_profileImage!),
+                                      )
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.add_a_photo,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // delete photo
+                        if (_profileImage != null)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _profileImage = null;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white
+                                      .withOpacity(0.5),
+                                  shape: BoxShape.circle,
+                                  /*border: Border.all(
+                                      color: Colors.grey.shade300,
+                                      width: 1),*/
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 13,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                      ],
                     ),
+
                     const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: _FirstnameController,
-                            decoration: const InputDecoration(
-                              labelText: 'FirstName',
-                              icon: Icon(Icons.person_outlined),
-                              labelStyle: TextStyle(color: Colors.white,),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaY: 15,
+                                sigmaX: 15,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.05),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: TextField(
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(1)),
+                                  cursorColor: Colors.white,
+                                  keyboardType: TextInputType.text,
+                                  controller: _FirstnameController,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintMaxLines: 1,
+                                    hintText: 'FirstName',
+                                    hintStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                    //labelText: 'FirstName',
+                                    prefixIcon: Icon(
+                                      Icons.account_circle_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 16),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                         SizedBox(width: 8),
                         Expanded(
-                          child: TextField(
-                            controller: _LastnameController,
-                            decoration: const InputDecoration(
-                              labelText: 'LastName',
-                              icon: Icon(Icons.person_add_alt_1_outlined),
-                              labelStyle: TextStyle(color: Colors.white),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaY: 15,
+                                sigmaX: 15,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.05),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: TextField(
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(1)),
+                                  cursorColor: Colors.white,
+                                  keyboardType: TextInputType.text,
+                                  controller: _LastnameController,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintMaxLines: 1,
+                                    hintText: 'LastName',
+                                    hintStyle: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    prefixIcon: Icon(
+                                      Icons.supervisor_account_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 16),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1126,18 +1285,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         labelStyle: const TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 2),
                         ),
                       ),
                     ),
@@ -1164,18 +1323,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         labelStyle: const TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.white, width: 2),
                         ),
                       ),
                       maxLines: 5,
@@ -1216,8 +1375,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   decoration: const InputDecoration(
                                     labelText: 'Website URL',
                                     icon: Icon(Icons.link),
-                                    labelStyle:
-                                        TextStyle(color: Colors.white),
+                                    labelStyle: TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -1465,8 +1623,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     suffixIcon:
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
-                                    labelStyle: const TextStyle(
-                                        color: Colors.white),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white),
                                   ),
                                   onTap: () {
                                     _selectDate(context, true, index);
@@ -1483,8 +1641,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     suffixIcon:
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
-                                    labelStyle: const TextStyle(
-                                        color: Colors.white),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white),
                                   ),
                                   onTap: () {
                                     _selectDate(context, false, index);
@@ -1588,8 +1746,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     suffixIcon:
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
-                                    labelStyle: const TextStyle(
-                                        color: Colors.white),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white),
                                   ),
                                   onTap: () async {
                                     int selectedYear = DateTime.now().year;
@@ -1635,8 +1793,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     suffixIcon:
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
-                                    labelStyle: const TextStyle(
-                                        color: Colors.white),
+                                    labelStyle:
+                                        const TextStyle(color: Colors.white),
                                   ),
                                   onTap: () async {
                                     int selectedYear = DateTime.now().year;

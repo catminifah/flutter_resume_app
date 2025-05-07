@@ -15,4 +15,11 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <!-- Add UCropTheme -->
+    <style name="UCropTheme" parent="Theme.AppCompat.Light">
+        <!-- Disable ActionBar -->
+        <item name="windowActionBar">false</item>
+        <!-- Enable Toolbar -->
+    <item name="windowNoTitle">true</item>
+</style>
 </resources>
