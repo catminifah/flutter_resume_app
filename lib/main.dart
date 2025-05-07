@@ -1052,16 +1052,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                    //Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
                     Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 20), // เว้นขอบบน
                         child: Text(
-                          'Pikpak',
+                          'Flutter Resume',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 30,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
                             wordSpacing: 4,
@@ -1069,6 +1069,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
                     GestureDetector(
                       onTap: _pickImage,
                       child: CircleAvatar(
@@ -1090,7 +1091,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'FirstName',
                               icon: Icon(Icons.person_outlined),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white,),
                             ),
                           ),
                         ),
@@ -1101,7 +1102,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'LastName',
                               icon: Icon(Icons.person_add_alt_1_outlined),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
@@ -1113,7 +1114,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       decoration: const InputDecoration(
                         labelText: 'Email',
                         icon: Icon(Icons.attach_email_outlined),
-                        labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        labelStyle: TextStyle(color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -1122,21 +1123,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       decoration: InputDecoration(
                         labelText: 'Address',
                         icon: const Icon(Icons.home_outlined),
-                        labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                        labelStyle: const TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 1),
+                              color: Colors.white, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 1),
+                              color: Colors.white, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 2),
+                              color: Colors.white, width: 2),
                         ),
                       ),
                     ),
@@ -1146,7 +1147,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       decoration: const InputDecoration(
                         labelText: 'Phone Number',
                         icon: Icon(Icons.phone_outlined),
-                        labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                        labelStyle: TextStyle(color: Colors.white),
                       ),
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -1160,21 +1161,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       decoration: InputDecoration(
                         labelText: 'About Me',
                         icon: const Icon(Icons.info_outline),
-                        labelStyle: const TextStyle(color: Color(0xFF6200EE)),
+                        labelStyle: const TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 1),
+                              color: Colors.white, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 1),
+                              color: Colors.white, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: Color(0xFF6200EE), width: 2),
+                              color: Colors.white, width: 2),
                         ),
                       ),
                       maxLines: 5,
@@ -1203,7 +1204,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Website Title',
                               icon: Icon(Icons.title),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1216,7 +1217,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     labelText: 'Website URL',
                                     icon: Icon(Icons.link),
                                     labelStyle:
-                                        TextStyle(color: Color(0xFF6200EE)),
+                                        TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -1374,7 +1375,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Language Name',
                               icon: Icon(Icons.language),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1383,7 +1384,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Proficiency Level',
                               icon: Icon(Icons.bar_chart),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -1440,7 +1441,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Company Name',
                               icon: Icon(Icons.apartment_outlined),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1449,7 +1450,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Job Title',
                               icon: Icon(Icons.badge_outlined),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1465,7 +1466,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
                                     labelStyle: const TextStyle(
-                                        color: Color(0xFF6200EE)),
+                                        color: Colors.white),
                                   ),
                                   onTap: () {
                                     _selectDate(context, true, index);
@@ -1483,7 +1484,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
                                     labelStyle: const TextStyle(
-                                        color: Color(0xFF6200EE)),
+                                        color: Colors.white),
                                   ),
                                   onTap: () {
                                     _selectDate(context, false, index);
@@ -1501,7 +1502,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                 labelText: 'Job Description',
                                 icon: const Icon(Icons.description_outlined),
                                 labelStyle:
-                                    const TextStyle(color: Color(0xFF6200EE)),
+                                    const TextStyle(color: Colors.white),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -1563,7 +1564,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Degree Title',
                               icon: Icon(Icons.school),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1572,7 +1573,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'University Name',
                               icon: Icon(Icons.account_balance),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1588,7 +1589,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
                                     labelStyle: const TextStyle(
-                                        color: Color(0xFF6200EE)),
+                                        color: Colors.white),
                                   ),
                                   onTap: () async {
                                     int selectedYear = DateTime.now().year;
@@ -1635,7 +1636,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                         const Icon(Icons.calendar_today),
                                     border: OutlineInputBorder(),
                                     labelStyle: const TextStyle(
-                                        color: Color(0xFF6200EE)),
+                                        color: Colors.white),
                                   ),
                                   onTap: () async {
                                     int selectedYear = DateTime.now().year;
@@ -1718,7 +1719,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Project Title',
                               icon: Icon(Icons.title),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1727,7 +1728,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Description',
                               icon: Icon(Icons.description),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1736,7 +1737,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Link',
                               icon: Icon(Icons.link),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1745,7 +1746,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Technologies',
                               icon: Icon(Icons.code),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -1795,7 +1796,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Title',
                               icon: Icon(Icons.card_membership),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1804,7 +1805,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Issuer',
                               icon: Icon(Icons.business),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -1813,7 +1814,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             decoration: const InputDecoration(
                               labelText: 'Date',
                               icon: Icon(Icons.calendar_today),
-                              labelStyle: TextStyle(color: Color(0xFF6200EE)),
+                              labelStyle: TextStyle(color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 10),
