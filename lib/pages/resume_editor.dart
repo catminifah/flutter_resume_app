@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/pages/splash_screen.dart';
 import 'package:flutter_resume_app/shared_preferences.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,42 +13,15 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'pages/onboarding_screen.dart';
-
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
-    ),
-  );
-  runApp(const ResumeApp());
-}
-
-class ResumeApp extends StatelessWidget {
-  const ResumeApp({super.key});
+class ResumeEditor extends StatefulWidget {
+  const ResumeEditor({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Resume',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashScreen(),
-    );
-  }
+  State<ResumeEditor> createState() => _ResumeEditorState();
 }
 
-class ResumeHomePage extends StatefulWidget {
-  const ResumeHomePage({super.key});
+class _ResumeEditorState extends State<ResumeEditor> {
 
-  @override
-  State<ResumeHomePage> createState() => _ResumeHomePageState();
-}
-
-class _ResumeHomePageState extends State<ResumeHomePage> {
   // Personal Information
   final TextEditingController _FirstnameController = TextEditingController();
   final TextEditingController _LastnameController = TextEditingController();
@@ -197,12 +169,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
-    final ARIBLKFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
 
     final languages = List.generate(
       _languageNameControllers.length,
@@ -1135,18 +1104,19 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       color: Colors.white.withOpacity(0.2),
                                       width: 1),*/
                                 ),
-                                child: _profileImage != null ? 
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: FileImage(_profileImage!),
-                                  ) : 
-                                const Center(
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.white,
-                                    size: 32,
-                                  ),
-                                ),
+                                child: _profileImage != null
+                                    ? CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage:
+                                            FileImage(_profileImage!),
+                                      )
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.add_a_photo,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
@@ -1185,14 +1155,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaY: 15,sigmaX: 15,),
+                              filter: ImageFilter.blur(
+                                sigmaY: 15,
+                                sigmaX: 15,
+                              ),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(.05),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: TextField(
-                                  style: TextStyle(color: Colors.white.withOpacity(1)),
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(1)),
                                   cursorColor: Colors.white,
                                   keyboardType: TextInputType.text,
                                   controller: _FirstnameController,
@@ -1209,8 +1183,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       Icons.account_circle_outlined,
                                       color: Colors.white,
                                     ),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 16),
-                                    labelStyle: TextStyle(color: Colors.white,),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 16),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1232,7 +1209,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: TextField(
-                                  style: TextStyle(color: Colors.white.withOpacity(1)),
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(1)),
                                   cursorColor: Colors.white,
                                   keyboardType: TextInputType.text,
                                   controller: _LastnameController,
@@ -1249,7 +1227,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       Icons.supervisor_account_outlined,
                                       color: Colors.white,
                                     ),
-                                    contentPadding:EdgeInsets.symmetric(vertical: 16),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 16),
                                     labelStyle: TextStyle(
                                       color: Colors.white,
                                     ),
@@ -1266,14 +1245,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaY: 15,sigmaX: 15,),
+                          filter: ImageFilter.blur(
+                            sigmaY: 15,
+                            sigmaX: 15,
+                          ),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(.05),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: TextField(
-                              style: TextStyle(color: Colors.white.withOpacity(1)),
+                              style:
+                                  TextStyle(color: Colors.white.withOpacity(1)),
                               cursorColor: Colors.white,
                               keyboardType: TextInputType.emailAddress,
                               controller: _emailController,
@@ -1290,8 +1273,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   Icons.attach_email_outlined,
                                   color: Colors.white,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 16),
-                                labelStyle: TextStyle(color: Colors.white,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -1304,7 +1289,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaY: 15,sigmaX: 15,),
+                          filter: ImageFilter.blur(
+                            sigmaY: 15,
+                            sigmaX: 15,
+                          ),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(.05),
@@ -1328,8 +1316,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   Icons.home_outlined,
                                   color: Colors.white,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                                labelStyle: TextStyle(color: Colors.white,),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -1372,8 +1363,11 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   Icons.phone_outlined,
                                   color: Colors.white,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                                labelStyle: TextStyle(color: Colors.white,),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 16),
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -1398,7 +1392,7 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                             style: TextStyle(color: Colors.white),
                             cursorColor: Colors.white,
                             keyboardType: TextInputType.multiline,
-                            textAlignVertical:TextAlignVertical.center,
+                            textAlignVertical: TextAlignVertical.center,
                             maxLines: 5,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -1435,7 +1429,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
                                     child: Icon(
                                       Icons.language,
                                       color: Colors.white,
@@ -1453,7 +1448,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   ),
                                 ],
                               ),
-                              ..._websiteControllers.asMap().entries.map((entry) {
+                              ..._websiteControllers
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 final index = entry.key;
                                 final controller = entry.value;
 
@@ -1464,15 +1462,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.link,
-                                            color: Colors.white),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.link,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
                                             controller: controller,
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1485,10 +1484,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white),
-                                          onPressed: () => _removeWebsiteField(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeWebsiteField(index),
                                         ),
                                       ],
                                     ),
@@ -1518,8 +1517,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.build, color: Colors.white),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child:
+                                        Icon(Icons.build, color: Colors.white),
                                   ),
                                   const Text(
                                     'Skills:',
@@ -1527,16 +1528,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   ),
                                   const Spacer(),
                                   IconButton(
-                                    icon: const Icon(
-                                      Icons.add_circle,
-                                      color: Colors.white),
+                                    icon: const Icon(Icons.add_circle,
+                                        color: Colors.white),
                                     onPressed: _addSkillCategoryWithItem,
                                   ),
                                 ],
                               ),
                               ...__skillTitles.asMap().entries.map((entry) {
                                 int index = entry.key;
-                                TextEditingController customTitleController = entry.value;
+                                TextEditingController customTitleController =
+                                    entry.value;
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1544,47 +1545,64 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
                                           child: Icon(Icons.category,
                                               color: Colors.white),
                                         ),
                                         Expanded(
                                           child: Theme(
                                             data: Theme.of(context).copyWith(
-                                              canvasColor: Colors.white.withOpacity(0.2),
+                                              canvasColor:
+                                                  Colors.white.withOpacity(0.2),
                                               dividerColor: Colors.transparent,
                                             ),
                                             child: Material(
                                               color: Colors.transparent,
-                                              child: DropdownButtonFormField<String>(
-                                                value: _selectedSkillCategories[index],
-                                                style: const TextStyle(color: Colors.white),
-                                                dropdownColor:const Color.fromARGB(255, 228, 228, 228).withOpacity(0.8),
+                                              child: DropdownButtonFormField<
+                                                  String>(
+                                                value: _selectedSkillCategories[
+                                                    index],
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                dropdownColor:
+                                                    const Color.fromARGB(
+                                                            255, 228, 228, 228)
+                                                        .withOpacity(0.8),
                                                 elevation: 0,
                                                 isDense: true,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    _selectedSkillCategories[index] = value;
-                                                    _isCustomCategory[index] = value == 'Custom';
+                                                    _selectedSkillCategories[
+                                                        index] = value;
+                                                    _isCustomCategory[index] =
+                                                        value == 'Custom';
                                                     if (value != 'Custom') {
-                                                      customTitleController.text = value!;
+                                                      customTitleController
+                                                          .text = value!;
                                                     } else {
-                                                      customTitleController.clear();
+                                                      customTitleController
+                                                          .clear();
                                                     }
                                                   });
                                                 },
-                                                items: _skillCategoryOptions.map((item) {
-                                                  return DropdownMenuItem<String>(
+                                                items: _skillCategoryOptions
+                                                    .map((item) {
+                                                  return DropdownMenuItem<
+                                                      String>(
                                                     value: item,
                                                     child: Text(
                                                       item,
-                                                      style: const TextStyle(color: Colors.black54),
+                                                      style: const TextStyle(
+                                                          color:
+                                                              Colors.black54),
                                                     ),
                                                   );
                                                 }).toList(),
                                                 decoration: InputDecoration(
                                                   filled: true,
-                                                  fillColor: Colors.white.withOpacity(0.1),
+                                                  fillColor: Colors.white
+                                                      .withOpacity(0.1),
                                                   hintText: 'Skill Category',
                                                   hintStyle: TextStyle(
                                                     fontSize: 14,
@@ -1592,13 +1610,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
                                                     borderSide: BorderSide.none,
                                                   ),
-                                                  contentPadding: const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 10
-                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 10),
                                                 ),
                                               ),
                                             ),
@@ -1611,34 +1632,39 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           onPressed: () => _addSkillItem(index),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white),
-                                          onPressed: () => _removeSkillCategoryWithItems(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeSkillCategoryWithItems(
+                                                  index),
                                         ),
                                       ],
                                     ),
                                     if (_isCustomCategory[index]) ...[
                                       const SizedBox(height: 5),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
                                         child: TextField(
                                           controller: customTitleController,
-                                          style: const TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.white.withOpacity(0.1),
+                                            fillColor:
+                                                Colors.white.withOpacity(0.1),
                                             hintText: 'Custom Category Name',
-                                            hintStyle: const TextStyle(color: Colors.white54),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.white54),
                                             border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               borderSide: BorderSide.none,
                                             ),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
-                                                  horizontal: 12,
-                                                  vertical: 10
-                                                ),
+                                                    horizontal: 12,
+                                                    vertical: 10),
                                             prefixIcon: const Icon(Icons.edit,
                                                 color: Colors.white),
                                           ),
@@ -1646,15 +1672,22 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                       ),
                                     ],
                                     const SizedBox(height: 5),
-                                    ..._skillControllers[index].asMap().entries.map((skillEntry) {
+                                    ..._skillControllers[index]
+                                        .asMap()
+                                        .entries
+                                        .map((skillEntry) {
                                       int skillIndex = skillEntry.key;
-                                      TextEditingController skillController = skillEntry.value;
+                                      TextEditingController skillController =
+                                          skillEntry.value;
 
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
                                         child: Row(
                                           children: [
-                                            Padding(padding: EdgeInsets.fromLTRB(30, 0, 0, 0)),
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    30, 0, 0, 0)),
                                             Container(
                                               width: 8,
                                               height: 8,
@@ -1667,19 +1700,23 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                             Expanded(
                                               child: TextField(
                                                 controller: skillController,
-                                                style: const TextStyle(color: Colors.white),
-                                                decoration: const InputDecoration(
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
                                                   hintText: 'Skill',
-                                                  hintStyle: TextStyle(color: Colors.white54),
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.white54),
                                                   border: InputBorder.none,
                                                 ),
                                               ),
                                             ),
                                             IconButton(
                                               icon: const Icon(
-                                                Icons.remove_circle_outline,
-                                                color: Colors.white),
-                                              onPressed: () => _removeSkillItem(index, skillIndex),
+                                                  Icons.remove_circle_outline,
+                                                  color: Colors.white),
+                                              onPressed: () => _removeSkillItem(
+                                                  index, skillIndex),
                                             ),
                                           ],
                                         ),
@@ -1712,10 +1749,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(
-                                      Icons.translate,
-                                      color: Colors.white),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: Icon(Icons.translate,
+                                        color: Colors.white),
                                   ),
                                   const Text(
                                     'Languages: ',
@@ -1723,18 +1760,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   ),
                                   const Spacer(),
                                   IconButton(
-                                    icon: const Icon(
-                                      Icons.add_circle,
-                                      color: Colors.white),
+                                    icon: const Icon(Icons.add_circle,
+                                        color: Colors.white),
                                     onPressed: _addLanguageField,
                                   ),
                                 ],
                               ),
-
-                              ..._languageNameControllers.asMap().entries.map((entry) {
+                              ..._languageNameControllers
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 int index = entry.key;
-                                TextEditingController nameController = _languageNameControllers[index];
-                                TextEditingController levelController = _languageLevelControllers[index];
+                                TextEditingController nameController =
+                                    _languageNameControllers[index];
+                                TextEditingController levelController =
+                                    _languageLevelControllers[index];
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1742,16 +1782,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.language,
-                                            color: Colors.white
-                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.language,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
                                             controller: nameController,
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1769,16 +1809,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.bar_chart,
-                                            color: Colors.white
-                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.bar_chart,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
                                             controller: levelController,
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1791,11 +1831,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white
-                                          ),
-                                          onPressed: () => _removeLanguageField(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeLanguageField(index),
                                         ),
                                       ],
                                     ),
@@ -1843,16 +1882,21 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   ),
                                 ],
                               ),
-
                               const SizedBox(height: 8),
-
-                              ..._ExperienceControllers.asMap().entries.map((entry) {
+                              ..._ExperienceControllers.asMap()
+                                  .entries
+                                  .map((entry) {
                                 int index = entry.key;
-                                TextEditingController companyNameController = _companyName[index];
-                                TextEditingController jobTitleController = _jobTitle[index];
-                                TextEditingController startDateController = _startdatejob[index];
-                                TextEditingController endDateController = _enddatejob[index];
-                                TextEditingController detailController = _detailjob[index];
+                                TextEditingController companyNameController =
+                                    _companyName[index];
+                                TextEditingController jobTitleController =
+                                    _jobTitle[index];
+                                TextEditingController startDateController =
+                                    _startdatejob[index];
+                                TextEditingController endDateController =
+                                    _enddatejob[index];
+                                TextEditingController detailController =
+                                    _detailjob[index];
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1861,16 +1905,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.apartment_outlined,
-                                            color: Colors.white
-                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.apartment_outlined,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
                                             controller: companyNameController,
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -1883,10 +1927,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white),
-                                          onPressed: () =>_removeExperienceField(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeExperienceField(index),
                                         ),
                                       ],
                                     ),
@@ -1921,11 +1965,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.calendar_today,
-                                            color: Colors.white
-                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.calendar_today,
+                                              color: Colors.white),
                                         ),
 
                                         // Start Date Stack
@@ -1935,8 +1978,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                               TextField(
                                                 controller: startDateController,
                                                 readOnly: true,
-                                                style: const TextStyle(color: Colors.white),
-                                                decoration: const InputDecoration(
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText: 'Start Date',
                                                   hintStyle: TextStyle(
@@ -1947,21 +1992,28 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                 onTap: () => _selectDate(
                                                     context, true, index),
                                               ),
-                                              if (startDateController.text.isNotEmpty)
+                                              if (startDateController
+                                                  .text.isNotEmpty)
                                                 Positioned(
                                                   top: 0,
                                                   right: 40,
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        startDateController.clear();
+                                                        startDateController
+                                                            .clear();
                                                       });
                                                     },
                                                     child: Container(
-                                                      margin:const EdgeInsets.all(4),
-                                                      padding:const EdgeInsets.all(4),
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withOpacity(0.2),
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: const Icon(
@@ -1983,8 +2035,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                               TextField(
                                                 controller: endDateController,
                                                 readOnly: true,
-                                                style: const TextStyle(color: Colors.white),
-                                                decoration:const InputDecoration(
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText: 'End Date',
                                                   hintStyle: TextStyle(
@@ -1995,21 +2049,28 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                 onTap: () => _selectDate(
                                                     context, false, index),
                                               ),
-                                              if (endDateController.text.isNotEmpty)
+                                              if (endDateController
+                                                  .text.isNotEmpty)
                                                 Positioned(
                                                   top: 0,
                                                   right: 40,
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        endDateController.clear();
+                                                        endDateController
+                                                            .clear();
                                                       });
                                                     },
                                                     child: Container(
-                                                      margin:const EdgeInsets.all(4),
-                                                      padding:const EdgeInsets.all(4),
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withOpacity(0.2),
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: const Icon(
@@ -2025,10 +2086,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                         ),
                                       ],
                                     ),
-
                                     const SizedBox(height: 5),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
                                       child: Container(
                                         height: 150,
                                         decoration: BoxDecoration(
@@ -2045,7 +2106,8 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ],*/
                                         ),
                                         child: Row(
-                                          crossAxisAlignment:CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             const SizedBox(width: 8),
                                             Expanded(
@@ -2105,8 +2167,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.school, color: Colors.white),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child:
+                                        Icon(Icons.school, color: Colors.white),
                                   ),
                                   const Text(
                                     'Education:',
@@ -2120,10 +2184,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   ),
                                 ],
                               ),
-                              ..._educationControllers.asMap().entries.map((entry) {
+                              ..._educationControllers
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 int index = entry.key;
-                                TextEditingController startDateEducationController = _startEducation[index];
-                                TextEditingController endDateEducationController = _endEducation[index];
+                                TextEditingController
+                                    startDateEducationController =
+                                    _startEducation[index];
+                                TextEditingController
+                                    endDateEducationController =
+                                    _endEducation[index];
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -2153,10 +2224,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white),
-                                          onPressed: () => _removeEducationField(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeEducationField(index),
                                         ),
                                       ],
                                     ),
@@ -2164,15 +2235,16 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.school,
-                                            color: Colors.white),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.school,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
                                             controller: _degreeTitle[index],
-                                            style: const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -2199,10 +2271,13 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           child: Stack(
                                             children: [
                                               TextField(
-                                                controller: startDateEducationController,
+                                                controller:
+                                                    startDateEducationController,
                                                 readOnly: true,
-                                                style: const TextStyle(color: Colors.white),
-                                                decoration: const InputDecoration(
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration:
+                                                    const InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText: 'Start Year',
                                                   hintStyle: TextStyle(
@@ -2211,25 +2286,39 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                   ),
                                                 ),
                                                 onTap: () async {
-                                                  int selectedYear = DateTime.now().year;
+                                                  int selectedYear =
+                                                      DateTime.now().year;
                                                   await showDialog(
                                                     context: context,
                                                     builder:
                                                         (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text('Select Year'),
+                                                        title: const Text(
+                                                            'Select Year'),
                                                         content: SizedBox(
                                                           width: 300,
                                                           height: 300,
                                                           child: YearPicker(
-                                                            firstDate: DateTime(1950),
-                                                            lastDate: DateTime(DateTime.now().year),
-                                                            initialDate: DateTime(selectedYear),
-                                                            selectedDate: DateTime(selectedYear),
-                                                            onChanged: (DateTime dateTime) {
-                                                              Navigator.pop(context);
+                                                            firstDate:
+                                                                DateTime(1950),
+                                                            lastDate: DateTime(
+                                                                DateTime.now()
+                                                                    .year),
+                                                            initialDate: DateTime(
+                                                                selectedYear),
+                                                            selectedDate:
+                                                                DateTime(
+                                                                    selectedYear),
+                                                            onChanged: (DateTime
+                                                                dateTime) {
+                                                              Navigator.pop(
+                                                                  context);
                                                               setState(() {
-                                                                startDateEducationController.text = dateTime.year.toString();
+                                                                startDateEducationController
+                                                                        .text =
+                                                                    dateTime
+                                                                        .year
+                                                                        .toString();
                                                               });
                                                             },
                                                           ),
@@ -2239,21 +2328,28 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                   );
                                                 },
                                               ),
-                                              if (startDateEducationController.text.isNotEmpty)
+                                              if (startDateEducationController
+                                                  .text.isNotEmpty)
                                                 Positioned(
                                                   top: 0,
                                                   right: 90,
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        startDateEducationController.clear();
+                                                        startDateEducationController
+                                                            .clear();
                                                       });
                                                     },
                                                     child: Container(
-                                                      margin: const EdgeInsets.all(4),
-                                                      padding: const EdgeInsets.all(4),
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withOpacity(0.2),
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: const Icon(
@@ -2272,11 +2368,13 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           child: Stack(
                                             children: [
                                               TextField(
-                                                controller: endDateEducationController,
+                                                controller:
+                                                    endDateEducationController,
                                                 readOnly: true,
                                                 style: const TextStyle(
                                                     color: Colors.white),
-                                                decoration: const InputDecoration(
+                                                decoration:
+                                                    const InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText: 'End Year',
                                                   hintStyle: TextStyle(
@@ -2285,24 +2383,39 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                   ),
                                                 ),
                                                 onTap: () async {
-                                                  int selectedYear = DateTime.now().year;
+                                                  int selectedYear =
+                                                      DateTime.now().year;
                                                   await showDialog(
                                                     context: context,
-                                                    builder: (BuildContext context) {
+                                                    builder:
+                                                        (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text('Select Year'),
+                                                        title: const Text(
+                                                            'Select Year'),
                                                         content: SizedBox(
                                                           width: 300,
                                                           height: 300,
                                                           child: YearPicker(
-                                                            firstDate: DateTime(1950),
-                                                            lastDate: DateTime(DateTime.now().year),
-                                                            initialDate: DateTime(selectedYear),
-                                                            selectedDate:DateTime(selectedYear),
-                                                            onChanged: (DateTime dateTime) {
-                                                              Navigator.pop(context);
+                                                            firstDate:
+                                                                DateTime(1950),
+                                                            lastDate: DateTime(
+                                                                DateTime.now()
+                                                                    .year),
+                                                            initialDate: DateTime(
+                                                                selectedYear),
+                                                            selectedDate:
+                                                                DateTime(
+                                                                    selectedYear),
+                                                            onChanged: (DateTime
+                                                                dateTime) {
+                                                              Navigator.pop(
+                                                                  context);
                                                               setState(() {
-                                                                endDateEducationController.text = dateTime.year.toString();
+                                                                endDateEducationController
+                                                                        .text =
+                                                                    dateTime
+                                                                        .year
+                                                                        .toString();
                                                               });
                                                             },
                                                           ),
@@ -2312,21 +2425,28 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                                   );
                                                 },
                                               ),
-                                              if (endDateEducationController.text.isNotEmpty)
+                                              if (endDateEducationController
+                                                  .text.isNotEmpty)
                                                 Positioned(
                                                   top: 0,
                                                   right: 90,
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        endDateEducationController.clear();
+                                                        endDateEducationController
+                                                            .clear();
                                                       });
                                                     },
                                                     child: Container(
-                                                      margin: const EdgeInsets.all(4),
-                                                      padding: const EdgeInsets.all(4),
+                                                      margin:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withOpacity(0.2),
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: const Icon(
@@ -2370,9 +2490,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                               Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
                                     child: Icon(Icons.work_outline,
-                                      color: Colors.white),
+                                        color: Colors.white),
                                   ),
                                   const Text(
                                     'Projects:',
@@ -2381,12 +2502,15 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                   const Spacer(),
                                   IconButton(
                                     icon: const Icon(Icons.add_circle,
-                                      color: Colors.white),
+                                        color: Colors.white),
                                     onPressed: _addProjectField,
                                   ),
                                 ],
                               ),
-                              ..._projectTitleControllers.asMap().entries.map((entry) {
+                              ..._projectTitleControllers
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
                                 int index = entry.key;
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2395,15 +2519,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.title,
-                                            color: Colors.white),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.title,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
-                                            controller: _projectTitleControllers[index],
-                                            style: const TextStyle(color: Colors.white),
+                                            controller:
+                                                _projectTitleControllers[index],
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -2416,10 +2542,10 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white),
-                                          onPressed: () => _removeProjectField(index),
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.white),
+                                          onPressed: () =>
+                                              _removeProjectField(index),
                                         ),
                                       ],
                                     ),
@@ -2427,14 +2553,18 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
                                           child: Icon(Icons.description,
-                                            color: Colors.white),
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
-                                            controller: _projectDescriptionControllers[index],
-                                            style: const TextStyle(color: Colors.white),
+                                            controller:
+                                                _projectDescriptionControllers[
+                                                    index],
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -2452,15 +2582,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.link,
-                                            color: Colors.white),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.link,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
-                                            controller: _projectLinkControllers[index],
-                                            style: const TextStyle(color: Colors.white),
+                                            controller:
+                                                _projectLinkControllers[index],
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
@@ -2478,16 +2610,17 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.code,
-                                            color: Colors.white
-                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Icon(Icons.code,
+                                              color: Colors.white),
                                         ),
                                         Expanded(
                                           child: TextField(
-                                            controller: _projectTechControllers[index],
-                                            style: const TextStyle(color: Colors.white),
+                                            controller:
+                                                _projectTechControllers[index],
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                             cursorColor: Colors.white,
                                             decoration: const InputDecoration(
                                               border: InputBorder.none,
