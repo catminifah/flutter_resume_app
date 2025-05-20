@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/star/glowing_star.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../onboarding_contents.dart';
+import '../onboarding/onboarding_contents.dart';
 import '../size_config.dart';
-import '../twinkling_stars_background.dart';
+import '../star/twinkling_stars_background.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -29,28 +30,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.initState();
   }
 
-  AnimatedContainer _buildDots({required int index}) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: _currentPage == index ? 16 : 10,
-      height: _currentPage == index ? 16 : 10,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _currentPage == index ? Colors.yellowAccent : Colors.white54,
-        boxShadow: _currentPage == index
-            ? [
-                BoxShadow(
-                  color: Colors.yellowAccent.withOpacity(0.6),
-                  blurRadius: 6,
-                  spreadRadius: 2,
-                )
-              ]
-            : [],
+  Widget _buildDots({required int index}) {
+    final isActive = _currentPage == index;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: GlowingStar(
+        isActive: isActive,
+        size: 15,
       ),
     );
   }
-
+  
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -69,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          const TwinklingStarsBackground(child: SizedBox.expand()),
+          const TwinklingStars_Background(child: SizedBox.expand()),
           SafeArea(
             child: Column(
               children: [
@@ -120,6 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      SizedBox(height: 5),
                       // Indicator Dots
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -137,8 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) =>
-                                            const HomeScreen()),
+                                        builder: (_) => const HomeScreen()),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -168,7 +158,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 children: [
                                   TextButton(
                                     onPressed: () {
-                                      _controller.jumpToPage(contents.length - 1);
+                                      _controller
+                                          .jumpToPage(contents.length - 1);
                                     },
                                     child: Text(
                                       "SKIP",

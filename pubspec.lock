@@ -665,10 +665,10 @@ packages:
     dependency: "direct main"
     description:
       name: twinkling_stars
-      sha256: ad96b6d3ee2ebc4147a13e1107f3087dd46f22acf9a0edf9e2fb4be26f920317
+      sha256: bdc3e396e5ec2edf91e5b57138bd5c8807a82fc228341fbbffa3eda4bb4b275a
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   typed_data:
     dependency: transitive
     description:

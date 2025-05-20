@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
+import 'package:flutter_resume_app/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
@@ -17,8 +18,6 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
-
-  late AnimationController _twinkleController;
 
   @override
   void initState() {
@@ -37,12 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    _twinkleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
-
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
@@ -53,7 +47,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _controller.dispose();
-    _twinkleController.dispose();
     super.dispose();
   }
 
@@ -62,18 +55,12 @@ class _SplashScreenState extends State<SplashScreen>
     Color(0xFF092E6E),
     Color(0xFF254E99),
   ];
-  
-  final List<Offset> _starPositions = const [
-    Offset(-80, -80),
-    Offset(100, -60),
-    Offset(-100, 60),
-    Offset(80, 80),
-    Offset(0, -100),
-    Offset(0, 100),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    double width = SizeConfig.screenW!;
+    double height = SizeConfig.screenH!;
     return Scaffold(
       body: Stack(
         children: [
@@ -91,51 +78,63 @@ class _SplashScreenState extends State<SplashScreen>
             starShapes: [StarShape.diamond,StarShape.fivePoint,StarShape.sixPoint,StarShape.sparkle3],
             child: const SizedBox.expand(),
           ),
-
           Center(
-            child: AnimatedBuilder(
-              animation: _twinkleController,
-              builder: (context, child) {
-                return Stack(
+            child: Container(
+              width: width,
+              child: ClipRRect(
+                child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    for (final offset in _starPositions)
-                      Positioned(
-                        left: 150 + offset.dx,
-                        top: 300 + offset.dy,
-                        child: Opacity(
-                          opacity: 0.6 + 0.4 * sin(_twinkleController.value * 2 * pi),
-                          child: const Icon(
-                            Icons.star,
-                            color: Colors.yellowAccent,
-                            size: 24,
-                          ),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset('images/logoresume.png', width: 300),
+                            const SizedBox(height: 20),
+                            ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return const LinearGradient(
+                                  colors: [
+                                    Color(0xFFFFE1E0),
+                                    Color(0xFFF49BAB),
+                                    Color(0xFF9B7EBD),
+                                    Color(0xFF7F55B1),
+                                  ],
+                                ).createShader(bounds);
+                              },
+                              blendMode: BlendMode.srcIn,
+                              child: Text(
+                                'Star Resume App',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  //fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'SweetLollipop',
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                  ],
-                );
-              },
-            ),
-          ),
-
-          Center(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset('images/logoresume.png', width: 300),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Flutter Resume App',
-                      style: GoogleFonts.orbitron(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
+                    ),
+                    TwinklingStarsBackground(
+                      starColors: const [
+                        Color(0xFFFFE1E0),
+                        Color(0xFFF49BAB),
+                        Color(0xFF9B7EBD),
+                        Color(0xFF7F55B1),
+                      ],
+                      starShapes: [
+                        StarShape.diamond,
+                        StarShape.fivePoint,
+                        StarShape.sixPoint,
+                        StarShape.sparkle3,
+                        StarShape.star4,
+                      ],
+                      child: const SizedBox.expand(),
                     ),
                   ],
                 ),

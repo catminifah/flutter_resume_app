@@ -2,17 +2,17 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class TwinklingStarsBackground extends StatefulWidget {
+class TwinklingStars_Background extends StatefulWidget {
   final Widget child;
 
-  const TwinklingStarsBackground({required this.child, super.key});
+  const TwinklingStars_Background({required this.child, super.key});
 
   @override
-  _TwinklingStarsBackgroundState createState() =>
-      _TwinklingStarsBackgroundState();
+  _TwinklingStars_BackgroundState createState() =>
+      _TwinklingStars_BackgroundState();
 }
 
-class _TwinklingStarsBackgroundState extends State<TwinklingStarsBackground>
+class _TwinklingStars_BackgroundState extends State<TwinklingStars_Background>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Star> _stars;
