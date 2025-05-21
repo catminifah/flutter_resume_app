@@ -3,7 +3,7 @@ import 'package:flutter_resume_app/star/glowing_star.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../onboarding/onboarding_contents.dart';
+import '../onboarding_data/onboarding_contents.dart';
 import '../size_config.dart';
 import '../star/twinkling_stars_background.dart';
 

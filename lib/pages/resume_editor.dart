@@ -10,11 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ResumeEditor extends StatefulWidget {
-  const ResumeEditor({Key? key}) : super(key: key);
+  const ResumeEditor({super.key});
 
   @override
   State<ResumeEditor> createState() => _ResumeEditorState();
@@ -421,8 +419,9 @@ class _ResumeEditorState extends State<ResumeEditor> {
                           ...languages.map((lang) {
                             final name = lang['name']?.trim() ?? '';
                             final level = lang['level']?.trim() ?? '';
-                            if (name.isEmpty && level.isEmpty)
+                            if (name.isEmpty && level.isEmpty) {
                               return pw.SizedBox();
+                            }
 
                             return pw.Padding(
                               padding:

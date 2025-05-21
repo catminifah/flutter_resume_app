@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
 import 'package:flutter_resume_app/size_config.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -79,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: const SizedBox.expand(),
           ),
           Center(
-            child: Container(
+            child: SizedBox(
               width: width,
               child: ClipRRect(
                 child: Stack(

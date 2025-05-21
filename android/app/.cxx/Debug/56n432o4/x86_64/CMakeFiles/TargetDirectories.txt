@@ -1,2 +1,0 @@
-D:/pjflutter/flutter_resume_app/android/app/.cxx/Debug/56n432o4/x86_64/CMakeFiles/edit_cache.dir
-D:/pjflutter/flutter_resume_app/android/app/.cxx/Debug/56n432o4/x86_64/CMakeFiles/rebuild_cache.dir

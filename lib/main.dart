@@ -447,8 +447,9 @@ class _ResumeHomePageState extends State<ResumeHomePage> {
                           ...languages.map((lang) {
                             final name = lang['name']?.trim() ?? '';
                             final level = lang['level']?.trim() ?? '';
-                            if (name.isEmpty && level.isEmpty)
+                            if (name.isEmpty && level.isEmpty) {
                               return pw.SizedBox();
+                            }
 
                             return pw.Padding(
                               padding:

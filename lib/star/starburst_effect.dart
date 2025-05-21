@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 class StarburstEffect extends StatefulWidget {
   final Offset position;
   final VoidCallback onCompleted;
+  final int starCount;
+  final double radius;
 
   const StarburstEffect({
     required this.position,
     required this.onCompleted,
+    this.starCount = 8,
+    this.radius = 40.0,
     super.key,
   });
 
@@ -38,7 +42,7 @@ class _StarburstEffectState extends State<StarburstEffect>
     super.dispose();
   }
 
-  Widget _buildStar(double angle, Color color) {
+  Widget _buildStar(double angle, Color color, double radius) {
     final double radius = 40.0;
     return AnimatedBuilder(
       animation: _controller,
@@ -71,10 +75,10 @@ class _StarburstEffectState extends State<StarburstEffect>
       const Color(0xFF7F55B1),
     ];
     return Stack(
-      children: List.generate(8, (i) {
-        final angle = (2 * pi / 8) * i;
+      children: List.generate(widget.starCount, (i) {
+        final angle = (2 * pi / widget.starCount) * i;
         final color = colors[i % colors.length];
-        return _buildStar(angle, color);
+        return _buildStar(angle, color, widget.radius);
       }),
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class TwinklingStars_Background extends StatefulWidget {
@@ -120,8 +119,11 @@ Path createStarPath(Offset center, double radius, StarShape shape, double rotati
           final r = (i % 2 == 0) ? radius : radius / 2;
           final angle = i * step - pi / 2 + rotationAngle;
           final point = Offset(center.dx + r * cos(angle), center.dy + r * sin(angle));
-          if (i == 0) path.moveTo(point.dx, point.dy);
-          else path.lineTo(point.dx, point.dy);
+          if (i == 0) {
+            path.moveTo(point.dx, point.dy);
+          } else {
+            path.lineTo(point.dx, point.dy);
+          }
         }
         path.close();
         return path;
@@ -134,8 +136,11 @@ Path createStarPath(Offset center, double radius, StarShape shape, double rotati
           final r = (i % 2 == 0) ? radius : radius / 2;
           final angle = i * step - pi / 2 + rotationAngle;
           final point = Offset(center.dx + r * cos(angle), center.dy + r * sin(angle));
-          if (i == 0) path.moveTo(point.dx, point.dy);
-          else path.lineTo(point.dx, point.dy);
+          if (i == 0) {
+            path.moveTo(point.dx, point.dy);
+          } else {
+            path.lineTo(point.dx, point.dy);
+          }
         }
         path.close();
         return path;
@@ -148,8 +153,11 @@ Path createStarPath(Offset center, double radius, StarShape shape, double rotati
           final r = (i % 2 == 0) ? radius : radius / 2;
           final angle = i * step - pi / 2 + rotationAngle;
           final point = Offset(center.dx + r * cos(angle), center.dy + r * sin(angle));
-          if (i == 0) path.moveTo(point.dx, point.dy);
-          else path.lineTo(point.dx, point.dy);
+          if (i == 0) {
+            path.moveTo(point.dx, point.dy);
+          } else {
+            path.lineTo(point.dx, point.dy);
+          }
         }
         path.close();
         return path;

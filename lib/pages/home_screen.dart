@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/star/starburst_effect.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
@@ -11,8 +10,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  int _currentIndex = 0;
-
   final List<IconData> icons = [
     Icons.edit,
     Icons.view_module,
@@ -20,46 +17,60 @@ class _HomeScreen extends State<HomeScreen> {
     Icons.person,
   ];
 
-  Offset? _tapPosition;
+  final List<String> labels = ['แก้ไข', 'แม่แบบ', 'ไลบรารี', 'ฉัน'];
+
+  int _currentIndex = 0;
   final List<Widget> _effects = [];
+  final List<GlobalKey> _iconKeys = List.generate(4, (_) => GlobalKey());
+
+  Offset? _tapPosition;
+
+  final List<Color> selectedColors = const [
+    Color(0xFFF7CFD8),
+    Color(0xFFF4F8D3),
+    Color(0xFFA6D6D6),
+    Color(0xFF8E7DBE),
+  ];
 
   void _onTapTab(int index, GlobalKey key) {
-    final context = key.currentContext;
-    if (context == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = key.currentContext;
+      if (context == null) return;
 
-    final RenderBox box = context.findRenderObject() as RenderBox;
-    final Offset localPos = box.localToGlobal(Offset.zero);
-    final Offset center =
-        localPos + Offset(box.size.width / 2, box.size.height / 2);
+      final RenderBox box = context.findRenderObject() as RenderBox;
+      final Offset localPos = box.localToGlobal(Offset.zero);
+      final Offset center =
+          localPos + Offset(box.size.width / 2, box.size.height / 2);
 
-    print('Tapped at $center');
+      print('Tapped at $center');
 
-    setState(() {
-      _tapPosition = center;
-      _effects.add(
-        Positioned(
-          left: center.dx - 25,
-          top: center.dy - 25,
-          child: Container(
-            width: 50,
-            height: 50,
-            color: Colors.red,
-          ),
-        ),
-      );
-      _currentIndex = index;
-    });
-
-    Future.delayed(Duration(milliseconds: 600), () {
       setState(() {
-        _effects.removeAt(0);
+        _tapPosition = center;
+        _effects.add(
+          Positioned(
+            left: center.dx - 25,
+            top: center.dy - 25,
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFF8E7DBE).withOpacity(0.4),
+              ),
+            ),
+          ),
+        );
+        _currentIndex = index;
+      });
+
+      Future.delayed(const Duration(milliseconds: 600), () {
+        setState(() {
+          _effects.removeAt(0);
+        });
       });
     });
   }
 
-  final List<GlobalKey> _iconKeys = List.generate(4, (_) => GlobalKey());
-
-  final List<String> labels = ['แก้ไข', 'แม่แบบ', 'ไลบรารี', 'ฉัน'];
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> resumes = [
@@ -78,7 +89,8 @@ class _HomeScreen extends State<HomeScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      //backgroundColor: Colors.transparent,
+      extendBody: true,
       body: Stack(
         children: [
           Container(
@@ -137,6 +149,7 @@ class _HomeScreen extends State<HomeScreen> {
                                   alignment: Alignment.center,
                                   children: [
                                     TwinklingStarsBackground(
+                                      starCount: 150,
                                       starColors: const [
                                         Color(0xFFFFE1E0),
                                         Color(0xFFF49BAB),
@@ -362,8 +375,9 @@ class _HomeScreen extends State<HomeScreen> {
                             '${item['date']} | ${item['size']} | ${item['pages']}',
                             style: const TextStyle(color: Colors.white70),
                           ),
-                          trailing: const Icon(Icons.more_vert,
-                              color: Colors.white70),
+                          trailing: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white70),
                         ),
                       );
                     },
@@ -374,90 +388,89 @@ class _HomeScreen extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 80,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
-              child: TwinklingStarsBackground(
-                starColors: const [
-                  Color(0xFFFFE1E0),
-                  Color(0xFFF49BAB),
-                  Color(0xFF9B7EBD),
-                  Color(0xFF7F55B1),
-                ],
-                starShapes: [
-                  StarShape.diamond,
-                  StarShape.fivePoint,
-                  StarShape.sixPoint,
-                  StarShape.sparkle3,
-                ],
-                child: const SizedBox.expand(),
-              ),
-            ),
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                child: Container(
-                  color: const Color(0xFF010A1A).withOpacity(0.8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(icons.length, (index) {
-                      final isSelected = _currentIndex == index;
-                      return GestureDetector(
-                        onTap: () {
-                          _onTapTab(index, _iconKeys[index]);
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          key: _iconKeys[index],
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: isSelected
-                                ? Colors.white.withOpacity(0.1)
-                                : Colors.transparent,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedScale(
-                                scale: isSelected ? 1.3 : 1.0,
-                                duration: const Duration(milliseconds: 300),
-                                child: Icon(
-                                  icons[index],
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.white70,
+        child: Container(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
+                  child: Container(
+                    color: const Color(0xFF010A1A).withOpacity(0.8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(icons.length, (index) {
+                        final isSelected = _currentIndex == index;
+                        final selectedColor =
+                            selectedColors[index % selectedColors.length];
+                        return GestureDetector(
+                          onTap: () {
+                            _onTapTab(index, _iconKeys[index]);
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            key: _iconKeys[index],
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: isSelected ? selectedColor.withOpacity(0.2) : Colors.transparent,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AnimatedScale(
+                                  scale: isSelected ? 1.3 : 1.0,
+                                  duration: const Duration(milliseconds: 300),
+                                  child: Icon(
+                                    icons[index],
+                                    color: isSelected ? selectedColor : Colors.white70,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                labels[index],
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.white70,
-                                  fontSize: 12,
+                                const SizedBox(height: 4),
+                                Text(
+                                  labels[index],
+                                  style: TextStyle(
+                                    color: isSelected ? selectedColor : Colors.white70,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(40)),
+                child: IgnorePointer(
+                  child: TwinklingStarsBackground(
+                    starColors: const [
+                      Color(0xFFFFE1E0),
+                      Color(0xFFF49BAB),
+                      Color(0xFF9B7EBD),
+                      Color(0xFF7F55B1),
+                    ],
+                    starShapes: [
+                      StarShape.diamond,
+                      StarShape.fivePoint,
+                      StarShape.sixPoint,
+                      StarShape.sparkle3,
+                    ],
+                    child: const SizedBox.expand(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -465,10 +478,10 @@ class _HomeScreen extends State<HomeScreen> {
 }
 
 class _IconMenu extends StatelessWidget {
+  const _IconMenu({required this.icon, required this.label});
+
   final IconData icon;
   final String label;
-
-  const _IconMenu({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
