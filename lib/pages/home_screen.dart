@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/star/sparkle_burst.dart';
+import 'package:flutter_resume_app/star/star8_painter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
@@ -11,64 +13,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreen extends State<HomeScreen> {
   final List<IconData> icons = [
-    Icons.edit,
-    Icons.view_module,
-    Icons.folder,
-    Icons.person,
+    Icons.home,
+    Icons.file_open_rounded,
+    Icons.settings,
   ];
 
-  final List<String> labels = ['แก้ไข', 'แม่แบบ', 'ไลบรารี', 'ฉัน'];
+  final List<String> labels = ['Home', 'Create', 'Setting'];
 
   int _currentIndex = 0;
-  final List<Widget> _effects = [];
-  final List<GlobalKey> _iconKeys = List.generate(4, (_) => GlobalKey());
-
-  Offset? _tapPosition;
+  int _previousIndex = 0;
 
   final List<Color> selectedColors = const [
     Color(0xFFF7CFD8),
-    Color(0xFFF4F8D3),
     Color(0xFFA6D6D6),
     Color(0xFF8E7DBE),
   ];
 
-  void _onTapTab(int index, GlobalKey key) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = key.currentContext;
-      if (context == null) return;
+  final List<Color> selectediconColors = const [
+    Color(0xFFB64F6A),
+    Color(0xFF4F9C9C),
+    Color(0xFF5A459B),
+  ];
 
-      final RenderBox box = context.findRenderObject() as RenderBox;
-      final Offset localPos = box.localToGlobal(Offset.zero);
-      final Offset center =
-          localPos + Offset(box.size.width / 2, box.size.height / 2);
+  late final List<GlobalKey> _itemKeys;
 
-      print('Tapped at $center');
-
-      setState(() {
-        _tapPosition = center;
-        _effects.add(
-          Positioned(
-            left: center.dx - 25,
-            top: center.dy - 25,
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFF8E7DBE).withOpacity(0.4),
-              ),
-            ),
-          ),
-        );
-        _currentIndex = index;
-      });
-
-      Future.delayed(const Duration(milliseconds: 600), () {
-        setState(() {
-          _effects.removeAt(0);
-        });
-      });
-    });
+  @override
+  void initState() {
+    super.initState();
+    _itemKeys = List.generate(icons.length, (_) => GlobalKey());
   }
 
   @override
@@ -116,7 +88,6 @@ class _HomeScreen extends State<HomeScreen> {
             ],
             child: const SizedBox.expand(),
           ),
-          ..._effects,
           SafeArea(
             child: Column(
               children: [
@@ -375,9 +346,8 @@ class _HomeScreen extends State<HomeScreen> {
                             '${item['date']} | ${item['size']} | ${item['pages']}',
                             style: const TextStyle(color: Colors.white70),
                           ),
-                          trailing: const Icon(
-                            Icons.more_vert,
-                            color: Colors.white70),
+                          trailing: const Icon(Icons.more_vert,
+                              color: Colors.white70),
                         ),
                       );
                     },
@@ -389,87 +359,184 @@ class _HomeScreen extends State<HomeScreen> {
         ],
       ),
       bottomNavigationBar: SizedBox(
-        height: 80,
-        child: Container(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(40)),
+        height: 100,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: 60,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
                   child: Container(
-                    color: const Color(0xFF010A1A).withOpacity(0.8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF010A1A).withOpacity(0.6),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: List.generate(icons.length, (index) {
                         final isSelected = _currentIndex == index;
+                        final wasSelected = _previousIndex == index;
                         final selectedColor =
                             selectedColors[index % selectedColors.length];
+                        final selectediconColor = selectediconColors[
+                            index % selectediconColors.length];
+                        final Offset offset;
                         return GestureDetector(
+                          key: _itemKeys[index],
                           onTap: () {
-                            _onTapTab(index, _iconKeys[index]);
-                            setState(() {
-                              _currentIndex = index;
-                            });
+                            final context = _itemKeys[index].currentContext;
+                            if (context == null) return;
+
+                            if (_currentIndex != index) {
+                              setState(() {
+                                _previousIndex = _currentIndex;
+                                _currentIndex = index;
+                              });
+
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                final renderBox = context.findRenderObject();
+                                if (renderBox is RenderBox) {
+                                  final position =
+                                      renderBox.localToGlobal(Offset.zero);
+                                  final overlay = Overlay.of(context);
+                                  if (overlay != null) {
+                                    late final OverlayEntry overlayEntry;
+
+                                    final isSelected = _currentIndex == index;
+                                    final transformOffsetX = isSelected ? 0.0 : 90.0;
+                                    final transformOffsetY = isSelected ? -35.0 : 0.0;
+
+                                    overlayEntry = OverlayEntry(
+                                      builder: (context) => SparkleBurstEffect(
+                                        center: Offset(
+                                          position.dx + renderBox.size.width / 2 + transformOffsetX,
+                                          position.dy + renderBox.size.height / 2 + transformOffsetY,
+                                        ),
+                                        radius: 60,
+                                        sparkleCount: 15,
+                                        colors: [
+                                          Color(0xFF7BD3EA),
+                                          Color(0xFFA1EEBD),
+                                          Color(0xFFF6F7C4),
+                                          Color(0xFFF6D6D6),
+                                        ],
+                                        sizes: [8, 12, 16],
+                                        starShapes: [
+                                          StarShapes.fivePoint,
+                                          StarShapes.sixPoint,
+                                          StarShapes.diamond,
+                                          StarShapes.sparkle3,
+                                        ],
+                                        duration: Duration(milliseconds: 800),
+                                        onComplete: () {
+                                          overlayEntry.remove();
+                                        },
+                                      ),
+                                    );
+
+                                    overlay.insert(overlayEntry);
+                                  }
+                                }
+                              });
+                              setState(() {
+                                _currentIndex = index;
+                              });
+                            }
                           },
-                          child: AnimatedContainer(
-                            key: _iconKeys[index],
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: isSelected ? selectedColor.withOpacity(0.2) : Colors.transparent,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AnimatedScale(
-                                  scale: isSelected ? 1.3 : 1.0,
-                                  duration: const Duration(milliseconds: 300),
-                                  child: Icon(
-                                    icons[index],
-                                    color: isSelected ? selectedColor : Colors.white70,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.center,
+                            children: [
+                              if (wasSelected && _currentIndex != index)
+                                AnimatedPositioned(
+                                  duration: const Duration(milliseconds: 400),
+                                  top: 0,
+                                  curve: Curves.easeOut,
+                                  child: AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 400),
+                                    opacity: 0,
+                                    child: Container(
+                                      width: 70,
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                        color: selectedColor.withOpacity(0.2),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  labels[index],
-                                  style: TextStyle(
-                                    color: isSelected ? selectedColor : Colors.white70,
-                                    fontSize: 12,
-                                  ),
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.easeOut,
+                                transform: Matrix4.translationValues(0, isSelected ? -30 : 0, 0),
+                                width: 70,
+                                height: 70,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    AnimatedRotation(
+                                      turns: isSelected ? 1.0 : 0.0,
+                                      duration: const Duration(milliseconds: 1000),
+                                      curve: Curves.easeOut,
+                                      child: CustomPaint(
+                                        painter: Star8Painter(color: isSelected ? selectedColor.withOpacity(0.8) : Colors.transparent,),
+                                        child: const SizedBox( width: 70, height: 70),
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        AnimatedScale(
+                                          scale: isSelected ? 1.3 : 1.0,
+                                          duration: const Duration(milliseconds: 300),
+                                          child: Icon(
+                                            icons[index],
+                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          labels[index],
+                                          style: TextStyle(
+                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         );
                       }),
                     ),
                   ),
                 ),
-              ),
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(40)),
-                child: IgnorePointer(
-                  child: TwinklingStarsBackground(
-                    starColors: const [
-                      Color(0xFFFFE1E0),
-                      Color(0xFFF49BAB),
-                      Color(0xFF9B7EBD),
-                      Color(0xFF7F55B1),
-                    ],
-                    starShapes: [
-                      StarShape.diamond,
-                      StarShape.fivePoint,
-                      StarShape.sixPoint,
-                      StarShape.sparkle3,
-                    ],
-                    child: const SizedBox.expand(),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
+                  child: IgnorePointer(
+                    child: TwinklingStarsBackground(
+                      starColors: const [
+                        Color(0xFFFFE1E0),
+                        Color(0xFFF49BAB),
+                        Color(0xFF9B7EBD),
+                        Color(0xFF7F55B1),
+                      ],
+                      starShapes: [
+                        StarShape.diamond,
+                        StarShape.fivePoint,
+                        StarShape.sixPoint,
+                        StarShape.sparkle3,
+                      ],
+                      child: const SizedBox.expand(),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
