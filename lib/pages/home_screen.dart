@@ -404,14 +404,20 @@ class _HomeScreen extends State<HomeScreen> {
                                     late final OverlayEntry overlayEntry;
 
                                     final isSelected = _currentIndex == index;
-                                    final transformOffsetX = isSelected ? 0.0 : 90.0;
-                                    final transformOffsetY = isSelected ? -35.0 : 0.0;
+                                    final transformOffsetX =
+                                        isSelected ? 0.0 : 90.0;
+                                    final transformOffsetY =
+                                        isSelected ? -35.0 : 0.0;
 
                                     overlayEntry = OverlayEntry(
                                       builder: (context) => SparkleBurstEffect(
                                         center: Offset(
-                                          position.dx + renderBox.size.width / 2 + transformOffsetX,
-                                          position.dy + renderBox.size.height / 2 + transformOffsetY,
+                                          position.dx +
+                                              renderBox.size.width / 2 +
+                                              transformOffsetX,
+                                          position.dy +
+                                              renderBox.size.height / 2 +
+                                              transformOffsetY,
                                         ),
                                         radius: 60,
                                         sparkleCount: 15,
@@ -469,7 +475,8 @@ class _HomeScreen extends State<HomeScreen> {
                               AnimatedContainer(
                                 duration: const Duration(milliseconds: 400),
                                 curve: Curves.easeOut,
-                                transform: Matrix4.translationValues(0, isSelected ? -30 : 0, 0),
+                                transform: Matrix4.translationValues(
+                                    0, isSelected ? -30 : 0, 0),
                                 width: 70,
                                 height: 70,
                                 child: Stack(
@@ -477,11 +484,17 @@ class _HomeScreen extends State<HomeScreen> {
                                   children: [
                                     AnimatedRotation(
                                       turns: isSelected ? 1.0 : 0.0,
-                                      duration: const Duration(milliseconds: 1000),
+                                      duration:
+                                          const Duration(milliseconds: 1000),
                                       curve: Curves.easeOut,
                                       child: CustomPaint(
-                                        painter: Star8Painter(color: isSelected ? selectedColor.withOpacity(0.8) : Colors.transparent,),
-                                        child: const SizedBox( width: 70, height: 70),
+                                        painter: Star8Painter(
+                                          color: isSelected
+                                              ? selectedColor.withOpacity(0.8)
+                                              : Colors.transparent,
+                                        ),
+                                        child: const SizedBox(
+                                            width: 70, height: 70),
                                       ),
                                     ),
                                     Column(
@@ -489,17 +502,24 @@ class _HomeScreen extends State<HomeScreen> {
                                       children: [
                                         AnimatedScale(
                                           scale: isSelected ? 1.3 : 1.0,
-                                          duration: const Duration(milliseconds: 300),
+                                          duration:
+                                              const Duration(milliseconds: 300),
                                           child: Icon(
                                             icons[index],
-                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                            color: isSelected
+                                                ? const Color(0xFF010A1A)
+                                                    .withOpacity(0.6)
+                                                : Colors.white70,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           labels[index],
                                           style: TextStyle(
-                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                            color: isSelected
+                                                ? const Color(0xFF010A1A)
+                                                    .withOpacity(0.6)
+                                                : Colors.white70,
                                             fontSize: 12,
                                           ),
                                         ),

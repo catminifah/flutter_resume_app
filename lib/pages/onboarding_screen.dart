@@ -40,7 +40,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -61,149 +61,147 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const TwinklingStars_Background(child: SizedBox.expand()),
           SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: PageView.builder(
-                    controller: _controller,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: contents.length,
-                    onPageChanged: (value) {
-                      setState(() => _currentPage = value);
-                    },
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Image.asset(contents[i].image),
-                            ),
-                            SizedBox(height: height * 0.03),
-                            Text(
-                              contents[i].title,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.orbitron(
-                                fontSize: width * 0.08,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              contents[i].desc,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.mulish(
-                                fontSize: width * 0.045,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(height: 5),
-                      // Indicator Dots
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          contents.length,
-                          (index) => _buildDots(index: index),
-                        ),
-                      ),
-                      // Buttons
-                      Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: _currentPage + 1 == contents.length
-                            ? ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const HomeScreen()),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.yellowAccent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  shadowColor: Colors.yellow,
-                                  elevation: 10,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.2,
-                                    vertical: 20,
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                bool isLandscape = orientation == Orientation.landscape;
+
+                return Column(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: PageView.builder(
+                        controller: _controller,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: contents.length,
+                        onPageChanged: (value) {
+                          setState(() => _currentPage = value);
+                        },
+                        itemBuilder: (context, i) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Image.asset(
+                                    contents[i].image,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                                child: Text(
-                                  "START",
+                                const SizedBox(height: 20),
+                                Text(
+                                  contents[i].title,
+                                  textAlign: TextAlign.center,
                                   style: GoogleFonts.orbitron(
-                                    fontSize: 18,
+                                    fontSize: isLandscape ? 24 : 28,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
                                   ),
                                 ),
-                              )
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      _controller
-                                          .jumpToPage(contents.length - 1);
-                                    },
-                                    child: Text(
-                                      "SKIP",
-                                      style: GoogleFonts.orbitron(
-                                        fontSize: 16,
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  contents[i].desc,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.mulish(
+                                    fontSize: isLandscape ? 16 : 18,
+                                    color: Colors.white70,
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _controller.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        curve: Curves.easeIn,
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.yellowAccent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 30,
-                                        vertical: 20,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "NEXT",
-                                      style: GoogleFonts.orbitron(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        contents.length,
+                        (index) => _buildDots(index: index),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: _currentPage + 1 == contents.length
+                          ? ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const HomeScreen()),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.yellowAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      isLandscape ? width * 0.12 : width * 0.2,
+                                  vertical: isLandscape ? 12 : 18,
+                                ),
+                              ),
+                              child: Text(
+                                "START",
+                                style: GoogleFonts.orbitron(
+                                  fontSize: isLandscape ? 16 : 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    _controller.jumpToPage(contents.length - 1);
+                                  },
+                                  child: Text(
+                                    "SKIP",
+                                    style: GoogleFonts.orbitron(
+                                      fontSize: isLandscape ? 14 : 16,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _controller.nextPage(
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeIn,
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.yellowAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isLandscape ? 30 : 40,
+                                      vertical: isLandscape ? 12 : 18,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "NEXT",
+                                    style: GoogleFonts.orbitron(
+                                      fontSize: isLandscape ? 14 : 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],
