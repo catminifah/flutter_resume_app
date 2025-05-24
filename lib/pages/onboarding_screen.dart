@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/star/glowing_star_button.dart';
 import 'package:flutter_resume_app/star/glowing_star.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
+import 'package:flutter_resume_app/star/star8_painter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../onboarding_data/onboarding_contents.dart';
@@ -169,7 +171,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     ),
                                   ),
                                 ),
-                                ElevatedButton(
+                                GlowingStarButton(
                                   onPressed: () {
                                     _controller.nextPage(
                                       duration:
@@ -177,23 +179,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       curve: Curves.easeIn,
                                     );
                                   },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.yellowAccent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: isLandscape ? 30 : 40,
-                                      vertical: isLandscape ? 12 : 18,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "NEXT",
-                                    style: GoogleFonts.orbitron(
-                                      fontSize: isLandscape ? 14 : 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
+                                  color: Colors.yellowAccent.withOpacity(0.9),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: 30,
                                   ),
                                 ),
                               ],

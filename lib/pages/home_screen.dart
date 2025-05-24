@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/sparkle_burst.dart';
 import 'package:flutter_resume_app/star/star8_painter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,6 +46,8 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = SizeConfig.screenW!;
+    double height = SizeConfig.screenH!;
     final List<Map<String, String>> resumes = [
       {
         'title': '20240526-01',
