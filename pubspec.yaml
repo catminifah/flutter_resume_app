@@ -44,6 +44,8 @@ dependencies:
   twinkling_stars: ^1.0.2
   audioplayers:
   confetti:
+  flutter_screenutil: 
+  flutter_device_type:
 
 dev_dependencies:
   flutter_test:

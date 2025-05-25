@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/sparkle_burst.dart';
 import 'package:flutter_resume_app/star/star8_painter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,8 +48,10 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig.init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final List<Map<String, String>> resumes = [
       {
         'title': '20240526-01',
@@ -61,13 +65,80 @@ class _HomeScreen extends State<HomeScreen> {
         'size': '37MB',
         'pages': '1 หน้า',
       },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
+      {
+        'title': '20240522-04',
+        'date': '22/05/2024 12:52',
+        'size': '37MB',
+        'pages': '1 หน้า',
+      },
     ];
+
+    bool isTablet = Device.get().isTablet;
+    bool isPhone = Device.get().isPhone;
+
+    final actualHeight = isTablet == true ? SizeConfig.scaleH(220) : SizeConfig.scaleH(90);
+    final THeight = isTablet == true ? SizeConfig.scaleH(500) : SizeConfig.scaleH(420);
 
     return Scaffold(
       //backgroundColor: Colors.transparent,
       extendBody: true,
       body: Stack(
         children: [
+          //---------------------------------------- background color -------------------------------------//
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -81,6 +152,8 @@ class _HomeScreen extends State<HomeScreen> {
               ),
             ),
           ),
+          //---------------------------------------- background color -------------------------------------//
+          //---------------------------------------- background star -------------------------------------//
           TwinklingStarsBackground(
             starColors: const [Colors.white],
             starShapes: [
@@ -91,22 +164,23 @@ class _HomeScreen extends State<HomeScreen> {
             ],
             child: const SizedBox.expand(),
           ),
+          //---------------------------------------- background star -------------------------------------//
           SafeArea(
             child: Column(
               children: [
+                //---------------------------------------- AppBar -------------------------------------//
                 AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   title: Row(
                     children: [
                       SizedBox(
-                        width: 95,
-                        height: 40,
+                        width: isLandscape ? SizeConfig.scaleW(125) : SizeConfig.scaleW(95),
+                        height: SizeConfig.scaleH(40),
                         child: Stack(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 0),
+                              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -139,11 +213,11 @@ class _HomeScreen extends State<HomeScreen> {
                                       ],
                                       child: const SizedBox.expand(),
                                     ),
-                                    const Text(
+                                    Text(
                                       'Resume',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 25,
+                                        fontSize: isLandscape ? 12.sp : 25.sp,
                                         fontFamily: 'SweetLollipop',
                                         letterSpacing: 1,
                                         wordSpacing: 4,
@@ -160,11 +234,11 @@ class _HomeScreen extends State<HomeScreen> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
+                          Text(
                             'Creat',
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: 25,
+                              fontSize: isLandscape ? 12.sp : 25.sp,
                               fontFamily: 'SweetLollipop',
                               letterSpacing: 1,
                               wordSpacing: 4,
@@ -174,21 +248,21 @@ class _HomeScreen extends State<HomeScreen> {
                             alignment: Alignment.centerLeft,
                             children: [
                               SizedBox(
-                                width: 24,
+                                width: SizeConfig.scaleW(24),
                               ),
-                              const Text(
+                              Text(
                                 'e',
                                 style: TextStyle(
                                   color: Colors.white70,
-                                  fontSize: 25,
+                                  fontSize: isLandscape ? 12.sp : 25.sp,
                                   fontFamily: 'SweetLollipop',
                                   letterSpacing: 1,
                                   wordSpacing: 4,
                                 ),
                               ),
                               Positioned(
-                                top: 2,
-                                right: 8,
+                                top: isLandscape ? 2 : 2,
+                                right: isLandscape ? 2 : 8,
                                 child: Icon(
                                   Icons.star,
                                   size: 9,
@@ -197,7 +271,7 @@ class _HomeScreen extends State<HomeScreen> {
                               ),
                               Positioned(
                                 top: -1,
-                                right: 5,
+                                right:  isLandscape ? 0 : 5,
                                 child: Icon(
                                   Icons.star,
                                   size: 6,
@@ -210,150 +284,164 @@ class _HomeScreen extends State<HomeScreen> {
                       ),
                       const Spacer(),
                       const Icon(Icons.help_outline, color: Colors.white70),
-                      const SizedBox(width: 10),
+                      SizedBox(width: SizeConfig.scaleW(10)),
                       const Icon(Icons.settings, color: Colors.white70),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 80,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    children: const [
-                      _IconMenu(icon: Icons.image, label: 'เครื่องมือแก้ไข'),
-                      _IconMenu(icon: Icons.camera_alt, label: 'กล้อง'),
-                      _IconMenu(icon: Icons.flash_on, label: 'AutoCut'),
-                      _IconMenu(icon: Icons.photo, label: 'ภาพถ่ายสินค้า'),
-                      _IconMenu(icon: Icons.expand_more, label: 'ขยาย'),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFF4E71FF).withOpacity(0.9),
-                                  Color(0xFF8DD8FF).withOpacity(0.9),
-                                  Color(0xFFBBFBFF).withOpacity(0.9),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: Colors.white30,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: TwinklingStarsBackground(
-                                starColors: const [
-                                  Color(0xFFFFE1E0),
-                                  Color(0xFFF49BAB),
-                                  Color(0xFF9B7EBD),
-                                  Color(0xFF7F55B1),
-                                ],
-                                starShapes: [
-                                  StarShape.diamond,
-                                  StarShape.fivePoint,
-                                  StarShape.sixPoint,
-                                  StarShape.sparkle3,
-                                  StarShape.star4,
-                                ],
-                                child: const SizedBox.expand(),
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                //---------------------------------------- AppBar -------------------------------------//
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
+                      SizedBox(
+                        height: SizeConfig.scaleH(80),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          children: const [
+                            _IconMenu(
+                                icon: Icons.image, label: 'เครื่องมือแก้ไข'),
+                            _IconMenu(icon: Icons.camera_alt, label: 'กล้อง'),
+                            _IconMenu(icon: Icons.flash_on, label: 'AutoCut'),
+                            _IconMenu(
+                                icon: Icons.photo, label: 'ภาพถ่ายสินค้า'),
+                            _IconMenu(icon: Icons.expand_more, label: 'ขยาย'),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: SizedBox(
+                            height: SizeConfig.scaleH(40),
+                            width: double.infinity,
+                            child: Stack(
                               children: [
-                                Icon(Icons.add,
-                                    color: Color(0xFF010A1A).withOpacity(0.9),
-                                    size: 20),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'New Resume',
-                                  style: GoogleFonts.orbitron(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF010A1A).withOpacity(0.9),
-                                    letterSpacing: 1.2,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFF4E71FF).withOpacity(0.9),
+                                        Color(0xFF8DD8FF).withOpacity(0.9),
+                                        Color(0xFFBBFBFF).withOpacity(0.9),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.white30,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: TwinklingStarsBackground(
+                                      starColors: const [
+                                        Color(0xFFFFE1E0),
+                                        Color(0xFFF49BAB),
+                                        Color(0xFF9B7EBD),
+                                        Color(0xFF7F55B1),
+                                      ],
+                                      starShapes: [
+                                        StarShape.diamond,
+                                        StarShape.fivePoint,
+                                        StarShape.sixPoint,
+                                        StarShape.sparkle3,
+                                        StarShape.star4,
+                                      ],
+                                      child: const SizedBox.expand(),
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.add,
+                                          color: Color(0xFF010A1A)
+                                              .withOpacity(0.9),
+                                          size: 20),
+                                      SizedBox(width: SizeConfig.scaleW(8)),
+                                      Text(
+                                        'New Resume',
+                                        style: GoogleFonts.orbitron(
+                                          fontSize: isLandscape ? 8.sp : 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF010A1A).withOpacity(0.9),
+                                          letterSpacing: 1.2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Text('My resume',
-                          style: GoogleFonts.orbitron(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          )),
-                      const Spacer(),
-                      const Icon(Icons.cloud, size: 20, color: Colors.white70),
-                      const SizedBox(width: 4),
-                      Text('Cloud storage',
-                          style: GoogleFonts.orbitron(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          )),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: resumes.length,
-                    itemBuilder: (context, index) {
-                      final item = resumes[index];
-                      return Card(
-                        color: Colors.white.withOpacity(0.1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          leading: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white24,
-                              borderRadius: BorderRadius.circular(8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Text('My resume',
+                                style: GoogleFonts.orbitron(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: isLandscape ? 5.sp : 12.sp,
+                                )),
+                            const Spacer(),
+                            const Icon(Icons.cloud,
+                                size: 20, color: Colors.white70),
+                            SizedBox(width: SizeConfig.scaleW(4)),
+                            Text('Cloud storage',
+                              style: GoogleFonts.orbitron(
+                                color: Colors.white70,
+                                fontSize: isLandscape ? 5.sp : 12.sp,
+                              )
                             ),
-                            child: const Icon(Icons.description,
-                                color: Colors.white),
-                          ),
-                          title: Text(item['title'] ?? '',
-                              style: const TextStyle(color: Colors.white)),
-                          subtitle: Text(
-                            '${item['date']} | ${item['size']} | ${item['pages']}',
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          trailing: const Icon(Icons.more_vert,
-                              color: Colors.white70),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                      SizedBox(height: isLandscape ? 0 : SizeConfig.scaleH(10)),
+                      SizedBox(
+                        height:   isLandscape ? actualHeight : THeight,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: resumes.length,
+                          itemBuilder: (context, index) {
+                            final item = resumes[index];
+                            return Card(
+                              color: Colors.white.withOpacity(0.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                leading: Container(
+                                  width: SizeConfig.scaleW(50),
+                                  height: SizeConfig.scaleH(50),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white24,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(Icons.description,
+                                      color: Colors.white),
+                                ),
+                                title: Text(item['title'] ?? '',
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                                subtitle: Text(
+                                  '${item['date']} | ${item['size']} | ${item['pages']}',
+                                  style: const TextStyle(color: Colors.white70),
+                                ),
+                                trailing: const Icon(Icons.more_vert,
+                                    color: Colors.white70),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -415,12 +503,8 @@ class _HomeScreen extends State<HomeScreen> {
                                     overlayEntry = OverlayEntry(
                                       builder: (context) => SparkleBurstEffect(
                                         center: Offset(
-                                          position.dx +
-                                              renderBox.size.width / 2 +
-                                              transformOffsetX,
-                                          position.dy +
-                                              renderBox.size.height / 2 +
-                                              transformOffsetY,
+                                          position.dx + renderBox.size.width / 2 + transformOffsetX,
+                                          position.dy + renderBox.size.height / 2 + transformOffsetY,
                                         ),
                                         radius: 60,
                                         sparkleCount: 15,
@@ -478,8 +562,7 @@ class _HomeScreen extends State<HomeScreen> {
                               AnimatedContainer(
                                 duration: const Duration(milliseconds: 400),
                                 curve: Curves.easeOut,
-                                transform: Matrix4.translationValues(
-                                    0, isSelected ? -30 : 0, 0),
+                                transform: Matrix4.translationValues( 0, isSelected ? -30 : 0, 0),
                                 width: 70,
                                 height: 70,
                                 child: Stack(
@@ -487,17 +570,13 @@ class _HomeScreen extends State<HomeScreen> {
                                   children: [
                                     AnimatedRotation(
                                       turns: isSelected ? 1.0 : 0.0,
-                                      duration:
-                                          const Duration(milliseconds: 1000),
+                                      duration: const Duration(milliseconds: 1000),
                                       curve: Curves.easeOut,
                                       child: CustomPaint(
                                         painter: Star8Painter(
-                                          color: isSelected
-                                              ? selectedColor.withOpacity(0.8)
-                                              : Colors.transparent,
+                                          color: isSelected ? selectedColor.withOpacity(0.8) : Colors.transparent,
                                         ),
-                                        child: const SizedBox(
-                                            width: 70, height: 70),
+                                        child: SizedBox( width: 70,height: 70,),
                                       ),
                                     ),
                                     Column(
@@ -505,24 +584,17 @@ class _HomeScreen extends State<HomeScreen> {
                                       children: [
                                         AnimatedScale(
                                           scale: isSelected ? 1.3 : 1.0,
-                                          duration:
-                                              const Duration(milliseconds: 300),
+                                          duration: const Duration(milliseconds: 300),
                                           child: Icon(
                                             icons[index],
-                                            color: isSelected
-                                                ? const Color(0xFF010A1A)
-                                                    .withOpacity(0.6)
-                                                : Colors.white70,
+                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(height: 4),
                                         Text(
                                           labels[index],
                                           style: TextStyle(
-                                            color: isSelected
-                                                ? const Color(0xFF010A1A)
-                                                    .withOpacity(0.6)
-                                                : Colors.white70,
+                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
                                             fontSize: 12,
                                           ),
                                         ),
@@ -575,6 +647,7 @@ class _IconMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: Column(
@@ -583,9 +656,14 @@ class _IconMenu extends StatelessWidget {
             backgroundColor: Colors.white24,
             child: Icon(icon, color: Colors.white),
           ),
-          const SizedBox(height: 4),
-          Text(label,
-              style: const TextStyle(fontSize: 12, color: Colors.white70)),
+          SizedBox(height: SizeConfig.scaleH(4)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isLandscape ? 5.sp : 12.sp,
+              color: Colors.white70,
+            ),
+          ),
         ],
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
 import 'package:flutter_resume_app/star/glowing_star.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
-import 'package:flutter_resume_app/star/star8_painter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../onboarding_data/onboarding_contents.dart';
@@ -45,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    SizeConfig.init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
 

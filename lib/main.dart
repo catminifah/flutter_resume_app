@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/pages/splash_screen.dart';
 import 'package:flutter_resume_app/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
@@ -26,13 +27,19 @@ void main() {
 class ResumeApp extends StatelessWidget {
   const ResumeApp({super.key});
 
-  @override
+   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Resume',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Flutter Resume',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(primarySwatch: Colors.blue),
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }

@@ -2,5 +2,10 @@
     "flutterTools.displayGetxContextMenu": false,
     "flutterTools.displayMobxContextMenu": false,
     "flutterTools.displayRiverpodContextMenu": false,
-    "flutterTools.displayModularContextMenu": false
+    "flutterTools.displayModularContextMenu": false,
+    "editor.formatOnSave": false,
+    "dart.formatOnSave": false,
+    "[dart]": {
+        "editor.formatOnSave": false
+    }
 }
