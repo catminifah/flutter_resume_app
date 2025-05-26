@@ -41,6 +41,14 @@ class _HomeScreen extends State<HomeScreen> {
   late final List<GlobalKey> _itemKeys;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final orientation = MediaQuery.of(context).orientation;
+    print("Orientation changed: $orientation");
+    setState(() {});
+  }
+
+  @override
   void initState() {
     super.initState();
     _itemKeys = List.generate(icons.length, (_) => GlobalKey());
@@ -130,8 +138,8 @@ class _HomeScreen extends State<HomeScreen> {
     bool isTablet = Device.get().isTablet;
     bool isPhone = Device.get().isPhone;
 
-    final actualHeight = isTablet == true ? SizeConfig.scaleH(220) : SizeConfig.scaleH(90);
-    final THeight = isTablet == true ? SizeConfig.scaleH(500) : SizeConfig.scaleH(420);
+    final actualHeight = isTablet == true ? SizeConfig.scaleH(220) : SizeConfig.scaleH(100);
+    final THeight = isTablet == true ? SizeConfig.scaleH(500) : SizeConfig.scaleH(460);
 
     return Scaffold(
       //backgroundColor: Colors.transparent,
@@ -461,7 +469,7 @@ class _HomeScreen extends State<HomeScreen> {
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF010A1A).withOpacity(0.6),
+                      color: const Color(0xFF010A1A),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -488,48 +496,43 @@ class _HomeScreen extends State<HomeScreen> {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 final renderBox = context.findRenderObject();
                                 if (renderBox is RenderBox) {
-                                  final position =
-                                      renderBox.localToGlobal(Offset.zero);
+                                  final position = renderBox.localToGlobal(Offset.zero);
                                   final overlay = Overlay.of(context);
-                                  if (overlay != null) {
-                                    late final OverlayEntry overlayEntry;
+                                  late final OverlayEntry overlayEntry;
 
-                                    final isSelected = _currentIndex == index;
-                                    final transformOffsetX =
-                                        isSelected ? 0.0 : 90.0;
-                                    final transformOffsetY =
-                                        isSelected ? -35.0 : 0.0;
+                                  final isSelected = _currentIndex == index;
+                                  final transformOffsetX = isSelected ? 0.0 : 90.0;
+                                  final transformOffsetY = isSelected ? -35.0 : 0.0;
 
-                                    overlayEntry = OverlayEntry(
-                                      builder: (context) => SparkleBurstEffect(
-                                        center: Offset(
-                                          position.dx + renderBox.size.width / 2 + transformOffsetX,
-                                          position.dy + renderBox.size.height / 2 + transformOffsetY,
-                                        ),
-                                        radius: 60,
-                                        sparkleCount: 15,
-                                        colors: [
-                                          Color(0xFF7BD3EA),
-                                          Color(0xFFA1EEBD),
-                                          Color(0xFFF6F7C4),
-                                          Color(0xFFF6D6D6),
-                                        ],
-                                        sizes: [8, 12, 16],
-                                        starShapes: [
-                                          StarShapes.fivePoint,
-                                          StarShapes.sixPoint,
-                                          StarShapes.diamond,
-                                          StarShapes.sparkle3,
-                                        ],
-                                        duration: Duration(milliseconds: 800),
-                                        onComplete: () {
-                                          overlayEntry.remove();
-                                        },
+                                  overlayEntry = OverlayEntry(
+                                    builder: (context) => SparkleBurstEffect(
+                                      center: Offset(
+                                        position.dx + renderBox.size.width / 2 + transformOffsetX,
+                                        position.dy + renderBox.size.height / 2 + transformOffsetY,
                                       ),
-                                    );
+                                      radius: 60,
+                                      sparkleCount: 15,
+                                      colors: [
+                                        Color(0xFF7BD3EA),
+                                        Color(0xFFA1EEBD),
+                                        Color(0xFFF6F7C4),
+                                        Color(0xFFF6D6D6),
+                                      ],
+                                      sizes: [8, 12, 16],
+                                      starShapes: [
+                                        StarShapes.fivePoint,
+                                        StarShapes.sixPoint,
+                                        StarShapes.diamond,
+                                        StarShapes.sparkle3,
+                                      ],
+                                      duration: Duration(milliseconds: 800),
+                                      onComplete: () {
+                                        overlayEntry.remove();
+                                      },
+                                    ),
+                                  );
 
-                                    overlay.insert(overlayEntry);
-                                  }
+                                  overlay.insert(overlayEntry);
                                 }
                               });
                               setState(() {
@@ -574,7 +577,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       curve: Curves.easeOut,
                                       child: CustomPaint(
                                         painter: Star8Painter(
-                                          color: isSelected ? selectedColor.withOpacity(0.8) : Colors.transparent,
+                                          color: isSelected ? selectedColor : Colors.transparent,
                                         ),
                                         child: SizedBox( width: 70,height: 70,),
                                       ),
