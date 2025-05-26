@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
-import 'package:flutter_resume_app/star/glowing_star.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,17 +29,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     _controller = PageController();
     super.initState();
-  }
-
-  Widget _buildDots({required int index}) {
-    final isActive = _currentPage == index;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: GlowingStar(
-        isActive: isActive,
-        size: 15,
-      ),
-    );
   }
 
   @override
@@ -115,13 +104,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //--------------------------------------- dot star------------------------------------------------//
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         contents.length,
-                        (index) => _buildDots(index: index),
+                        (index) => DotIndicator(
+                          isActive: _currentPage == index,
+                          dotSize: 15,
+                        ),
                       ),
                     ),
+                    //--------------------------------------- dot star------------------------------------------------//
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.all(30),
@@ -170,6 +164,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     ),
                                   ),
                                 ),
+                                //--------------------------------------- button star------------------------------------------------//
                                 GlowingStarButton(
                                   onPressed: () {
                                     _controller.nextPage(
@@ -185,6 +180,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     size: 30,
                                   ),
                                 ),
+                                //--------------------------------------- button star------------------------------------------------//
                               ],
                             ),
                     ),
