@@ -133,7 +133,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
                     onboardingItems.length,
                     (index) => DotIndicator(
                       isActive: currentIndex == index,
-                      dotSize: 15,
+                      dotSize: 10,
                     ),
                   ),
                 ),

@@ -178,485 +178,454 @@ class _HomeScreen extends State<HomeScreen> {
           ),
           //---------------------------------------- background star -------------------------------------//
           SafeArea(
-            child: Column(
-              children: [
-                //---------------------------------------- AppBar -------------------------------------//
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  title: Row(
-                    children: [
-                      SizedBox(
-                        width: isLandscape ? SizeConfig.scaleW(125) : SizeConfig.scaleW(95),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  //---------------------------------------- AppBar -------------------------------------//
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: Row(
+                      children: [
+                        SizedBox(
+                          width: isLandscape ? SizeConfig.scaleW(125) : SizeConfig.scaleW(95),
+                          height: SizeConfig.scaleH(40),
+                          child: Stack(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.purple.withOpacity(0.5),
+                                      Colors.blueAccent.withOpacity(0.5),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      TwinklingStarsBackground(
+                                        starCount: 150,
+                                        starColors: const [
+                                          Color(0xFFFFE1E0),
+                                          Color(0xFFF49BAB),
+                                          Color(0xFF9B7EBD),
+                                          Color(0xFF7F55B1),
+                                        ],
+                                        starShapes: [
+                                          StarShape.diamond,
+                                          StarShape.fivePoint,
+                                          StarShape.sixPoint,
+                                          StarShape.sparkle3,
+                                          StarShape.star4,
+                                        ],
+                                        child: const SizedBox.expand(),
+                                      ),
+                                      Text(
+                                        'Resume',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: isLandscape ? 12.sp : 25.sp,
+                                          fontFamily: 'SweetLollipop',
+                                          letterSpacing: 1,
+                                          wordSpacing: 4,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Creat',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: isLandscape ? 12.sp : 25.sp,
+                                fontFamily: 'SweetLollipop',
+                                letterSpacing: 1,
+                                wordSpacing: 4,
+                              ),
+                            ),
+                            Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                SizedBox(
+                                  width: SizeConfig.scaleW(24),
+                                ),
+                                Text(
+                                  'e',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: isLandscape ? 12.sp : 25.sp,
+                                    fontFamily: 'SweetLollipop',
+                                    letterSpacing: 1,
+                                    wordSpacing: 4,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: isLandscape ? 2 : 2,
+                                  right: isLandscape ? 2 : 8,
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 9,
+                                    color: Colors.yellowAccent,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: -1,
+                                  right:  isLandscape ? 0 : 5,
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 6,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.help_outline, color: Colors.white70),
+                        SizedBox(width: SizeConfig.scaleW(10)),
+                        const Icon(Icons.settings, color: Colors.white70),
+                      ],
+                    ),
+                  ),
+                  //---------------------------------------- AppBar -------------------------------------//
+                  SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
+                  OnboardingWidgetState(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: SizedBox(
                         height: SizeConfig.scaleH(40),
+                        width: double.infinity,
                         child: Stack(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                              alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Colors.purple.withOpacity(0.5),
-                                    Colors.blueAccent.withOpacity(0.5),
+                                    Color(0xFF4E71FF).withOpacity(0.9),
+                                    Color(0xFF8DD8FF).withOpacity(0.9),
+                                    Color(0xFFBBFBFF).withOpacity(0.9),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.white30,
+                                  style: BorderStyle.solid,
+                                ),
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    TwinklingStarsBackground(
-                                      starCount: 150,
-                                      starColors: const [
-                                        Color(0xFFFFE1E0),
-                                        Color(0xFFF49BAB),
-                                        Color(0xFF9B7EBD),
-                                        Color(0xFF7F55B1),
-                                      ],
-                                      starShapes: [
-                                        StarShape.diamond,
-                                        StarShape.fivePoint,
-                                        StarShape.sixPoint,
-                                        StarShape.sparkle3,
-                                        StarShape.star4,
-                                      ],
-                                      child: const SizedBox.expand(),
-                                    ),
-                                    Text(
-                                      'Resume',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: isLandscape ? 12.sp : 25.sp,
-                                        fontFamily: 'SweetLollipop',
-                                        letterSpacing: 1,
-                                        wordSpacing: 4,
-                                      ),
-                                    ),
+                                borderRadius: BorderRadius.circular(16),
+                                child: TwinklingStarsBackground(
+                                  starColors: const [
+                                    Color(0xFFFFE1E0),
+                                    Color(0xFFF49BAB),
+                                    Color(0xFF9B7EBD),
+                                    Color(0xFF7F55B1),
                                   ],
+                                  starShapes: [
+                                    StarShape.diamond,
+                                    StarShape.fivePoint,
+                                    StarShape.sixPoint,
+                                    StarShape.sparkle3,
+                                    StarShape.star4,
+                                  ],
+                                  child: const SizedBox.expand(),
                                 ),
+                              ),
+                            ),
+                            Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.add,
+                                    color: Color(0xFF010A1A).withOpacity(0.9),
+                                    size: 20
+                                  ),
+                                  SizedBox(width: SizeConfig.scaleW(8)),
+                                  Text(
+                                    'New Resume',
+                                    style: GoogleFonts.orbitron(
+                                      fontSize: isLandscape ? 8.sp : 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF010A1A).withOpacity(0.9),
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Creat',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: isLandscape ? 12.sp : 25.sp,
-                              fontFamily: 'SweetLollipop',
-                              letterSpacing: 1,
-                              wordSpacing: 4,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Text('My resume',
+                          style: GoogleFonts.orbitron(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: isLandscape ? 5.sp : 12.sp,
+                          )
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.cloud,
+                            size: 20, color: Colors.white70),
+                        SizedBox(width: SizeConfig.scaleW(4)),
+                        Text('Cloud storage',
+                          style: GoogleFonts.orbitron(
+                            color: Colors.white70,
+                            fontSize: isLandscape ? 5.sp : 12.sp,
+                          )
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: isLandscape ? 0 : SizeConfig.scaleH(10)),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: resumes.length,
+                    itemBuilder: (context, index) {
+                      final item = resumes[index];
+                      return Card(
+                        color: Colors.white.withOpacity(0.1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: Container(
+                            width: SizeConfig.scaleW(50),
+                            height: SizeConfig.scaleH(50),
+                            decoration: BoxDecoration(
+                              color: Colors.white24,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.description,
+                              color: Colors.white
                             ),
                           ),
-                          Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              SizedBox(
-                                width: SizeConfig.scaleW(24),
-                              ),
-                              Text(
-                                'e',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: isLandscape ? 12.sp : 25.sp,
-                                  fontFamily: 'SweetLollipop',
-                                  letterSpacing: 1,
-                                  wordSpacing: 4,
-                                ),
-                              ),
-                              Positioned(
-                                top: isLandscape ? 2 : 2,
-                                right: isLandscape ? 2 : 8,
-                                child: Icon(
-                                  Icons.star,
-                                  size: 9,
-                                  color: Colors.yellowAccent,
-                                ),
-                              ),
-                              Positioned(
-                                top: -1,
-                                right:  isLandscape ? 0 : 5,
-                                child: Icon(
-                                  Icons.star,
-                                  size: 6,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+                          title: Text(item['title'] ?? '',
+                              style: const TextStyle(color: Colors.white)),
+                          subtitle: Text('${item['date']} | ${item['size']} | ${item['pages']}',
+                            style: const TextStyle(color: Colors.white70),
                           ),
-                        ],
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.help_outline, color: Colors.white70),
-                      SizedBox(width: SizeConfig.scaleW(10)),
-                      const Icon(Icons.settings, color: Colors.white70),
-                    ],
+                          trailing: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white70
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-                //---------------------------------------- AppBar -------------------------------------//
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
-                      OnboardingWidgetState(),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: SizedBox(
-                            height: SizeConfig.scaleH(40),
-                            width: double.infinity,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF4E71FF).withOpacity(0.9),
-                                        Color(0xFF8DD8FF).withOpacity(0.9),
-                                        Color(0xFFBBFBFF).withOpacity(0.9),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: Colors.white30,
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: TwinklingStarsBackground(
-                                      starColors: const [
-                                        Color(0xFFFFE1E0),
-                                        Color(0xFFF49BAB),
-                                        Color(0xFF9B7EBD),
-                                        Color(0xFF7F55B1),
-                                      ],
-                                      starShapes: [
-                                        StarShape.diamond,
-                                        StarShape.fivePoint,
-                                        StarShape.sixPoint,
-                                        StarShape.sparkle3,
-                                        StarShape.star4,
-                                      ],
-                                      child: const SizedBox.expand(),
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.add,
-                                          color: Color(0xFF010A1A)
-                                              .withOpacity(0.9),
-                                          size: 20),
-                                      SizedBox(width: SizeConfig.scaleW(8)),
-                                      Text(
-                                        'New Resume',
-                                        style: GoogleFonts.orbitron(
-                                          fontSize: isLandscape ? 8.sp : 16.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFF010A1A).withOpacity(0.9),
-                                          letterSpacing: 1.2,
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: SizedBox(
+          height: 100,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 60,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF010A1A),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(icons.length, (index) {
+                          final isSelected = _currentIndex == index;
+                          final wasSelected = _previousIndex == index;
+                          final selectedColor =
+                              selectedColors[index % selectedColors.length];
+                          final selectediconColor = selectediconColors[
+                              index % selectediconColors.length];
+                          final Offset offset;
+                          return GestureDetector(
+                            key: _itemKeys[index],
+                            onTap: () {
+                              final context = _itemKeys[index].currentContext;
+                              if (context == null) return;
+        
+                              if (_currentIndex != index) {
+                                setState(() {
+                                  _previousIndex = _currentIndex;
+                                  _currentIndex = index;
+                                });
+        
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  final renderBox = context.findRenderObject();
+                                  if (renderBox is RenderBox) {
+                                    final position = renderBox.localToGlobal(Offset.zero);
+                                    final overlay = Overlay.of(context);
+                                    late final OverlayEntry overlayEntry;
+        
+                                    final isSelected = _currentIndex == index;
+                                    final transformOffsetX = isSelected ? 0.0 : 90.0;
+                                    final transformOffsetY = isSelected ? -35.0 : 0.0;
+        
+                                    overlayEntry = OverlayEntry(
+                                      builder: (context) => SparkleBurstEffect(
+                                        center: Offset(
+                                          position.dx + renderBox.size.width / 2 + transformOffsetX,
+                                          position.dy + renderBox.size.height / 2 + transformOffsetY,
                                         ),
+                                        radius: 60,
+                                        sparkleCount: 15,
+                                        colors: [
+                                          Color(0xFF7BD3EA),
+                                          Color(0xFFA1EEBD),
+                                          Color(0xFFF6F7C4),
+                                          Color(0xFFF6D6D6),
+                                        ],
+                                        sizes: [8, 12, 16],
+                                        starShapes: [
+                                          StarShapes.fivePoint,
+                                          StarShapes.sixPoint,
+                                          StarShapes.diamond,
+                                          StarShapes.sparkle3,
+                                        ],
+                                        duration: Duration(milliseconds: 800),
+                                        onComplete: () {
+                                          overlayEntry.remove();
+                                        },
+                                      ),
+                                    );
+        
+                                    overlay.insert(overlayEntry);
+                                  }
+                                });
+                                setState(() {
+                                  _currentIndex = index;
+                                });
+                              }
+                            },
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              alignment: Alignment.center,
+                              children: [
+                                if (wasSelected && _currentIndex != index)
+                                  AnimatedPositioned(
+                                    duration: const Duration(milliseconds: 400),
+                                    top: 0,
+                                    curve: Curves.easeOut,
+                                    child: AnimatedOpacity(
+                                      duration: const Duration(milliseconds: 400),
+                                      opacity: 0,
+                                      child: Container(
+                                        width: 70,
+                                        height: 70,
+                                        decoration: BoxDecoration(
+                                          color: selectedColor.withOpacity(0.2),
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.easeOut,
+                                  transform: Matrix4.translationValues( 0, isSelected ? -30 : 0, 0),
+                                  width: 70,
+                                  height: 70,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      AnimatedRotation(
+                                        turns: isSelected ? 1.0 : 0.0,
+                                        duration: const Duration(milliseconds: 1000),
+                                        curve: Curves.easeOut,
+                                        child: CustomPaint(
+                                          painter: Star8Painter(
+                                            color: isSelected ? selectedColor : Colors.transparent,
+                                          ),
+                                          child: SizedBox( width: 70,height: 70,),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AnimatedScale(
+                                            scale: isSelected ? 1.3 : 1.0,
+                                            duration: const Duration(milliseconds: 300),
+                                            child: Icon(
+                                              icons[index],
+                                              color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            labels[index],
+                                            style: TextStyle(
+                                              color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          children: [
-                            Text('My resume',
-                                style: GoogleFonts.orbitron(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: isLandscape ? 5.sp : 12.sp,
-                                )),
-                            const Spacer(),
-                            const Icon(Icons.cloud,
-                                size: 20, color: Colors.white70),
-                            SizedBox(width: SizeConfig.scaleW(4)),
-                            Text('Cloud storage',
-                              style: GoogleFonts.orbitron(
-                                color: Colors.white70,
-                                fontSize: isLandscape ? 5.sp : 12.sp,
-                              )
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: isLandscape ? 0 : SizeConfig.scaleH(10)),
-                      SizedBox(
-                        height:   isLandscape ? actualHeight : THeight,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: resumes.length,
-                          itemBuilder: (context, index) {
-                            final item = resumes[index];
-                            return Card(
-                              color: Colors.white.withOpacity(0.1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: ListTile(
-                                leading: Container(
-                                  width: SizeConfig.scaleW(50),
-                                  height: SizeConfig.scaleH(50),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white24,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(Icons.description,
-                                      color: Colors.white),
-                                ),
-                                title: Text(item['title'] ?? '',
-                                    style:
-                                        const TextStyle(color: Colors.white)),
-                                subtitle: Text(
-                                  '${item['date']} | ${item['size']} | ${item['pages']}',
-                                  style: const TextStyle(color: Colors.white70),
-                                ),
-                                trailing: const Icon(Icons.more_vert,
-                                    color: Colors.white70),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 100,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            height: 60,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF010A1A),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(icons.length, (index) {
-                        final isSelected = _currentIndex == index;
-                        final wasSelected = _previousIndex == index;
-                        final selectedColor =
-                            selectedColors[index % selectedColors.length];
-                        final selectediconColor = selectediconColors[
-                            index % selectediconColors.length];
-                        final Offset offset;
-                        return GestureDetector(
-                          key: _itemKeys[index],
-                          onTap: () {
-                            final context = _itemKeys[index].currentContext;
-                            if (context == null) return;
-
-                            if (_currentIndex != index) {
-                              setState(() {
-                                _previousIndex = _currentIndex;
-                                _currentIndex = index;
-                              });
-
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                final renderBox = context.findRenderObject();
-                                if (renderBox is RenderBox) {
-                                  final position = renderBox.localToGlobal(Offset.zero);
-                                  final overlay = Overlay.of(context);
-                                  late final OverlayEntry overlayEntry;
-
-                                  final isSelected = _currentIndex == index;
-                                  final transformOffsetX = isSelected ? 0.0 : 90.0;
-                                  final transformOffsetY = isSelected ? -35.0 : 0.0;
-
-                                  overlayEntry = OverlayEntry(
-                                    builder: (context) => SparkleBurstEffect(
-                                      center: Offset(
-                                        position.dx + renderBox.size.width / 2 + transformOffsetX,
-                                        position.dy + renderBox.size.height / 2 + transformOffsetY,
-                                      ),
-                                      radius: 60,
-                                      sparkleCount: 15,
-                                      colors: [
-                                        Color(0xFF7BD3EA),
-                                        Color(0xFFA1EEBD),
-                                        Color(0xFFF6F7C4),
-                                        Color(0xFFF6D6D6),
-                                      ],
-                                      sizes: [8, 12, 16],
-                                      starShapes: [
-                                        StarShapes.fivePoint,
-                                        StarShapes.sixPoint,
-                                        StarShapes.diamond,
-                                        StarShapes.sparkle3,
-                                      ],
-                                      duration: Duration(milliseconds: 800),
-                                      onComplete: () {
-                                        overlayEntry.remove();
-                                      },
-                                    ),
-                                  );
-
-                                  overlay.insert(overlayEntry);
-                                }
-                              });
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            }
-                          },
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.center,
-                            children: [
-                              if (wasSelected && _currentIndex != index)
-                                AnimatedPositioned(
-                                  duration: const Duration(milliseconds: 400),
-                                  top: 0,
-                                  curve: Curves.easeOut,
-                                  child: AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 400),
-                                    opacity: 0,
-                                    child: Container(
-                                      width: 70,
-                                      height: 70,
-                                      decoration: BoxDecoration(
-                                        color: selectedColor.withOpacity(0.2),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeOut,
-                                transform: Matrix4.translationValues( 0, isSelected ? -30 : 0, 0),
-                                width: 70,
-                                height: 70,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    AnimatedRotation(
-                                      turns: isSelected ? 1.0 : 0.0,
-                                      duration: const Duration(milliseconds: 1000),
-                                      curve: Curves.easeOut,
-                                      child: CustomPaint(
-                                        painter: Star8Painter(
-                                          color: isSelected ? selectedColor : Colors.transparent,
-                                        ),
-                                        child: SizedBox( width: 70,height: 70,),
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        AnimatedScale(
-                                          scale: isSelected ? 1.3 : 1.0,
-                                          duration: const Duration(milliseconds: 300),
-                                          child: Icon(
-                                            icons[index],
-                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
-                                          ),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          labels[index],
-                                          style: TextStyle(
-                                            color: isSelected ? const Color(0xFF010A1A).withOpacity(0.6) : Colors.white70,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
                     ),
                   ),
-                ),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(40)),
-                  child: IgnorePointer(
-                    child: TwinklingStarsBackground(
-                      starColors: const [
-                        Color(0xFFFFE1E0),
-                        Color(0xFFF49BAB),
-                        Color(0xFF9B7EBD),
-                        Color(0xFF7F55B1),
-                      ],
-                      starShapes: [
-                        StarShape.diamond,
-                        StarShape.fivePoint,
-                        StarShape.sixPoint,
-                        StarShape.sparkle3,
-                      ],
-                      child: const SizedBox.expand(),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(40)),
+                    child: IgnorePointer(
+                      child: TwinklingStarsBackground(
+                        starColors: const [
+                          Color(0xFFFFE1E0),
+                          Color(0xFFF49BAB),
+                          Color(0xFF9B7EBD),
+                          Color(0xFF7F55B1),
+                        ],
+                        starShapes: [
+                          StarShape.diamond,
+                          StarShape.fivePoint,
+                          StarShape.sixPoint,
+                          StarShape.sparkle3,
+                        ],
+                        child: const SizedBox.expand(),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _IconMenu extends StatelessWidget {
-  const _IconMenu({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.white24,
-            child: Icon(icon, color: Colors.white),
-          ),
-          SizedBox(height: SizeConfig.scaleH(4)),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: isLandscape ? 5.sp : 12.sp,
-              color: Colors.white70,
-            ),
-          ),
-        ],
       ),
     );
   }
