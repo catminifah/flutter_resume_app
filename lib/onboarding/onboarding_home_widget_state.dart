@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/onboarding/onboarding_home_data.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingWidgetState extends StatefulWidget {
   const OnboardingWidgetState({super.key});
@@ -27,6 +28,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
   @override
   void initState() {
     super.initState();
+    _autoSlideTimer?.cancel();
     _pageController = PageController(initialPage: 1);
     _startAutoSlide();
   }
@@ -34,12 +36,18 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
   void _startAutoSlide() {
     _autoSlideTimer?.cancel();
     _autoSlideTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      int nextPage = _pageController.page!.toInt() + 1;
-      _pageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+      if (!mounted || !_pageController.hasClients) return;
+
+      int nextPage = (_pageController.page ?? 1).toInt() + 1;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_pageController.hasClients) {
+          _pageController.animateToPage(
+            nextPage,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     });
   }
 
@@ -69,7 +77,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
     return SizedBox(
       width: SizeConfig.screenW!,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
         child: AspectRatio(
           aspectRatio: 16 / 9,
           child: Stack(
@@ -81,7 +89,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
                 itemBuilder: (context, index) {
                   final item = loopedItems[index];
                   return ClipRRect(
-                    //borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -104,7 +112,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
                           right: 16,
                           child: Text(
                             item.title,
-                            style: TextStyle(
+                            style: GoogleFonts.orbitron(
                               color: Colors.white.withOpacity(0.5),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
