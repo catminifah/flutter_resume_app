@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/onboarding_data/onboarding_home_data.dart';
+import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/sparkle_burst.dart';
@@ -51,46 +51,11 @@ class _HomeScreen extends State<HomeScreen> {
     print("Orientation changed: $orientation");
     setState(() {});
   }
-  int currentIndex = 0;
-  PageController _pageController = PageController();
-  Timer? _autoSlideTimer;
-
-  void _startAutoSlide() {
-    _autoSlideTimer = Timer.periodic(Duration(seconds: 3), (_) {
-      int nextPage = currentIndex + 1;
-      if (nextPage >= onboardingItems.length) {
-        nextPage = 0;
-      }
-      _pageController.animateToPage(
-        nextPage,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     _itemKeys = List.generate(icons.length, (_) => GlobalKey());
-    _pageController = PageController();
-    _pageController.addListener(() {
-      int next = _pageController.page?.round() ?? 0;
-      if (currentIndex != next) {
-        setState(() {
-          currentIndex = next;
-        });
-      }
-    });
-
-    _startAutoSlide();
-  }
-
-  @override
-  void dispose() {
-    _autoSlideTimer?.cancel();
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -341,91 +306,9 @@ class _HomeScreen extends State<HomeScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
-                      SizedBox(
-                        height: SizeConfig.scaleH(180),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                          child: AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: Stack(
-                              children: [
-                                PageView.builder(
-                                  controller: _pageController,
-                                  itemCount: onboardingItems.length,
-                                  onPageChanged: (index) {
-                                    setState(() => currentIndex = index);
-                                  },
-                                  itemBuilder: (context, index) {
-                                    final item = onboardingItems[index];
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          Image.asset(
-                                            item.imagePath,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  Colors.black54,
-                                                  Colors.transparent
-                                                ],
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 24,
-                                            left: 16,
-                                            right: 16,
-                                            child: Text(
-                                              item.title,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                shadows: [
-                                                  Shadow(
-                                                    offset: Offset(0, 1),
-                                                    blurRadius: 2,
-                                                    color: Colors.black87,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                // 🔸 Positioned dot indicator
-                                Positioned(
-                                  bottom: 10,
-                                  right: 16,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(
-                                      onboardingItems.length,
-                                      (index) => DotIndicator(
-                                        isActive: currentIndex == index,
-                                        dotSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      OnboardingWidgetState(),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                         child: GestureDetector(
                           onTap: () {},
                           child: SizedBox(
