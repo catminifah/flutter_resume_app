@@ -613,6 +613,8 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
   //------------------------------ Widget Button New Resume ----------------------------------------//
+
+  //------------------------------ Widget Resume Header ----------------------------------------//
   Widget _buildMyResumeHeader(var isLandscape) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -638,4 +640,5 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
   }
+  //------------------------------ Widget Resume Header ----------------------------------------//
 }
