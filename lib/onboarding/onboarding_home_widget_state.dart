@@ -69,7 +69,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
     return SizedBox(
       width: SizeConfig.screenW!,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         child: AspectRatio(
           aspectRatio: 16 / 9,
           child: Stack(
@@ -81,7 +81,7 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
                 itemBuilder: (context, index) {
                   final item = loopedItems[index];
                   return ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
+                    //borderRadius: BorderRadius.circular(16),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [

@@ -181,132 +181,135 @@ class _HomeScreen extends State<HomeScreen> {
             child: Column(
               children: [
                 //---------------------------------------- AppBar -------------------------------------//
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  title: Row(
-                    children: [
-                      SizedBox(
-                        width: isLandscape ? SizeConfig.scaleW(125) : SizeConfig.scaleW(95),
-                        height: SizeConfig.scaleH(40),
-                        child: Stack(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.purple.withOpacity(0.5),
-                                    Colors.blueAccent.withOpacity(0.5),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    TwinklingStarsBackground(
-                                      starCount: 150,
-                                      starColors: const [
-                                        Color(0xFFFFE1E0),
-                                        Color(0xFFF49BAB),
-                                        Color(0xFF9B7EBD),
-                                        Color(0xFF7F55B1),
-                                      ],
-                                      starShapes: [
-                                        StarShape.diamond,
-                                        StarShape.fivePoint,
-                                        StarShape.sixPoint,
-                                        StarShape.sparkle3,
-                                        StarShape.star4,
-                                      ],
-                                      child: const SizedBox.expand(),
-                                    ),
-                                    Text(
-                                      'Resume',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: isLandscape ? 12.sp : 25.sp,
-                                        fontFamily: 'SweetLollipop',
-                                        letterSpacing: 1,
-                                        wordSpacing: 4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                Stack(
+                  children: [
+                    OnboardingWidgetState(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      child: Row(
                         children: [
-                          Text(
-                            'Creat',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: isLandscape ? 12.sp : 25.sp,
-                              fontFamily: 'SweetLollipop',
-                              letterSpacing: 1,
-                              wordSpacing: 4,
+                          SizedBox(
+                            width: isLandscape? SizeConfig.scaleW(125) : SizeConfig.scaleW(95),
+                            height: SizeConfig.scaleH(40),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.purple.withOpacity(0.8),
+                                        Colors.blueAccent.withOpacity(0.8),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        TwinklingStarsBackground(
+                                          starCount: 150,
+                                          starColors: const [
+                                            Color(0xFFFFE1E0),
+                                            Color(0xFFF49BAB),
+                                            Color(0xFF9B7EBD),
+                                            Color(0xFF7F55B1),
+                                          ],
+                                          starShapes: [
+                                            StarShape.diamond,
+                                            StarShape.fivePoint,
+                                            StarShape.sixPoint,
+                                            StarShape.sparkle3,
+                                            StarShape.star4,
+                                          ],
+                                          child: const SizedBox.expand(),
+                                        ),
+                                        Text(
+                                          'Resume',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: isLandscape ? 12.sp : 25.sp,
+                                            fontFamily: 'SweetLollipop',
+                                            letterSpacing: 1,
+                                            wordSpacing: 4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Stack(
-                            alignment: Alignment.centerLeft,
+                          const SizedBox(width: 8),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(
-                                width: SizeConfig.scaleW(24),
-                              ),
                               Text(
-                                'e',
+                                'Creat',
                                 style: TextStyle(
-                                  color: Colors.white70,
+                                  color: Colors.white,
                                   fontSize: isLandscape ? 12.sp : 25.sp,
                                   fontFamily: 'SweetLollipop',
                                   letterSpacing: 1,
                                   wordSpacing: 4,
                                 ),
                               ),
-                              Positioned(
-                                top: isLandscape ? 2 : 2,
-                                right: isLandscape ? 2 : 8,
-                                child: Icon(
-                                  Icons.star,
-                                  size: 9,
-                                  color: Colors.yellowAccent,
-                                ),
-                              ),
-                              Positioned(
-                                top: -1,
-                                right:  isLandscape ? 0 : 5,
-                                child: Icon(
-                                  Icons.star,
-                                  size: 6,
-                                  color: Colors.white,
-                                ),
+                              Stack(
+                                alignment: Alignment.centerLeft,
+                                children: [
+                                  SizedBox(
+                                    width: SizeConfig.scaleW(24),
+                                  ),
+                                  Text(
+                                    'e',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isLandscape ? 12.sp : 25.sp,
+                                      fontFamily: 'SweetLollipop',
+                                      letterSpacing: 1,
+                                      wordSpacing: 4,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: isLandscape ? 2 : 2,
+                                    right: isLandscape ? 2 : 8,
+                                    child: Icon(
+                                      Icons.star,
+                                      size: 9,
+                                      color: Colors.yellowAccent,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: -1,
+                                    right: isLandscape ? 0 : 5,
+                                    child: Icon(
+                                      Icons.star,
+                                      size: 6,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          const Spacer(),
+                          const Icon(Icons.help_outline, color: Colors.white70),
+                          SizedBox(width: SizeConfig.scaleW(10)),
+                          const Icon(Icons.settings, color: Colors.white70),
                         ],
                       ),
-                      const Spacer(),
-                      const Icon(Icons.help_outline, color: Colors.white70),
-                      SizedBox(width: SizeConfig.scaleW(10)),
-                      const Icon(Icons.settings, color: Colors.white70),
-                    ],
-                  ),
+                    )
+                  ],
                 ),
                 //---------------------------------------- AppBar -------------------------------------//
                 SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
-                      OnboardingWidgetState(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                         child: GestureDetector(
