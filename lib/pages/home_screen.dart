@@ -175,57 +175,77 @@ class _HomeScreen extends State<HomeScreen> {
           ),
           //---------------------------------------- background star -------------------------------------//
           SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  //---------------------------------------- AppBar -------------------------------------//
-                  _buildAppBar(isLandscape),
-                  //---------------------------------------- AppBar -------------------------------------//
-                  SizedBox(height: isLandscape ? SizeConfig.scaleH(0) :SizeConfig.scaleH(10)),
-                  OnboardingWidgetState(),
-                  _buildNewResumeButton(isLandscape),
-                  _buildMyResumeHeader(isLandscape),
-                  SizedBox(height: isLandscape ? 0 : SizeConfig.scaleH(10)),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: resumes.length,
-                    itemBuilder: (context, index) {
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      //---------------------------------------- AppBar -------------------------------------//
+                      _buildAppBar(isLandscape),
+                      //---------------------------------------- AppBar -------------------------------------//
+                      SizedBox(
+                          height: isLandscape ? SizeConfig.scaleH(0) : SizeConfig.scaleH(10)),
+                      //------------------------------------- Onboarding -------------------------------------//
+                      OnboardingWidgetState(),
+                      //------------------------------------- Onboarding -------------------------------------//
+                      
+                    ],
+                  ),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _StickyHeaderDelegate(
+                    minHeight: 100,
+                    maxHeight: 100,
+                    child: Column(
+                      children: [
+                        //---------------------------------------- Button -------------------------------------//
+                        _buildNewResumeButton(isLandscape),
+                        //---------------------------------------- Button -------------------------------------//
+                        _buildMyResumeHeader(isLandscape),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
                       final item = resumes[index];
-                      return Card(
-                        color: Colors.white.withOpacity(0.1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          leading: Container(
-                            width: SizeConfig.scaleW(50),
-                            height: SizeConfig.scaleH(50),
-                            decoration: BoxDecoration(
-                              color: Colors.white24,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.description,
-                              color: Colors.white
-                            ),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 0),
+                        child: Card(
+                          color: Colors.white.withOpacity(0.1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          title: Text(item['title'] ?? '',
-                              style: const TextStyle(color: Colors.white)),
-                          subtitle: Text('${item['date']} | ${item['size']} | ${item['pages']}',
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          trailing: const Icon(
-                            Icons.more_vert,
-                            color: Colors.white70
+                          child: ListTile(
+                            leading: Container(
+                              width: SizeConfig.scaleW(50),
+                              height: SizeConfig.scaleH(50),
+                              decoration: BoxDecoration(
+                                color: Colors.white24,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.description,
+                                  color: Colors.white),
+                            ),
+                            title: Text(item['title'] ?? '',
+                                style: const TextStyle(color: Colors.white)),
+                            subtitle: Text(
+                              '${item['date']} | ${item['size']} | ${item['pages']}',
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                            trailing: const Icon(Icons.more_vert,
+                                color: Colors.white70),
                           ),
                         ),
                       );
                     },
+                    childCount: resumes.length,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -641,4 +661,38 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
   //------------------------------ Widget Resume Header ----------------------------------------//
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  _StickyHeaderDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.transparent,
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
+  }
 }

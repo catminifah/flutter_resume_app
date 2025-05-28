@@ -12,7 +12,7 @@ class OnboardingWidgetState extends StatefulWidget {
   State<OnboardingWidgetState> createState() => _OnboardingWidgetState();
 }
 
-class _OnboardingWidgetState extends State<OnboardingWidgetState> {
+class _OnboardingWidgetState extends State<OnboardingWidgetState> with WidgetsBindingObserver {
   late PageController _pageController;
   int currentIndex = 0;
   Timer? _autoSlideTimer;
@@ -26,11 +26,34 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
   }
 
   @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    _autoSlideTimer?.cancel();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_pageController.hasClients) return;
+      try {
+        final currentPage = (_pageController.page ?? 1).round();
+        _pageController.jumpToPage(currentPage);
+      } catch (_) {}
+      _startAutoSlide();
+    });
+  }
+
+  @override
   void initState() {
     super.initState();
-    _autoSlideTimer?.cancel();
+    WidgetsBinding.instance.addObserver(this);
     _pageController = PageController(initialPage: 1);
     _startAutoSlide();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _autoSlideTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _startAutoSlide() {
@@ -38,16 +61,16 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
     _autoSlideTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (!mounted || !_pageController.hasClients) return;
 
-      int nextPage = (_pageController.page ?? 1).toInt() + 1;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageController.hasClients) {
-          _pageController.animateToPage(
-            nextPage,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
+      try {
+        int nextPage = (_pageController.page ?? 1).round() + 1;
+        _pageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      } catch (e) {
+        debugPrint('Slide error: $e');
+      }
     });
   }
 
@@ -63,13 +86,6 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> {
         currentIndex = index - 1;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    _autoSlideTimer?.cancel();
-    super.dispose();
   }
 
   @override
