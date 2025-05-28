@@ -28,17 +28,29 @@ class _OnboardingWidgetState extends State<OnboardingWidgetState> with WidgetsBi
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
+
+    if (!mounted || !_pageController.hasClients) return;
+
     _autoSlideTimer?.cancel();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_pageController.hasClients) return;
       try {
         final currentPage = (_pageController.page ?? 1).round();
-        _pageController.jumpToPage(currentPage);
-      } catch (_) {}
+        final nextPage = currentPage + 1;
+
+        if (nextPage < loopedItems.length) {
+          _pageController.jumpToPage(nextPage);
+        } else {
+          _pageController.jumpToPage(1);
+        }
+      } catch (e) {
+        debugPrint("Error in didChangeMetrics: $e");
+      }
+
       _startAutoSlide();
     });
   }
+
 
   @override
   void initState() {

@@ -195,54 +195,63 @@ class _HomeScreen extends State<HomeScreen> {
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _StickyHeaderDelegate(
-                    minHeight: 100,
-                    maxHeight: 100,
-                    child: Column(
-                      children: [
-                        //---------------------------------------- Button -------------------------------------//
-                        _buildNewResumeButton(isLandscape),
-                        //---------------------------------------- Button -------------------------------------//
-                        _buildMyResumeHeader(isLandscape),
-                      ],
+                    minHeight: 200,
+                    maxHeight: 400,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildNewResumeButton(isLandscape),
+                          const SizedBox(height: 8),
+                          _buildMyResumeHeader(isLandscape),
+                          const SizedBox(height: 8),
+                          const Divider(color: Colors.white24),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: resumes.length,
+                              itemBuilder: (context, index) {
+                                final item = resumes[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Card(
+                                    color: Colors.white.withOpacity(0.1),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: SizeConfig.scaleW(50),
+                                        height: SizeConfig.scaleH(50),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white24,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: const Icon(Icons.description,
+                                            color: Colors.white),
+                                      ),
+                                      title: Text(item['title'] ?? '',
+                                          style: const TextStyle(
+                                              color: Colors.white)),
+                                      subtitle: Text(
+                                        '${item['date']} | ${item['size']} | ${item['pages']}',
+                                        style: const TextStyle(
+                                            color: Colors.white70),
+                                      ),
+                                      trailing: const Icon(Icons.more_vert,
+                                          color: Colors.white70),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = resumes[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 0),
-                        child: Card(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ListTile(
-                            leading: Container(
-                              width: SizeConfig.scaleW(50),
-                              height: SizeConfig.scaleH(50),
-                              decoration: BoxDecoration(
-                                color: Colors.white24,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(Icons.description,
-                                  color: Colors.white),
-                            ),
-                            title: Text(item['title'] ?? '',
-                                style: const TextStyle(color: Colors.white)),
-                            subtitle: Text(
-                              '${item['date']} | ${item['size']} | ${item['pages']}',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                            trailing: const Icon(Icons.more_vert,
-                                color: Colors.white70),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: resumes.length,
                   ),
                 ),
               ],
@@ -370,9 +379,7 @@ class _HomeScreen extends State<HomeScreen> {
                                         duration: const Duration(milliseconds: 1000),
                                         curve: Curves.easeOut,
                                         child: CustomPaint(
-                                          painter: Star8Painter(
-                                            color: isSelected ? selectedColor : Colors.transparent,
-                                          ),
+                                          painter: Star8Painter(color: isSelected ? selectedColor : Colors.transparent,),
                                           child: SizedBox( width: 70,height: 70,),
                                         ),
                                       ),
@@ -435,6 +442,7 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
   }
+  /////////////////////////////////////////////////// Widget //////////////////////////////////////////////////////////////////
   //------------------------------ Widget App bar ----------------------------------------//
   Widget _buildAppBar(var isLandscape) {
     Size size = MediaQuery.of(context).size;
