@@ -183,8 +183,7 @@ class _HomeScreen extends State<HomeScreen> {
                       //---------------------------------------- AppBar -------------------------------------//
                       _buildAppBar(isLandscape),
                       //---------------------------------------- AppBar -------------------------------------//
-                      SizedBox(
-                          height: isLandscape ? SizeConfig.scaleH(0) : SizeConfig.scaleH(10)),
+                      SizedBox(height: isLandscape ? SizeConfig.scaleH(0) : SizeConfig.scaleH(10)),
                       //------------------------------------- Onboarding -------------------------------------//
                       OnboardingWidgetState(),
                       //------------------------------------- Onboarding -------------------------------------//
@@ -209,45 +208,7 @@ class _HomeScreen extends State<HomeScreen> {
                           const Divider(color: Colors.white24),
                           const SizedBox(height: 8),
                           Expanded(
-                            child: ListView.builder(
-                              itemCount: resumes.length,
-                              itemBuilder: (context, index) {
-                                final item = resumes[index];
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Card(
-                                    color: Colors.white.withOpacity(0.1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: SizeConfig.scaleW(50),
-                                        height: SizeConfig.scaleH(50),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white24,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: const Icon(Icons.description,
-                                            color: Colors.white),
-                                      ),
-                                      title: Text(item['title'] ?? '',
-                                          style: const TextStyle(
-                                              color: Colors.white)),
-                                      subtitle: Text(
-                                        '${item['date']} | ${item['size']} | ${item['pages']}',
-                                        style: const TextStyle(
-                                            color: Colors.white70),
-                                      ),
-                                      trailing: const Icon(Icons.more_vert,
-                                          color: Colors.white70),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                            child: buildResumeList(resumes),
                           ),
                         ],
                       ),
@@ -668,7 +629,79 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
   }
+
   //------------------------------ Widget Resume Header ----------------------------------------//
+  Widget buildResumeList(List<Map<String, dynamic>> resumes) {
+    return Stack(
+      children: [
+        ListView.builder(
+          padding: const EdgeInsets.only(top: 16, bottom: 32),
+          shrinkWrap: true,
+          itemCount: resumes.length,
+          itemBuilder: (context, index) {
+            final item = resumes[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF4E71FF).withOpacity(0.2),
+                          Color(0xFF8DD8FF).withOpacity(0.2),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white24, width: 1),
+                      /*boxShadow: [
+                      BoxShadow(
+                        color: Colors.white24.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],*/
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white24, width: 1),
+                        ),
+                        child:
+                            const Icon(Icons.description, color: Colors.white),
+                      ),
+                      title: Text(
+                        item['title'] ?? 'Untitled',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${item['date']} | ${item['size']} | ${item['pages']}',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                      trailing:
+                          const Icon(Icons.more_vert, color: Colors.white70),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
 }
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
