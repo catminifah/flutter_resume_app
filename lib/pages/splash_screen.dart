@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/pastel_star_color.dart';
+import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
@@ -63,12 +66,6 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  final List<Color> _gradientColors = const [
-    Color(0xFF010A1A),
-    Color(0xFF092E6E),
-    Color(0xFF254E99),
-  ];
-
   Path drawStar(Size size) {
     const int numPoints = 5;
     final double outerRadius = size.width / 2;
@@ -100,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: _gradientColors,
+                colors: BackgroundColors.iBackgroundColors,
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -135,12 +132,7 @@ class _SplashScreenState extends State<SplashScreen>
                           ShaderMask(
                             shaderCallback: (Rect bounds) {
                               return const LinearGradient(
-                                colors: [
-                                  Color(0xFFFFE1E0),
-                                  Color(0xFFF49BAB),
-                                  Color(0xFF9B7EBD),
-                                  Color(0xFF7F55B1),
-                                ],
+                                colors: PastelStarColor.iPastelStarColor,
                               ).createShader(bounds);
                             },
                             blendMode: BlendMode.srcIn,
@@ -166,12 +158,7 @@ class _SplashScreenState extends State<SplashScreen>
                     minBlastForce: 5,
                     emissionFrequency: 0.02,
                     gravity: 0.3,
-                    colors: const [
-                      Color(0xFF7BD3EA),
-                      Color(0xFFA1EEBD),
-                      Color(0xFFF6F7C4),
-                      Color(0xFFF6D6D6),
-                    ],
+                    colors: PastelStarColor2.iPastelStarColor,
                     createParticlePath: (size) => drawStar(size),
                   )
                 ],
