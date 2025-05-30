@@ -1,35 +1,34 @@
 import 'dart:convert';
-import 'package:flutter_resume_app/models/file_helper.dart';
-
-import '../models/resume_model.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'resume_model.dart';
 
 class ResumeService {
-  Future<void> saveResume(ResumeModel resume) async {
-    final file = await FileHelper.getResumeFile();
-    final jsonStr = jsonEncode(resume.toJson());
-    await file.writeAsString(jsonStr);
+  static Future<File> _getFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/resumes.json');
   }
 
-  Future<ResumeModel?> loadResume() async {
+  static Future<List<ResumeModel>> loadAll() async {
     try {
-      final file = await FileHelper.getResumeFile();
-      if (await file.exists()) {
-        final jsonStr = await file.readAsString();
-        final data = jsonDecode(jsonStr);
-        return ResumeModel.fromJson(data);
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print("Error loading resume: $e");
-      return null;
+      final file = await _getFile();
+      if (!(await file.exists())) return [];
+      final data = json.decode(await file.readAsString());
+      return (data as List).map((e) => ResumeModel.fromJson(e)).toList();
+    } catch (_) {
+      return [];
     }
   }
 
-  Future<void> deleteResume() async {
-    final file = await FileHelper.getResumeFile();
-    if (await file.exists()) {
-      await file.delete();
-    }
+  static Future<void> saveAll(List<ResumeModel> resumes) async {
+    final file = await _getFile();
+    final jsonData = resumes.map((e) => e.toJson()).toList();
+    await file.writeAsString(json.encode(jsonData));
+  }
+
+  static Future<void> deleteResume(String id) async {
+    final resumes = await loadAll();
+    resumes.removeWhere((r) => r.id == id);
+    await saveAll(resumes);
   }
 }

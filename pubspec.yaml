@@ -78,6 +78,7 @@ flutter:
     - assets/fonts/SweetLollipop.ttf
     - assets/images/
     - assets/onboarding-style-images/
+    - assets/icons_home/
   fonts:
     - family: SweetLollipop
       fonts:
