@@ -13,9 +13,12 @@ class ResumeService {
     try {
       final file = await _getFile();
       if (!(await file.exists())) return [];
-      final data = json.decode(await file.readAsString());
+      final content = await file.readAsString();
+      if (content.trim().isEmpty) return [];
+      final data = json.decode(content);
       return (data as List).map((e) => ResumeModel.fromJson(e)).toList();
-    } catch (_) {
+    } catch (e) {
+      print('Error loading resumes: $e');
       return [];
     }
   }
@@ -31,4 +34,32 @@ class ResumeService {
     resumes.removeWhere((r) => r.id == id);
     await saveAll(resumes);
   }
+
+  //----------------- new resume -----------------------//
+  static Future<void> create(ResumeModel resume) async {
+    final resumes = await loadAll();
+    resumes.add(resume);
+    await saveAll(resumes);
+  }
+
+  //----------------- update resume -------------------//
+  static Future<void> update(ResumeModel updatedResume) async {
+    final resumes = await loadAll();
+    final index = resumes.indexWhere((r) => r.id == updatedResume.id);
+    if (index != -1) {
+      resumes[index] = updatedResume;
+      await saveAll(resumes);
+    }
+  }
+
+  //-------------- select resume from id ----------------//
+  static Future<ResumeModel?> loadById(String id) async {
+    final resumes = await loadAll();
+    try {
+      return resumes.firstWhere((r) => r.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
 }

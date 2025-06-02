@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/colors/background_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
+import 'package:flutter_resume_app/models/resume_model.dart';
+import 'package:flutter_resume_app/models/resume_service.dart';
 import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart';
+import 'package:flutter_resume_app/pages/resume_editor.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/sparkle_burst.dart';
 import 'package:flutter_resume_app/star/star8_painter.dart';
@@ -205,7 +208,7 @@ class _HomeScreen extends State<HomeScreen> {
                           const SizedBox(height: 8),
                           const Divider(color: Colors.white24),
                           const SizedBox(height: 8),
-                          Expanded(child: buildResumeList(resumes),),
+                          Expanded(child: buildResumeListFuture(),),
                         ],
                       ),
                     ),
@@ -605,73 +608,105 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   //------------------------------ Widget Resume Header ----------------------------------------//
-  Widget buildResumeList(List<Map<String, dynamic>> resumes) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 16, bottom: 32),
-      shrinkWrap: true,
-      itemCount: resumes.length,
-      itemBuilder: (context, index) {
-        final item = resumes[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF4E71FF).withOpacity(0.2),
-                      Color(0xFF8DD8FF).withOpacity(0.2),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white24, width: 1),
-                  /*boxShadow: [
-                  BoxShadow(
-                    color: Colors.white24.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],*/
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-                  leading: Container(
-                    width: 50,
-                    height: 50,
+  Widget buildResumeListFuture() {
+    return FutureBuilder<List<ResumeModel>>(
+      future: ResumeService.loadAll(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+              child: Text('No resumes found.',
+                  style: TextStyle(color: Colors.white70)));
+        }
+
+        final resumes = snapshot.data!;
+
+        return ListView.builder(
+          padding: const EdgeInsets.only(top: 16, bottom: 32),
+          itemCount: resumes.length,
+          itemBuilder: (context, index) {
+            final item = resumes[index];
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              child: Stack(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
-                      color: Colors.white10,
-                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFF4E71FF).withOpacity(0.2),
+                          const Color(0xFF8DD8FF).withOpacity(0.2),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: Colors.white24, width: 1),
                     ),
-                    child:
-                        const Icon(Icons.description, color: Colors.white),
-                  ),
-                  title: Text(
-                    item['title'] ?? 'Untitled',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 2),
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white24, width: 1),
+                        ),
+                        child:
+                            const Icon(Icons.description, color: Colors.white),
+                      ),
+                      title: Text(
+                        '${item.firstname} ${item.lastname}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        item.email,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                      trailing: PopupMenuButton<String>(
+                        icon:
+                            const Icon(Icons.more_vert, color: Colors.white70),
+                        onSelected: (value) async {
+                          if (value == 'edit') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ResumeEditor(
+                                  resume: item,
+                                ),
+                              ),
+                            ).then((_) => setState(() {}));
+                          } else if (value == 'delete') {
+                            await ResumeService.deleteResume(item.id);
+                            setState(() {}); // reload list
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                              value: 'edit', child: Text('Edit')),
+                          const PopupMenuItem(
+                              value: 'delete', child: Text('Delete')),
+                        ],
+                      ),
                     ),
                   ),
-                  subtitle: Text(
-                    '${item['date']} | ${item['size']} | ${item['pages']}',
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
-                  ),
-                  trailing:
-                      const Icon(Icons.more_vert, color: Colors.white70),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
-
 }
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {

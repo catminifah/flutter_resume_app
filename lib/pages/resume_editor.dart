@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/shared_preferences.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class ResumeEditor extends StatefulWidget {
-  const ResumeEditor({super.key});
+  final ResumeModel? resume;
+  const ResumeEditor({super.key, this.resume});
 
   @override
   State<ResumeEditor> createState() => _ResumeEditorState();
