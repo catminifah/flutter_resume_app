@@ -243,72 +243,142 @@ class _HomeScreen extends State<HomeScreen> {
   Widget _buildNewResumeButton(var isLandscape) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ResumeEditor()),
-          );
-        },
-        child: SizedBox(
-          height: SizeConfig.scaleH(40),
-          width: double.infinity,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF4E71FF).withOpacity(0.9),
-                      Color(0xFF8DD8FF).withOpacity(0.9),
-                      Color(0xFFBBFBFF).withOpacity(0.9),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.white30,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: TwinklingStarsBackground(
-                    starColors: PastelStarColor.iPastelStarColor,
-                    starShapes: [
-                      StarShape.diamond,
-                      StarShape.fivePoint,
-                      StarShape.sixPoint,
-                      StarShape.sparkle3,
-                      StarShape.star4,
-                    ],
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-              ),
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ResumeEditor()),
+                );
+              },
+              child: SizedBox(
+                height: SizeConfig.scaleH(80),
+                child: Stack(
                   children: [
-                    Icon(Icons.add,
-                        color: Color(0xFF010A1A).withOpacity(0.9), size: 20),
-                    SizedBox(width: SizeConfig.scaleW(8)),
-                    Text(
-                      'New Resume',
-                      style: GoogleFonts.orbitron(
-                        fontSize: isLandscape ? 8.sp : 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF010A1A).withOpacity(0.9),
-                        letterSpacing: 1.2,
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF4E71FF).withOpacity(0.9),
+                            Color(0xFF8DD8FF).withOpacity(0.9),
+                            Color(0xFFBBFBFF).withOpacity(0.9),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white30),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: TwinklingStarsBackground(
+                          starColors: PastelStarColor.iPastelStarColor,
+                          starShapes: [
+                            StarShape.diamond,
+                            StarShape.fivePoint,
+                            StarShape.sixPoint,
+                            StarShape.sparkle3,
+                            StarShape.star4,
+                          ],
+                          child: const SizedBox.expand(),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/icons_home/new_resume.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: SizeConfig.scaleW(8)),
+                          Text(
+                            'New\nResume',
+                            style: GoogleFonts.orbitron(
+                              fontSize: isLandscape ? 8.sp : 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF010A1A).withOpacity(0.9),
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          SizedBox(width: 16),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {},
+              child: SizedBox(
+                height: SizeConfig.scaleH(80),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFFFF9A9E).withOpacity(0.9),
+                            Color(0xFFFECFEF).withOpacity(0.9),
+                            Color(0xFFF6F3FF).withOpacity(0.9),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white30),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: TwinklingStarsBackground(
+                          starColors: PastelStarColor.iPastelStarColor,
+                          starShapes: [
+                            StarShape.fivePoint,
+                            StarShape.sparkle3,
+                            StarShape.star4,
+                          ],
+                          child: const SizedBox.expand(),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/icons_home/guidebook_resume.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: SizeConfig.scaleW(8)),
+                          Text(
+                            'View\nResume',
+                            style: GoogleFonts.orbitron(
+                              fontSize: isLandscape ? 8.sp : 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF010A1A).withOpacity(0.9),
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
+
   }
   //------------------------------ Widget Button New Resume ----------------------------------------//
 
