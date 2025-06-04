@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/pages/bottomnav.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
-import 'package:flutter_resume_app/pages/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../onboarding/onboarding_contents.dart';
