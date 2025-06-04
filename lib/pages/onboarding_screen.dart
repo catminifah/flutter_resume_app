@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/pages/bottomnav.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
@@ -124,7 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                                  MaterialPageRoute(builder: (_) => const /*HomeScreen()*/BottomNav()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
