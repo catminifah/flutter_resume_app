@@ -92,8 +92,7 @@ class _SparkleBurstEffectState extends State<SparkleBurstEffect> with SingleTick
       case EffectPosition.right:
         return Offset(widget.radius, 0);
       case EffectPosition.center:
-      default:
-        return Offset.zero;
+      return Offset.zero;
     }
   }
 
