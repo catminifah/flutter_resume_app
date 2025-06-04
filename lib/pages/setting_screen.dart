@@ -67,8 +67,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                   ),
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.purple.withOpacity(0.5),
-                                      Colors.blueAccent.withOpacity(0.5),
+                                      Colors.purple,
+                                      Colors.blueAccent,
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,

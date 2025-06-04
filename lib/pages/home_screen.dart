@@ -98,9 +98,9 @@ class _HomeScreen extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildNewResumeButton(isLandscape),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _buildMyResumeHeader(isLandscape),
-                          const SizedBox(height: 8),
+                          //const SizedBox(height: 8),
                           const Divider(color: Colors.white24),
                           const SizedBox(height: 8),
                           Expanded(child: buildResumeListFuture(),),
@@ -358,7 +358,7 @@ class _HomeScreen extends State<HomeScreen> {
                           ),
                           SizedBox(width: SizeConfig.scaleW(8)),
                           Text(
-                            'View\nResume',
+                            'App\nGuide',
                             style: GoogleFonts.orbitron(
                               fontSize: isLandscape ? 8.sp : 14.sp,
                               fontWeight: FontWeight.w600,
@@ -378,7 +378,6 @@ class _HomeScreen extends State<HomeScreen> {
         ],
       ),
     );
-
   }
   //------------------------------ Widget Button New Resume ----------------------------------------//
 
@@ -387,7 +386,10 @@ class _HomeScreen extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Icon(Icons.cloud, size: 20, color: Colors.white70),
+          SizedBox(width: SizeConfig.scaleW(4)),
           Text('My resume',
             style: GoogleFonts.orbitron(
               color: Colors.white70,
@@ -395,15 +397,15 @@ class _HomeScreen extends State<HomeScreen> {
               fontSize: isLandscape ? 5.sp : 12.sp,
             )
           ),
-          const Spacer(),
-          const Icon(Icons.cloud, size: 20, color: Colors.white70),
+          //const Spacer(),
+          /*const Icon(Icons.cloud, size: 20, color: Colors.white70),
           SizedBox(width: SizeConfig.scaleW(4)),
           Text('Cloud storage',
             style: GoogleFonts.orbitron(
               color: Colors.white70,
               fontSize: isLandscape ? 5.sp : 12.sp,
             )
-          ),
+          ),*/
         ],
       ),
     );
