@@ -124,8 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const HomeScreen()),
+                                  MaterialPageRoute(builder: (_) => const HomeScreen()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -168,8 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 GlowingStarButton(
                                   onPressed: () {
                                     _controller.nextPage(
-                                      duration:
-                                          const Duration(milliseconds: 300),
+                                      duration: const Duration(milliseconds: 300),
                                       curve: Curves.easeIn,
                                     );
                                   },

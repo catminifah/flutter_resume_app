@@ -67,87 +67,10 @@ class _HomeScreen extends State<HomeScreen> {
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    final List<Map<String, String>> resumes = [
-      {
-        'title': '20240526-01',
-        'date': '26/05/2024 14:05',
-        'size': '226MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-      {
-        'title': '20240522-04',
-        'date': '22/05/2024 12:52',
-        'size': '37MB',
-        'pages': '1 หน้า',
-      },
-    ];
 
     bool isTablet = Device.get().isTablet;
     bool isPhone = Device.get().isPhone;
-
-    final actualHeight = isTablet == true ? SizeConfig.scaleH(220) : SizeConfig.scaleH(100);
-    final THeight = isTablet == true ? SizeConfig.scaleH(500) : SizeConfig.scaleH(460);
-
+    
     return Scaffold(
       //backgroundColor: Colors.transparent,
       extendBody: true,
@@ -517,7 +440,12 @@ class _HomeScreen extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ResumeEditor()),
+          );
+        },
         child: SizedBox(
           height: SizeConfig.scaleH(40),
           width: double.infinity,
@@ -617,8 +545,7 @@ class _HomeScreen extends State<HomeScreen> {
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
-              child: Text('No resumes found.',
-                  style: TextStyle(color: Colors.white70)));
+              child: Text(/*'No resumes found.'*/'',style: TextStyle(color: Colors.white70)));
         }
 
         final resumes = snapshot.data!;
@@ -629,8 +556,7 @@ class _HomeScreen extends State<HomeScreen> {
           itemBuilder: (context, index) {
             final item = resumes[index];
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: Stack(
                 children: [
                   Container(

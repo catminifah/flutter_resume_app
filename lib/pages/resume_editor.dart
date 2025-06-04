@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/shared_preferences.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -11,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:twinkling_stars/twinkling_stars.dart';
 
 class ResumeEditor extends StatefulWidget {
   final ResumeModel? resume;
@@ -21,7 +24,6 @@ class ResumeEditor extends StatefulWidget {
 }
 
 class _ResumeEditorState extends State<ResumeEditor> {
-
   // Personal Information
   final TextEditingController _FirstnameController = TextEditingController();
   final TextEditingController _LastnameController = TextEditingController();
@@ -169,9 +171,12 @@ class _ResumeEditorState extends State<ResumeEditor> {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
-    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ARIBLKFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
 
     final languages = List.generate(
       _languageNameControllers.length,
@@ -1039,6 +1044,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
     return certifications;
   }
 
+  //////////////////////////////////////////////////////// UI ///////////////////////////////////////////////////////////////////////////////////
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -1046,1844 +1053,1890 @@ class _ResumeEditorState extends State<ResumeEditor> {
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF021526),
-                Color(0xFF03346E),
-                Color(0xFF6EACDA),
-                Color(0xFFE2E2B6),
-              ],
+        child: Stack(
+          children: [
+            //---------------------------------------- background color -------------------------------------//
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: BackgroundColors.iBackgroundColors,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
             ),
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            //appBar: AppBar(title: const Text('Flutter')),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    //Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text(
-                          'Flutter Resume',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontFamily: 'SweetLollipop',
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                            wordSpacing: 4,
+            //---------------------------------------- background color -------------------------------------//
+            //---------------------------------------- background star -------------------------------------//
+            TwinklingStarsBackground(
+              starColors: const [Colors.white],
+              starShapes: [
+                StarShape.diamond,
+                StarShape.fivePoint,
+                StarShape.sixPoint,
+                StarShape.sparkle3
+              ],
+              child: const SizedBox.expand(),
+            ),
+            //---------------------------------------- background star -------------------------------------//
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              //appBar: AppBar(title: const Text('Flutter')),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      //Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                      /*Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            'Flutter Resume',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontFamily: 'SweetLollipop',
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              wordSpacing: 4,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Avatar + photo
-                        GestureDetector(
-                          onTap: _pickImage,
-                          child: ClipOval(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                              child: Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.05),
-                                  shape: BoxShape.circle,
-                                  /*border: Border.all(
-                                      color: Colors.white.withOpacity(0.2),
-                                      width: 1),*/
-                                ),
-                                child: _profileImage != null
-                                    ? CircleAvatar(
-                                        radius: 50,
-                                        backgroundImage:
-                                            FileImage(_profileImage!),
-                                      )
-                                    : const Center(
-                                        child: Icon(
-                                          Icons.add_a_photo,
-                                          color: Colors.white,
-                                          size: 32,
+                      ),*/
+                      Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Avatar + photo
+                          GestureDetector(
+                            onTap: _pickImage,
+                            child: ClipOval(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 2,sigmaY: 2),
+                                child: Container(
+                                  width: 120,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.05),
+                                    shape: BoxShape.circle,
+                                    /*border: Border.all(
+                                        color: Colors.white.withOpacity(0.2),
+                                        width: 1),*/
+                                  ),
+                                  child: _profileImage != null
+                                      ? CircleAvatar(
+                                          radius: 50,
+                                          backgroundImage:
+                                              FileImage(_profileImage!),
+                                        )
+                                      : const Center(
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.white,
+                                            size: 32,
+                                          ),
                                         ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // delete photo
+                          if (_profileImage != null)
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _profileImage = null;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.remove,
+                                    size: 15,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(.05),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: TextField(
+                                    style: TextStyle(
+                                        color: Colors.white.withOpacity(1)),
+                                    cursorColor: Colors.white,
+                                    keyboardType: TextInputType.text,
+                                    controller: _FirstnameController,
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintMaxLines: 1,
+                                      hintText: 'FirstName',
+                                      hintStyle: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                      //labelText: 'FirstName',
+                                      prefixIcon: Icon(
+                                        Icons.account_circle_outlined,
+                                        color: Colors.white,
                                       ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        // delete photo
-                        if (_profileImage != null)
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _profileImage = null;
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.remove,
-                                  size: 15,
-                                  color: Colors.white,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 16),
+                                      labelStyle: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaY: 15,
-                                sigmaX: 15,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(.05),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: TextField(
-                                  style: TextStyle(
-                                      color: Colors.white.withOpacity(1)),
-                                  cursorColor: Colors.white,
-                                  keyboardType: TextInputType.text,
-                                  controller: _FirstnameController,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintMaxLines: 1,
-                                    hintText: 'FirstName',
-                                    hintStyle: TextStyle(
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(.05),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: TextField(
+                                    style: TextStyle(
+                                        color: Colors.white.withOpacity(1)),
+                                    cursorColor: Colors.white,
+                                    keyboardType: TextInputType.text,
+                                    controller: _LastnameController,
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                      hintMaxLines: 1,
+                                      hintText: 'LastName',
+                                      hintStyle: TextStyle(
                                         fontSize: 14,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                    //labelText: 'FirstName',
-                                    prefixIcon: Icon(
-                                      Icons.account_circle_outlined,
-                                      color: Colors.white,
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 16),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaY: 15,
-                                sigmaX: 15,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(.05),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: TextField(
-                                  style: TextStyle(color: Colors.white.withOpacity(1)),
-                                  cursorColor: Colors.white,
-                                  keyboardType: TextInputType.text,
-                                  controller: _LastnameController,
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    hintMaxLines: 1,
-                                    hintText: 'LastName',
-                                    hintStyle: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.supervisor_account_outlined,
-                                      color: Colors.white,
-                                    ),
-                                    contentPadding:EdgeInsets.symmetric(vertical: 16),
-                                    labelStyle: TextStyle(
-                                      color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.supervisor_account_outlined,
+                                        color: Colors.white,
+                                      ),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 16),
+                                      labelStyle: TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaY: 15,
-                            sigmaX: 15,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.05),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextField(
-                              style:TextStyle(color: Colors.white.withOpacity(1)),
-                              cursorColor: Colors.white,
-                              keyboardType: TextInputType.emailAddress,
-                              controller: _emailController,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintMaxLines: 1,
-                                hintText: 'Email',
-                                hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.attach_email_outlined,
-                                  color: Colors.white,
-                                ),
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 16),
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(.05),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextField(
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(1)),
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.emailAddress,
+                                controller: _emailController,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintMaxLines: 1,
+                                  hintText: 'Email',
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.attach_email_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 16),
+                                  labelStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaY: 15,
-                            sigmaX: 15,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.05),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextField(
-                              controller: _addressController,
-                              style: const TextStyle(color: Colors.white),
-                              cursorColor: Colors.white,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintMaxLines: 1,
-                                hintText: 'Address',
-                                hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.home_outlined,
-                                  color: Colors.white,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 16, horizontal: 16),
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(.05),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: TextField(
+                                controller: _addressController,
+                                style: const TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintMaxLines: 1,
+                                  hintText: 'Address',
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.home_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 16, horizontal: 16),
+                                  labelStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                            sigmaY: 15,
-                            sigmaX: 15,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.05),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextField(
-                              controller: _phoneNumberController,
-                              style: const TextStyle(color: Colors.white),
-                              cursorColor: Colors.white,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(10),
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintMaxLines: 1,
-                                hintText: 'Phone Number',
-                                hintStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.phone_outlined,
-                                  color: Colors.white,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 16, horizontal: 16),
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(.05),
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaY: 15,
-                          sigmaX: 15,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: TextField(
-                            controller: _aboutMeController,
-                            style: TextStyle(color: Colors.white),
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.multiline,
-                            textAlignVertical: TextAlignVertical.center,
-                            maxLines: 5,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'About Me',
-                              hintStyle: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.info_outline,
-                                color: Colors.white,
-                              ),
-                              contentPadding: EdgeInsets.all(16),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    //------------------------------------------------------Website------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(
-                                      Icons.language,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const Text(
-                                    'Website: ',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  Spacer(),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.add_circle,
-                                      color: Colors.white
-                                    ),
-                                    onPressed: _addWebsiteField,
-                                  ),
+                              child: TextField(
+                                controller: _phoneNumberController,
+                                style: const TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(10),
+                                  FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintMaxLines: 1,
+                                  hintText: 'Phone Number',
+                                  hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.phone_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 16, horizontal: 16),
+                                  labelStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                              ..._websiteControllers.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final controller = entry.value;
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextField(
+                              controller: _aboutMeController,
+                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.multiline,
+                              textAlignVertical: TextAlignVertical.center,
+                              maxLines: 5,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'About Me',
+                                hintStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.info_outline,
+                                  color: Colors.white,
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      //------------------------------------------------------Website------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.link,
-                                            color: Colors.white
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: controller,
-                                            style: const TextStyle(
-                                              color: Colors.white
-                                            ),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Website URL',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.white
-                                          ),
-                                          onPressed: () =>_removeWebsiteField(index),
-                                        ),
-                                      ],
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(
+                                        Icons.language,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Website: ',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addWebsiteField,
                                     ),
                                   ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //------------------------------------------------------Website------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //---------------------------------------------- Skill Section ------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:EdgeInsets.symmetric(horizontal: 8),
-                                    child:Icon(Icons.build, color: Colors.white),
-                                  ),
-                                  const Text(
-                                    'Skills:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.add_circle,
-                                      color: Colors.white
-                                    ),
-                                    onPressed: _addSkillCategoryWithItem,
-                                  ),
-                                ],
-                              ),
-                              ...__skillTitles.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                TextEditingController customTitleController = entry.value;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8),
-                                          child: Icon(
-                                            Icons.category,
-                                            color: Colors.white
+                                ),
+                                ..._websiteControllers
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  final index = entry.key;
+                                  final controller = entry.value;
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.link,
+                                                color: Colors.white),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Theme(
-                                            data: Theme.of(context).copyWith(
-                                              canvasColor:Colors.white.withOpacity(0.2),
-                                              dividerColor: Colors.transparent,
-                                            ),
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: DropdownButtonFormField<String>(
-                                                value: _selectedSkillCategories[index],
-                                                style: const TextStyle(color: Colors.white),
-                                                dropdownColor: const Color.fromARGB(255, 228, 228, 228).withOpacity(0.8),
-                                                elevation: 0,
-                                                isDense: true,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedSkillCategories[
-                                                        index] = value;
-                                                    _isCustomCategory[index] =
-                                                        value == 'Custom';
-                                                    if (value != 'Custom') {
-                                                      customTitleController
-                                                          .text = value!;
-                                                    } else {
-                                                      customTitleController
-                                                          .clear();
-                                                    }
-                                                  });
-                                                },
-                                                items: _skillCategoryOptions
-                                                    .map((item) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: item,
-                                                    child: Text(
-                                                      item,
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Colors.black54),
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                                decoration: InputDecoration(
-                                                  filled: true,
-                                                  fillColor: Colors.white
-                                                      .withOpacity(0.1),
-                                                  hintText: 'Skill Category',
-                                                  hintStyle: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    borderSide: BorderSide.none,
-                                                  ),
-                                                  contentPadding:
-                                                      const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 12,
-                                                          vertical: 10),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: controller,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Website URL',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                              Icons.add_circle_outline,
-                                              color: Colors.white),
-                                          onPressed: () => _addSkillItem(index),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeSkillCategoryWithItems(
-                                                  index),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeWebsiteField(index),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //------------------------------------------------------Website------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //---------------------------------------------- Skill Section ------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.build,
+                                          color: Colors.white),
+                                    ),
+                                    const Text(
+                                      'Skills:',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addSkillCategoryWithItem,
+                                    ),
+                                  ],
+                                ),
+                                ...__skillTitles.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  TextEditingController customTitleController =
+                                      entry.value;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.category,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: Theme(
+                                              data: Theme.of(context).copyWith(
+                                                canvasColor: Colors.white
+                                                    .withOpacity(0.2),
+                                                dividerColor:
+                                                    Colors.transparent,
+                                              ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: DropdownButtonFormField<
+                                                    String>(
+                                                  value:
+                                                      _selectedSkillCategories[
+                                                          index],
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  dropdownColor:
+                                                      const Color.fromARGB(255,
+                                                              228, 228, 228)
+                                                          .withOpacity(0.8),
+                                                  elevation: 0,
+                                                  isDense: true,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _selectedSkillCategories[
+                                                          index] = value;
+                                                      _isCustomCategory[index] =
+                                                          value == 'Custom';
+                                                      if (value != 'Custom') {
+                                                        customTitleController
+                                                            .text = value!;
+                                                      } else {
+                                                        customTitleController
+                                                            .clear();
+                                                      }
+                                                    });
+                                                  },
+                                                  items: _skillCategoryOptions
+                                                      .map((item) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: item,
+                                                      child: Text(
+                                                        item,
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.black54),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.white
+                                                        .withOpacity(0.1),
+                                                    hintText: 'Skill Category',
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide:
+                                                          BorderSide.none,
+                                                    ),
+                                                    contentPadding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 10),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.add_circle_outline,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _addSkillItem(index),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeSkillCategoryWithItems(
+                                                    index),
+                                          ),
+                                        ],
+                                      ),
+                                      if (_isCustomCategory[index]) ...[
+                                        const SizedBox(height: 5),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: TextField(
+                                            controller: customTitleController,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor:
+                                                  Colors.white.withOpacity(0.1),
+                                              hintText: 'Custom Category Name',
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.white54),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 10),
+                                              prefixIcon: const Icon(Icons.edit,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
                                         ),
                                       ],
+                                      const SizedBox(height: 5),
+                                      ..._skillControllers[index]
+                                          .asMap()
+                                          .entries
+                                          .map((skillEntry) {
+                                        int skillIndex = skillEntry.key;
+                                        TextEditingController skillController =
+                                            skillEntry.value;
+
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      30, 0, 0, 0)),
+                                              Container(
+                                                width: 8,
+                                                height: 8,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: TextField(
+                                                  controller: skillController,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    hintText: 'Skill',
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.white54),
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                    Icons.remove_circle_outline,
+                                                    color: Colors.white),
+                                                onPressed: () =>
+                                                    _removeSkillItem(
+                                                        index, skillIndex),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //---------------------------------------------- Skill Section ------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //----------------------------------------------------Languages------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.translate,
+                                          color: Colors.white),
                                     ),
-                                    if (_isCustomCategory[index]) ...[
+                                    const Text(
+                                      'Languages: ',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addLanguageField,
+                                    ),
+                                  ],
+                                ),
+                                ..._languageNameControllers
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int index = entry.key;
+                                  TextEditingController nameController =
+                                      _languageNameControllers[index];
+                                  TextEditingController levelController =
+                                      _languageLevelControllers[index];
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.language,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: nameController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Language Name',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.bar_chart,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: levelController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Proficiency Level',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeLanguageField(index),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //-------------------------------------------------------Languages------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //------------------------------------------------------Experience------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.work_outline,
+                                          color: Colors.white),
+                                    ),
+                                    const Text(
+                                      'Experience: ',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addExperienceField,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                ..._ExperienceControllers.asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int index = entry.key;
+                                  TextEditingController companyNameController =
+                                      _companyName[index];
+                                  TextEditingController jobTitleController =
+                                      _jobTitle[index];
+                                  TextEditingController startDateController =
+                                      _startdatejob[index];
+                                  TextEditingController endDateController =
+                                      _enddatejob[index];
+                                  TextEditingController detailController =
+                                      _detailjob[index];
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(
+                                                Icons.apartment_outlined,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: companyNameController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Company Name',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeExperienceField(index),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.badge_outlined,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: jobTitleController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Job Title',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.calendar_today,
+                                                color: Colors.white),
+                                          ),
+
+                                          // Start Date Stack
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                TextField(
+                                                  controller:
+                                                      startDateController,
+                                                  readOnly: true,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: 'Start Date',
+                                                    hintStyle: TextStyle(
+                                                      color: Colors.white54,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () => _selectDate(
+                                                      context, true, index),
+                                                ),
+                                                if (startDateController
+                                                    .text.isNotEmpty)
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 40,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          startDateController
+                                                              .clear();
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(4),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white
+                                                              .withOpacity(0.2),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: const Icon(
+                                                          Icons.remove,
+                                                          size: 10,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          // End Date Stack
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                TextField(
+                                                  controller: endDateController,
+                                                  readOnly: true,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: 'End Date',
+                                                    hintStyle: TextStyle(
+                                                      color: Colors.white54,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () => _selectDate(
+                                                      context, false, index),
+                                                ),
+                                                if (endDateController
+                                                    .text.isNotEmpty)
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 40,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          endDateController
+                                                              .clear();
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(4),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white
+                                                              .withOpacity(0.2),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: const Icon(
+                                                          Icons.remove,
+                                                          size: 10,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       const SizedBox(height: 5),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 8),
-                                        child: TextField(
-                                          controller: customTitleController,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor:
+                                        child: Container(
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            color:
                                                 Colors.white.withOpacity(0.1),
-                                            hintText: 'Custom Category Name',
-                                            hintStyle: const TextStyle(
-                                                color: Colors.white54),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 10),
-                                            prefixIcon: const Icon(Icons.edit,
-                                                color: Colors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            /*boxShadow: [
+                                              BoxShadow(
+                                                color:
+                                                    Colors.white.withOpacity(0.2),
+                                                blurRadius: 8,
+                                                offset: Offset(0, 4),
+                                              ),
+                                            ],*/
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: TextField(
+                                                  controller: detailController,
+                                                  maxLines: null,
+                                                  expands: true,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  cursorColor: Colors.white,
+                                                  textAlignVertical:
+                                                      TextAlignVertical.center,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: 'Job Description',
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .description_outlined,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //------------------------------------------------------Experience------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //------------------------------------------------------Education------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaY: 2,sigmaX: 2,),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.school,
+                                          color: Colors.white),
+                                    ),
+                                    const Text(
+                                      'Education:',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addEducationField,
+                                    ),
+                                  ],
+                                ),
+                                ..._educationControllers
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int index = entry.key;
+                                  TextEditingController
+                                      startDateEducationController =
+                                      _startEducation[index];
+                                  TextEditingController
+                                      endDateEducationController =
+                                      _endEducation[index];
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.account_balance,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _universityName[index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'University Name',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeEducationField(index),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.school,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _degreeTitle[index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Degree Title',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.calendar_today,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                TextField(
+                                                  controller:
+                                                      startDateEducationController,
+                                                  readOnly: true,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: 'Start Year',
+                                                    hintStyle: TextStyle(
+                                                      color: Colors.white54,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () async {
+                                                    int selectedYear =
+                                                        DateTime.now().year;
+                                                    await showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Select Year'),
+                                                          content: SizedBox(
+                                                            width: 300,
+                                                            height: 300,
+                                                            child: YearPicker(
+                                                              firstDate:
+                                                                  DateTime(
+                                                                      1950),
+                                                              lastDate: DateTime(
+                                                                  DateTime.now()
+                                                                      .year),
+                                                              initialDate: DateTime(
+                                                                  selectedYear),
+                                                              selectedDate:
+                                                                  DateTime(
+                                                                      selectedYear),
+                                                              onChanged:
+                                                                  (DateTime
+                                                                      dateTime) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                                setState(() {
+                                                                  startDateEducationController
+                                                                          .text =
+                                                                      dateTime
+                                                                          .year
+                                                                          .toString();
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                                if (startDateEducationController
+                                                    .text.isNotEmpty)
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 90,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          startDateEducationController
+                                                              .clear();
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(4),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white
+                                                              .withOpacity(0.2),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: const Icon(
+                                                          Icons.remove,
+                                                          size: 10,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Stack(
+                                              children: [
+                                                TextField(
+                                                  controller:
+                                                      endDateEducationController,
+                                                  readOnly: true,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: 'End Year',
+                                                    hintStyle: TextStyle(
+                                                      color: Colors.white54,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onTap: () async {
+                                                    int selectedYear =
+                                                        DateTime.now().year;
+                                                    await showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Select Year'),
+                                                          content: SizedBox(
+                                                            width: 300,
+                                                            height: 300,
+                                                            child: YearPicker(
+                                                              firstDate:
+                                                                  DateTime(
+                                                                      1950),
+                                                              lastDate: DateTime(
+                                                                  DateTime.now()
+                                                                      .year),
+                                                              initialDate: DateTime(
+                                                                  selectedYear),
+                                                              selectedDate:
+                                                                  DateTime(
+                                                                      selectedYear),
+                                                              onChanged:
+                                                                  (DateTime
+                                                                      dateTime) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                                setState(() {
+                                                                  endDateEducationController
+                                                                          .text =
+                                                                      dateTime
+                                                                          .year
+                                                                          .toString();
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                                if (endDateEducationController
+                                                    .text.isNotEmpty)
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 90,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          endDateEducationController
+                                                              .clear();
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets
+                                                            .all(4),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white
+                                                              .withOpacity(0.2),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: const Icon(
+                                                          Icons.remove,
+                                                          size: 10,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //------------------------------------------------------Education------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //------------------------------------------------------Projects------------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 2,sigmaY: 2),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            //padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.work_outline,
+                                          color: Colors.white),
+                                    ),
+                                    const Text(
+                                      'Projects:',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addProjectField,
+                                    ),
+                                  ],
+                                ),
+                                ..._projectTitleControllers
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int index = entry.key;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.title,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _projectTitleControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Project Title',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeProjectField(index),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.description,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _projectDescriptionControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Description',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.link,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _projectLinkControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Project Link',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.code,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _projectTechControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Technologies Used',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //------------------------------------------------------Projects------------------------------------------------------//
+                      const SizedBox(height: 10),
+                      //-------------------------------------------------Certifications-----------------------------------------------------//
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 2,sigmaY: 2),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            //padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.card_membership,
+                                          color: Colors.white),
+                                    ),
+                                    const Text(
+                                      'Certifications:',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.add_circle,
+                                          color: Colors.white),
+                                      onPressed: _addCertificationField,
+                                    ),
+                                  ],
+                                ),
+                                ..._certificationTitleControllers
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  int index = entry.key;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.label,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _certificationTitleControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Certification Title',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white),
+                                            onPressed: () =>
+                                                _removeCertificationField(
+                                                    index),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.business,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _certificationIssuerControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Issuer',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(Icons.calendar_today,
+                                                color: Colors.white),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _certificationDateControllers[
+                                                      index],
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              cursorColor: Colors.white,
+                                              decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Date',
+                                                hintStyle: TextStyle(
+                                                  color: Colors.white54,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      //const Divider(thickness: 1, color: Colors.white24),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      //-------------------------------------------------Certifications-----------------------------------------------------//
+                      const SizedBox(height: 5),
+                      const Divider(thickness: 1, color: Colors.white24),
+                      const SizedBox(height: 5),
+                      //------------------------------------------------------button------------------------------------------------------//
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: InkWell(
+                                onTap: _saveData,
+                                onHighlightChanged: (isHighlighted) {
+                                  setState(() {
+                                    _isButton1Highlighted = isHighlighted;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _isButton1Highlighted
+                                        ? Colors.blue[900]
+                                        : Colors.blue,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 4,
                                       ),
                                     ],
-                                    const SizedBox(height: 5),
-                                    ..._skillControllers[index]
-                                        .asMap()
-                                        .entries
-                                        .map((skillEntry) {
-                                      int skillIndex = skillEntry.key;
-                                      TextEditingController skillController =
-                                          skillEntry.value;
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    30, 0, 0, 0)),
-                                            Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                shape: BoxShape.circle,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: TextField(
-                                                controller: skillController,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  hintText: 'Skill',
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.white54),
-                                                  border: InputBorder.none,
-                                                ),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                  Icons.remove_circle_outline,
-                                                  color: Colors.white),
-                                              onPressed: () => _removeSkillItem(
-                                                  index, skillIndex),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }),
-                                    const SizedBox(height: 20),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //---------------------------------------------- Skill Section ------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //----------------------------------------------------Languages------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.translate,
-                                        color: Colors.white),
                                   ),
-                                  const Text(
-                                    'Languages: ',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle,
-                                        color: Colors.white),
-                                    onPressed: _addLanguageField,
-                                  ),
-                                ],
-                              ),
-                              ..._languageNameControllers
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                TextEditingController nameController =
-                                    _languageNameControllers[index];
-                                TextEditingController levelController =
-                                    _languageLevelControllers[index];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.language,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: nameController,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Language Name',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.bar_chart,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: levelController,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Proficiency Level',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeLanguageField(index),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //-------------------------------------------------------Languages------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //------------------------------------------------------Experience------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.work_outline,
-                                        color: Colors.white),
-                                  ),
-                                  const Text(
-                                    'Experience: ',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle,
-                                        color: Colors.white),
-                                    onPressed: _addExperienceField,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              ..._ExperienceControllers.asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                TextEditingController companyNameController =
-                                    _companyName[index];
-                                TextEditingController jobTitleController =
-                                    _jobTitle[index];
-                                TextEditingController startDateController =
-                                    _startdatejob[index];
-                                TextEditingController endDateController =
-                                    _enddatejob[index];
-                                TextEditingController detailController =
-                                    _detailjob[index];
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.apartment_outlined,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: companyNameController,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Company Name',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeExperienceField(index),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.badge_outlined,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: jobTitleController,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Job Title',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.calendar_today,
-                                              color: Colors.white),
-                                        ),
-
-                                        // Start Date Stack
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              TextField(
-                                                controller: startDateController,
-                                                readOnly: true,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: 'Start Date',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.white54,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                onTap: () => _selectDate(
-                                                    context, true, index),
-                                              ),
-                                              if (startDateController
-                                                  .text.isNotEmpty)
-                                                Positioned(
-                                                  top: 0,
-                                                  right: 40,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        startDateController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withOpacity(0.2),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.remove,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        // End Date Stack
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              TextField(
-                                                controller: endDateController,
-                                                readOnly: true,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: 'End Date',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.white54,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                onTap: () => _selectDate(
-                                                    context, false, index),
-                                              ),
-                                              if (endDateController
-                                                  .text.isNotEmpty)
-                                                Positioned(
-                                                  top: 0,
-                                                  right: 40,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        endDateController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withOpacity(0.2),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.remove,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Container(
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          /*boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.white.withOpacity(0.2),
-                                              blurRadius: 8,
-                                              offset: Offset(0, 4),
-                                            ),
-                                          ],*/
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: TextField(
-                                                controller: detailController,
-                                                maxLines: null,
-                                                expands: true,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                cursorColor: Colors.white,
-                                                textAlignVertical:
-                                                    TextAlignVertical.center,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: 'Job Description',
-                                                  hintStyle: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  prefixIcon: Icon(
-                                                    Icons.description_outlined,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.save,
+                                        size: 40,
+                                        color: Colors.white,
                                       ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //------------------------------------------------------Experience------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //------------------------------------------------------Education------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child:
-                                        Icon(Icons.school, color: Colors.white),
+                                      const Text(
+                                        'Save Data',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  const Text(
-                                    'Education:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle,
-                                        color: Colors.white),
-                                    onPressed: _addEducationField,
-                                  ),
-                                ],
-                              ),
-                              ..._educationControllers
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                TextEditingController
-                                    startDateEducationController =
-                                    _startEducation[index];
-                                TextEditingController
-                                    endDateEducationController =
-                                    _endEducation[index];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.account_balance,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _universityName[index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'University Name',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeEducationField(index),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.school,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _degreeTitle[index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Degree Title',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.calendar_today,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              TextField(
-                                                controller:
-                                                    startDateEducationController,
-                                                readOnly: true,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: 'Start Year',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.white54,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                onTap: () async {
-                                                  int selectedYear =
-                                                      DateTime.now().year;
-                                                  await showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Select Year'),
-                                                        content: SizedBox(
-                                                          width: 300,
-                                                          height: 300,
-                                                          child: YearPicker(
-                                                            firstDate:
-                                                                DateTime(1950),
-                                                            lastDate: DateTime(
-                                                                DateTime.now()
-                                                                    .year),
-                                                            initialDate: DateTime(
-                                                                selectedYear),
-                                                            selectedDate:
-                                                                DateTime(
-                                                                    selectedYear),
-                                                            onChanged: (DateTime
-                                                                dateTime) {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              setState(() {
-                                                                startDateEducationController
-                                                                        .text =
-                                                                    dateTime
-                                                                        .year
-                                                                        .toString();
-                                                              });
-                                                            },
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                              if (startDateEducationController
-                                                  .text.isNotEmpty)
-                                                Positioned(
-                                                  top: 0,
-                                                  right: 90,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        startDateEducationController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withOpacity(0.2),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.remove,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              TextField(
-                                                controller:
-                                                    endDateEducationController,
-                                                readOnly: true,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: 'End Year',
-                                                  hintStyle: TextStyle(
-                                                    color: Colors.white54,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                onTap: () async {
-                                                  int selectedYear =
-                                                      DateTime.now().year;
-                                                  await showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Select Year'),
-                                                        content: SizedBox(
-                                                          width: 300,
-                                                          height: 300,
-                                                          child: YearPicker(
-                                                            firstDate:
-                                                                DateTime(1950),
-                                                            lastDate: DateTime(
-                                                                DateTime.now()
-                                                                    .year),
-                                                            initialDate: DateTime(
-                                                                selectedYear),
-                                                            selectedDate:
-                                                                DateTime(
-                                                                    selectedYear),
-                                                            onChanged: (DateTime
-                                                                dateTime) {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              setState(() {
-                                                                endDateEducationController
-                                                                        .text =
-                                                                    dateTime
-                                                                        .year
-                                                                        .toString();
-                                                              });
-                                                            },
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                              if (endDateEducationController
-                                                  .text.isNotEmpty)
-                                                Positioned(
-                                                  top: 0,
-                                                  right: 90,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        endDateEducationController
-                                                            .clear();
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withOpacity(0.2),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.remove,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //------------------------------------------------------Education------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //------------------------------------------------------Projects------------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          //padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.work_outline,
-                                        color: Colors.white),
-                                  ),
-                                  const Text(
-                                    'Projects:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle,
-                                        color: Colors.white),
-                                    onPressed: _addProjectField,
-                                  ),
-                                ],
-                              ),
-                              ..._projectTitleControllers
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.title,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _projectTitleControllers[index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Project Title',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeProjectField(index),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.description,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _projectDescriptionControllers[
-                                                    index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Description',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.link,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _projectLinkControllers[index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Project Link',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.code,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _projectTechControllers[index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Technologies Used',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //------------------------------------------------------Projects------------------------------------------------------//
-                    const SizedBox(height: 10),
-                    //-------------------------------------------------Certifications-----------------------------------------------------//
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          //padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: Icon(Icons.card_membership,
-                                        color: Colors.white),
-                                  ),
-                                  const Text(
-                                    'Certifications:',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.add_circle,
-                                        color: Colors.white),
-                                    onPressed: _addCertificationField,
-                                  ),
-                                ],
-                              ),
-                              ..._certificationTitleControllers
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                int index = entry.key;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.label,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _certificationTitleControllers[
-                                                    index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Certification Title',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.remove_circle,
-                                              color: Colors.white),
-                                          onPressed: () =>
-                                              _removeCertificationField(index),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.business,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _certificationIssuerControllers[
-                                                    index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Issuer',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Icon(Icons.calendar_today,
-                                              color: Colors.white),
-                                        ),
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _certificationDateControllers[
-                                                    index],
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            cursorColor: Colors.white,
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: 'Date',
-                                              hintStyle: TextStyle(
-                                                color: Colors.white54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    //const Divider(thickness: 1, color: Colors.white24),
-                                  ],
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    //-------------------------------------------------Certifications-----------------------------------------------------//
-                    const SizedBox(height: 5),
-                    const Divider(thickness: 1, color: Colors.white24),
-                    const SizedBox(height: 5),
-                    //------------------------------------------------------button------------------------------------------------------//
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: InkWell(
-                              onTap: _saveData,
-                              onHighlightChanged: (isHighlighted) {
-                                setState(() {
-                                  _isButton1Highlighted = isHighlighted;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: _isButton1Highlighted
-                                      ? Colors.blue[900]
-                                      : Colors.blue,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.save,
-                                      size: 40,
-                                      color: Colors.white,
-                                    ),
-                                    const Text(
-                                      'Save Data',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: InkWell(
-                              onTap: _sharePdf,
-                              onHighlightChanged: (isHighlighted) {
-                                setState(() {
-                                  _isButton2Highlighted = isHighlighted;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: _isButton2Highlighted
-                                      ? Colors.green[900]
-                                      : Colors.green,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.picture_as_pdf,
-                                      size: 40,
-                                      color: Colors.white,
-                                    ),
-                                    const Text(
-                                      'Generate & Share PDF',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: InkWell(
+                                onTap: _sharePdf,
+                                onHighlightChanged: (isHighlighted) {
+                                  setState(() {
+                                    _isButton2Highlighted = isHighlighted;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _isButton2Highlighted
+                                        ? Colors.green[900]
+                                        : Colors.green,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.picture_as_pdf,
+                                        size: 40,
+                                        color: Colors.white,
+                                      ),
+                                      const Text(
+                                        'Generate & Share PDF',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    //------------------------------------------------------button------------------------------------------------------//
-                    const SizedBox(height: 10),
-                  ],
+                        ],
+                      ),
+                      //------------------------------------------------------button------------------------------------------------------//
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ));
   }
 }
