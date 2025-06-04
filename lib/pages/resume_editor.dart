@@ -460,14 +460,10 @@ class _ResumeEditorState extends State<ResumeEditor> {
                         // Skills Summary
                         ..._skillControllers.asMap().entries.map((entry) {
                           final int categoryIndex = entry.key;
-                          final List<TextEditingController> skills =
-                              entry.value;
-                          final String categoryTitle =
-                              __skillTitles[categoryIndex].text.trim();
-                          final bool allSkillsEmpty = skills.every(
-                              (controller) => controller.text.trim().isEmpty);
-                          final bool isCategoryEmpty =
-                              categoryTitle.isEmpty && allSkillsEmpty;
+                          final List<TextEditingController> skills = entry.value;
+                          final String categoryTitle = __skillTitles[categoryIndex].text.trim();
+                          final bool allSkillsEmpty = skills.every((controller) => controller.text.trim().isEmpty);
+                          final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
 
                           if (isCategoryEmpty) return pw.SizedBox();
 
@@ -490,8 +486,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 if (skillText.isEmpty) return pw.SizedBox();
 
                                 return pw.Padding(
-                                  padding: const pw.EdgeInsets.only(
-                                      left: 10, bottom: 2),
+                                  padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
                                   child: pw.Row(
                                     children: [
                                       pw.Container(
@@ -1540,11 +1535,9 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 ),
                                 ...__skillTitles.asMap().entries.map((entry) {
                                   int index = entry.key;
-                                  TextEditingController customTitleController =
-                                      entry.value;
+                                  TextEditingController customTitleController = entry.value;
                                   return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment:  CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 10),
                                       Row(
@@ -1558,77 +1551,53 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                           Expanded(
                                             child: Theme(
                                               data: Theme.of(context).copyWith(
-                                                canvasColor: Colors.white
-                                                    .withOpacity(0.2),
-                                                dividerColor:
-                                                    Colors.transparent,
+                                                canvasColor: Colors.white.withOpacity(0.2),
+                                                dividerColor: Colors.transparent,
                                               ),
                                               child: Material(
                                                 color: Colors.transparent,
-                                                child: DropdownButtonFormField<
-                                                    String>(
+                                                child: DropdownButtonFormField<String>(
                                                   value:
                                                       _selectedSkillCategories[
                                                           index],
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  dropdownColor:
-                                                      const Color.fromARGB(255,
-                                                              228, 228, 228)
-                                                          .withOpacity(0.8),
+                                                  style: const TextStyle( color: Colors.white),
+                                                  dropdownColor:const Color.fromARGB(255, 228, 228, 228).withOpacity(0.8),
                                                   elevation: 0,
                                                   isDense: true,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _selectedSkillCategories[
-                                                          index] = value;
-                                                      _isCustomCategory[index] =
-                                                          value == 'Custom';
+                                                      _selectedSkillCategories[index] = value;
+                                                      _isCustomCategory[index] = value == 'Custom';
                                                       if (value != 'Custom') {
-                                                        customTitleController
-                                                            .text = value!;
+                                                        customTitleController.text = value!;
                                                       } else {
-                                                        customTitleController
-                                                            .clear();
+                                                        customTitleController.clear();
                                                       }
                                                     });
                                                   },
-                                                  items: _skillCategoryOptions
-                                                      .map((item) {
-                                                    return DropdownMenuItem<
-                                                        String>(
+                                                  items: _skillCategoryOptions.map((item) {
+                                                    return DropdownMenuItem<String>(
                                                       value: item,
                                                       child: Text(
                                                         item,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.black54),
+                                                        style: const TextStyle(color: Colors.black54),
                                                       ),
                                                     );
                                                   }).toList(),
                                                   decoration: InputDecoration(
                                                     filled: true,
-                                                    fillColor: Colors.white
-                                                        .withOpacity(0.1),
+                                                    fillColor: Colors.white.withOpacity(0.1),
                                                     hintText: 'Skill Category',
                                                     hintStyle: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                     border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide:
-                                                          BorderSide.none,
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderSide: BorderSide.none,
                                                     ),
-                                                    contentPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: 12,
-                                                            vertical: 10),
+                                                    contentPadding: const EdgeInsets.symmetric( horizontal: 12, vertical: 10),
                                                   ),
                                                 ),
                                               ),
@@ -1636,69 +1605,50 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                           ),
                                           IconButton(
                                             icon: const Icon(
-                                                Icons.add_circle_outline,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _addSkillItem(index),
+                                              Icons.add_circle_outline,
+                                              color: Colors.white),
+                                            onPressed: () => _addSkillItem(index),
                                           ),
                                           IconButton(
                                             icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _removeSkillCategoryWithItems(
-                                                    index),
+                                              Icons.remove_circle,
+                                              color: Colors.white),
+                                            onPressed: () => _removeSkillCategoryWithItems(index),
                                           ),
                                         ],
                                       ),
                                       if (_isCustomCategory[index]) ...[
                                         const SizedBox(height: 5),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 8),
                                           child: TextField(
                                             controller: customTitleController,
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style: const TextStyle(color: Colors.white),
                                             decoration: InputDecoration(
                                               filled: true,
-                                              fillColor:
-                                                  Colors.white.withOpacity(0.1),
+                                              fillColor: Colors.white.withOpacity(0.1),
                                               hintText: 'Custom Category Name',
-                                              hintStyle: const TextStyle(
-                                                  color: Colors.white54),
+                                              hintStyle: const TextStyle(color: Colors.white54),
                                               border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                                borderRadius: BorderRadius.circular(10),
                                                 borderSide: BorderSide.none,
                                               ),
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 10),
-                                              prefixIcon: const Icon(Icons.edit,
-                                                  color: Colors.white),
+                                              contentPadding: const EdgeInsets.symmetric( horizontal: 12, vertical: 10),
+                                              prefixIcon: const Icon(Icons.edit, color: Colors.white),
                                             ),
                                           ),
                                         ),
                                       ],
                                       const SizedBox(height: 5),
-                                      ..._skillControllers[index]
-                                          .asMap()
-                                          .entries
-                                          .map((skillEntry) {
+                                      ..._skillControllers[index].asMap().entries.map((skillEntry) {
                                         int skillIndex = skillEntry.key;
-                                        TextEditingController skillController =
-                                            skillEntry.value;
+                                        TextEditingController skillController = skillEntry.value;
 
                                         return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
+                                          padding: const EdgeInsets.symmetric(horizontal: 8),
                                           child: Row(
                                             children: [
-                                              Padding(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      30, 0, 0, 0)),
+                                              Padding( padding: EdgeInsets.fromLTRB( 30, 0, 0, 0)),
                                               Container(
                                                 width: 8,
                                                 height: 8,
@@ -1711,24 +1661,17 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                               Expanded(
                                                 child: TextField(
                                                   controller: skillController,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  style: const TextStyle(color: Colors.white),
+                                                  decoration: const InputDecoration(
                                                     hintText: 'Skill',
-                                                    hintStyle: TextStyle(
-                                                        color: Colors.white54),
+                                                    hintStyle: TextStyle(color: Colors.white54),
                                                     border: InputBorder.none,
                                                   ),
                                                 ),
                                               ),
                                               IconButton(
-                                                icon: const Icon(
-                                                    Icons.remove_circle_outline,
-                                                    color: Colors.white),
-                                                onPressed: () =>
-                                                    _removeSkillItem(
-                                                        index, skillIndex),
+                                                icon: const Icon( Icons.remove_circle_outline, color: Colors.white),
+                                                onPressed: () => _removeSkillItem(index, skillIndex),
                                               ),
                                             ],
                                           ),
@@ -2110,15 +2053,12 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       ),
                                       const SizedBox(height: 5),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
                                         child: Container(
                                           height: 150,
                                           decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            color: Colors.white.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(10),
                                             /*boxShadow: [
                                               BoxShadow(
                                                 color:
@@ -2129,8 +2069,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             ],*/
                                           ),
                                           child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               const SizedBox(width: 8),
                                               Expanded(
@@ -2138,24 +2077,19 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                                   controller: detailController,
                                                   maxLines: null,
                                                   expands: true,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
+                                                  style: const TextStyle(color: Colors.white),
                                                   cursorColor: Colors.white,
-                                                  textAlignVertical:
-                                                      TextAlignVertical.center,
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  textAlignVertical: TextAlignVertical.center,
+                                                  decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: 'Job Description',
                                                     hintStyle: TextStyle(
                                                       fontSize: 14,
                                                       color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                     prefixIcon: Icon(
-                                                      Icons
-                                                          .description_outlined,
+                                                      Icons.description_outlined,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -2192,53 +2126,35 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 Row(
                                   children: [
                                     const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Icon(Icons.school,
-                                          color: Colors.white),
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.school, color: Colors.white),
                                     ),
-                                    const Text(
-                                      'Education:',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                                    const Text( 'Education:', style: TextStyle(color: Colors.white),),
                                     const Spacer(),
                                     IconButton(
-                                      icon: const Icon(Icons.add_circle,
-                                          color: Colors.white),
+                                      icon: const Icon(Icons.add_circle, color: Colors.white),
                                       onPressed: _addEducationField,
                                     ),
                                   ],
                                 ),
-                                ..._educationControllers
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
+                                ..._educationControllers.asMap().entries.map((entry) {
                                   int index = entry.key;
-                                  TextEditingController
-                                      startDateEducationController =
-                                      _startEducation[index];
-                                  TextEditingController
-                                      endDateEducationController =
-                                      _endEducation[index];
+                                  TextEditingController startDateEducationController = _startEducation[index];
+                                  TextEditingController endDateEducationController = _endEducation[index];
                                   return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 10),
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.account_balance,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.account_balance, color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _universityName[index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _universityName[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2251,11 +2167,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             ),
                                           ),
                                           IconButton(
-                                            icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _removeEducationField(index),
+                                            icon: const Icon( Icons.remove_circle, color: Colors.white),
+                                            onPressed: () =>  _removeEducationField(index),
                                           ),
                                         ],
                                       ),
@@ -2263,16 +2176,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.school,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.school,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
                                               controller: _degreeTitle[index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2290,66 +2200,44 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.calendar_today,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.calendar_today, color: Colors.white),
                                           ),
                                           Expanded(
                                             child: Stack(
                                               children: [
                                                 TextField(
-                                                  controller:
-                                                      startDateEducationController,
+                                                  controller: startDateEducationController,
                                                   readOnly: true,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  style: const TextStyle(color: Colors.white),
+                                                  decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: 'Start Year',
                                                     hintStyle: TextStyle(
                                                       color: Colors.white54,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                   onTap: () async {
-                                                    int selectedYear =
-                                                        DateTime.now().year;
+                                                    int selectedYear = DateTime.now().year;
                                                     await showDialog(
                                                       context: context,
                                                       builder: (BuildContext
                                                           context) {
                                                         return AlertDialog(
-                                                          title: const Text(
-                                                              'Select Year'),
+                                                          title: const Text('Select Year'),
                                                           content: SizedBox(
                                                             width: 300,
                                                             height: 300,
                                                             child: YearPicker(
-                                                              firstDate:
-                                                                  DateTime(
-                                                                      1950),
-                                                              lastDate: DateTime(
-                                                                  DateTime.now()
-                                                                      .year),
-                                                              initialDate: DateTime(
-                                                                  selectedYear),
-                                                              selectedDate:
-                                                                  DateTime(
-                                                                      selectedYear),
-                                                              onChanged:
-                                                                  (DateTime
-                                                                      dateTime) {
-                                                                Navigator.pop(
-                                                                    context);
+                                                              firstDate: DateTime(1950),
+                                                              lastDate: DateTime(DateTime.now().year),
+                                                              initialDate: DateTime(selectedYear),
+                                                              selectedDate: DateTime(selectedYear),
+                                                              onChanged: (DateTime dateTime) {
+                                                                Navigator.pop(context);
                                                                 setState(() {
-                                                                  startDateEducationController
-                                                                          .text =
-                                                                      dateTime
-                                                                          .year
-                                                                          .toString();
+                                                                  startDateEducationController.text = dateTime.toString();
                                                                 });
                                                               },
                                                             ),
@@ -2359,30 +2247,22 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                                     );
                                                   },
                                                 ),
-                                                if (startDateEducationController
-                                                    .text.isNotEmpty)
+                                                if (startDateEducationController.text.isNotEmpty)
                                                   Positioned(
                                                     top: 0,
                                                     right: 90,
                                                     child: GestureDetector(
                                                       onTap: () {
                                                         setState(() {
-                                                          startDateEducationController
-                                                              .clear();
+                                                          startDateEducationController.clear();
                                                         });
                                                       },
                                                       child: Container(
-                                                        margin: const EdgeInsets
-                                                            .all(4),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white
-                                                              .withOpacity(0.2),
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        margin: const EdgeInsets.all(4),
+                                                        padding: const EdgeInsets.all(4),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white.withOpacity(0.2),
+                                                          shape: BoxShape.circle,
                                                         ),
                                                         child: const Icon(
                                                           Icons.remove,
