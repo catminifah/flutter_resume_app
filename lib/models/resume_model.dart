@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter_resume_app/models/certification.dart';
 import 'package:flutter_resume_app/models/education.dart';
 import 'package:flutter_resume_app/models/experience.dart';
@@ -20,6 +22,7 @@ class ResumeModel {
   List<Project> projects;
   List<Certification> certifications;
   List<LanguageSkill> languages;
+  Uint8List? profileImage;
 
   ResumeModel({
     required this.id,
@@ -36,6 +39,7 @@ class ResumeModel {
     required this.projects,
     required this.certifications,
     required this.languages,
+    required this.profileImage,
   });
 
   factory ResumeModel.fromJson(Map<String, dynamic> json) => ResumeModel(
@@ -53,6 +57,7 @@ class ResumeModel {
     projects: (json['projects'] as List).map((e) => Project.fromJson(e)).toList(),
     certifications: (json['certifications'] as List).map((e) => Certification.fromJson(e)).toList(),
     languages: (json['languages'] as List).map((e) => LanguageSkill.fromJson(e)).toList(),
+    profileImage: json['profileImage'] != null ? base64Decode(json['profileImage']) : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -70,5 +75,7 @@ class ResumeModel {
     'projects': projects.map((e) => e.toJson()).toList(),
     'certifications': certifications.map((e) => e.toJson()).toList(),
     'languages': languages.map((e) => e.toJson()).toList(),
+    'profileImage': profileImage != null ? base64Encode(profileImage!) : null,
   };
 }
+

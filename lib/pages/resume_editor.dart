@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/colors/background_color.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
-import 'package:flutter_resume_app/shared_preferences.dart';
+import 'package:flutter_resume_app/services/shared_preferences.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
@@ -1843,8 +1843,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                           Expanded(
                                             child: TextField(
                                               controller: companyNameController,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              style: const TextStyle( color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -1857,11 +1856,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             ),
                                           ),
                                           IconButton(
-                                            icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _removeExperienceField(index),
+                                            icon: const Icon( Icons.remove_circle, color: Colors.white),
+                                            onPressed: () => _removeExperienceField(index),
                                           ),
                                         ],
                                       ),
@@ -1869,16 +1865,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.badge_outlined,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.badge_outlined, color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
                                               controller: jobTitleController,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              style: const TextStyle( color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -1896,10 +1889,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.calendar_today,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.calendar_today, color: Colors.white),
                                           ),
 
                                           // Start Date Stack
@@ -1907,48 +1898,34 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             child: Stack(
                                               children: [
                                                 TextField(
-                                                  controller:
-                                                      startDateController,
+                                                  controller: startDateController,
                                                   readOnly: true,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  style: const TextStyle( color: Colors.white),
+                                                  decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: 'Start Date',
-                                                    hintStyle: TextStyle(
-                                                      color: Colors.white54,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                    hintStyle: TextStyle( color: Colors.white54,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
-                                                  onTap: () => _selectDate(
-                                                      context, true, index),
+                                                  onTap: () => _selectDate( context, true, index),
                                                 ),
-                                                if (startDateController
-                                                    .text.isNotEmpty)
+                                                if (startDateController.text.isNotEmpty)
                                                   Positioned(
                                                     top: 0,
                                                     right: 40,
                                                     child: GestureDetector(
                                                       onTap: () {
                                                         setState(() {
-                                                          startDateController
-                                                              .clear();
+                                                          startDateController.clear();
                                                         });
                                                       },
                                                       child: Container(
-                                                        margin: const EdgeInsets
-                                                            .all(4),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white
-                                                              .withOpacity(0.2),
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        margin: const EdgeInsets.all(4),
+                                                        padding: const EdgeInsets.all(4),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white.withOpacity(0.2),
+                                                          shape: BoxShape.circle,
                                                         ),
                                                         child: const Icon(
                                                           Icons.remove,
@@ -1969,45 +1946,33 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                                 TextField(
                                                   controller: endDateController,
                                                   readOnly: true,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  style: const TextStyle( color: Colors.white),
+                                                  decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: 'End Date',
                                                     hintStyle: TextStyle(
                                                       color: Colors.white54,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
-                                                  onTap: () => _selectDate(
-                                                      context, false, index),
+                                                  onTap: () => _selectDate( context, false, index),
                                                 ),
-                                                if (endDateController
-                                                    .text.isNotEmpty)
+                                                if (endDateController.text.isNotEmpty)
                                                   Positioned(
                                                     top: 0,
                                                     right: 40,
                                                     child: GestureDetector(
                                                       onTap: () {
                                                         setState(() {
-                                                          endDateController
-                                                              .clear();
+                                                          endDateController.clear();
                                                         });
                                                       },
                                                       child: Container(
-                                                        margin: const EdgeInsets
-                                                            .all(4),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white
-                                                              .withOpacity(0.2),
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        margin: const EdgeInsets.all(4),
+                                                        padding: const EdgeInsets.all(4),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white.withOpacity(0.2),
+                                                          shape: BoxShape.circle,
                                                         ),
                                                         child: const Icon(
                                                           Icons.remove,
@@ -2193,8 +2158,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                                     int selectedYear = DateTime.now().year;
                                                     await showDialog(
                                                       context: context,
-                                                      builder: (BuildContext
-                                                          context) {
+                                                      builder: (BuildContext context) {
                                                         return AlertDialog(
                                                           title: const Text('Select Year'),
                                                           content: SizedBox(
@@ -2251,57 +2215,36 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             child: Stack(
                                               children: [
                                                 TextField(
-                                                  controller:
-                                                      endDateEducationController,
+                                                  controller: endDateEducationController,
                                                   readOnly: true,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  decoration:
-                                                      const InputDecoration(
+                                                  style: const TextStyle(color: Colors.white),
+                                                  decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     hintText: 'End Year',
                                                     hintStyle: TextStyle(
                                                       color: Colors.white54,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                   onTap: () async {
-                                                    int selectedYear =
-                                                        DateTime.now().year;
+                                                    int selectedYear = DateTime.now().year;
                                                     await showDialog(
                                                       context: context,
-                                                      builder: (BuildContext
-                                                          context) {
+                                                      builder: (BuildContext context) {
                                                         return AlertDialog(
-                                                          title: const Text(
-                                                              'Select Year'),
+                                                          title: const Text('Select Year'),
                                                           content: SizedBox(
                                                             width: 300,
                                                             height: 300,
                                                             child: YearPicker(
-                                                              firstDate:
-                                                                  DateTime(
-                                                                      1950),
-                                                              lastDate: DateTime(
-                                                                  DateTime.now()
-                                                                      .year),
-                                                              initialDate: DateTime(
-                                                                  selectedYear),
-                                                              selectedDate:
-                                                                  DateTime(
-                                                                      selectedYear),
-                                                              onChanged:
-                                                                  (DateTime
-                                                                      dateTime) {
-                                                                Navigator.pop(
-                                                                    context);
+                                                              firstDate: DateTime(1950),
+                                                              lastDate: DateTime(DateTime.now().year),
+                                                              initialDate: DateTime(selectedYear),
+                                                              selectedDate: DateTime(selectedYear),
+                                                              onChanged: (DateTime dateTime) {
+                                                                Navigator.pop(context);
                                                                 setState(() {
-                                                                  endDateEducationController
-                                                                          .text =
-                                                                      dateTime
-                                                                          .year
-                                                                          .toString();
+                                                                  endDateEducationController.text = dateTime.year.toString();
                                                                 });
                                                               },
                                                             ),
@@ -2311,30 +2254,22 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                                     );
                                                   },
                                                 ),
-                                                if (endDateEducationController
-                                                    .text.isNotEmpty)
+                                                if (endDateEducationController.text.isNotEmpty)
                                                   Positioned(
                                                     top: 0,
                                                     right: 90,
                                                     child: GestureDetector(
                                                       onTap: () {
                                                         setState(() {
-                                                          endDateEducationController
-                                                              .clear();
+                                                          endDateEducationController.clear();
                                                         });
                                                       },
                                                       child: Container(
-                                                        margin: const EdgeInsets
-                                                            .all(4),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white
-                                                              .withOpacity(0.2),
-                                                          shape:
-                                                              BoxShape.circle,
+                                                        margin: const EdgeInsets.all(4),
+                                                        padding: const EdgeInsets.all(4),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white.withOpacity(0.2),
+                                                          shape: BoxShape.circle,
                                                         ),
                                                         child: const Icon(
                                                           Icons.remove,
@@ -2377,10 +2312,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 Row(
                                   children: [
                                     const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Icon(Icons.work_outline,
-                                          color: Colors.white),
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.work_outline, color: Colors.white),
                                     ),
                                     const Text(
                                       'Projects:',
@@ -2388,37 +2321,27 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                     ),
                                     const Spacer(),
                                     IconButton(
-                                      icon: const Icon(Icons.add_circle,
-                                          color: Colors.white),
+                                      icon: const Icon(Icons.add_circle, color: Colors.white),
                                       onPressed: _addProjectField,
                                     ),
                                   ],
                                 ),
-                                ..._projectTitleControllers
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
+                                ..._projectTitleControllers.asMap().entries.map((entry) {
                                   int index = entry.key;
                                   return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 10),
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.title,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.title, color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _projectTitleControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _projectTitleControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2431,11 +2354,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             ),
                                           ),
                                           IconButton(
-                                            icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _removeProjectField(index),
+                                            icon: const Icon( Icons.remove_circle, color: Colors.white),
+                                            onPressed: () => _removeProjectField(index),
                                           ),
                                         ],
                                       ),
@@ -2443,18 +2363,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.description,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.description,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _projectDescriptionControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _projectDescriptionControllers[index],
+                                              style: const TextStyle( color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2472,18 +2387,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.link,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.link,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _projectLinkControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _projectLinkControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2501,18 +2411,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.code,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.code,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _projectTechControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _projectTechControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2554,10 +2459,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 Row(
                                   children: [
                                     const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Icon(Icons.card_membership,
-                                          color: Colors.white),
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Icon(Icons.card_membership, color: Colors.white),
                                     ),
                                     const Text(
                                       'Certifications:',
@@ -2565,37 +2468,27 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                     ),
                                     const Spacer(),
                                     IconButton(
-                                      icon: const Icon(Icons.add_circle,
-                                          color: Colors.white),
+                                      icon: const Icon(Icons.add_circle, color: Colors.white),
                                       onPressed: _addCertificationField,
                                     ),
                                   ],
                                 ),
-                                ..._certificationTitleControllers
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
+                                ..._certificationTitleControllers.asMap().entries.map((entry) {
                                   int index = entry.key;
                                   return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 10),
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.label,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.label,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _certificationTitleControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _certificationTitleControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2608,12 +2501,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                             ),
                                           ),
                                           IconButton(
-                                            icon: const Icon(
-                                                Icons.remove_circle,
-                                                color: Colors.white),
-                                            onPressed: () =>
-                                                _removeCertificationField(
-                                                    index),
+                                            icon: const Icon(Icons.remove_circle,color: Colors.white),
+                                            onPressed: () => _removeCertificationField(index),
                                           ),
                                         ],
                                       ),
@@ -2621,18 +2510,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.business,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.business,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _certificationIssuerControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _certificationIssuerControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2650,18 +2534,13 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       Row(
                                         children: [
                                           const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(Icons.calendar_today,
-                                                color: Colors.white),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
+                                            child: Icon(Icons.calendar_today,color: Colors.white),
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              controller:
-                                                  _certificationDateControllers[
-                                                      index],
-                                              style: const TextStyle(
-                                                  color: Colors.white),
+                                              controller: _certificationDateControllers[index],
+                                              style: const TextStyle(color: Colors.white),
                                               cursorColor: Colors.white,
                                               decoration: const InputDecoration(
                                                 border: InputBorder.none,
@@ -2704,9 +2583,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: _isButton1Highlighted
-                                        ? Colors.blue[900]
-                                        : Colors.blue,
+                                    color: _isButton1Highlighted ? Colors.blue[900] : Colors.blue,
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
@@ -2715,8 +2592,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       ),
                                     ],
                                   ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
@@ -2747,9 +2623,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: _isButton2Highlighted
-                                        ? Colors.green[900]
-                                        : Colors.green,
+                                    color: _isButton2Highlighted ? Colors.green[900] : Colors.green,
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
@@ -2758,8 +2632,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                                       ),
                                     ],
                                   ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
