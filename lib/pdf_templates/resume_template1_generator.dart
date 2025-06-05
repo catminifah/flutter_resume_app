@@ -13,6 +13,9 @@ class ResumeTemplate1Generator  {
     return data.buffer.asUint8List();
   }
 
+  
+
+
   Future<Future<Uint8List>> generatePdfFromResume(ResumeModel resume) async {
 
     final pdf = pw.Document();
@@ -28,12 +31,46 @@ class ResumeTemplate1Generator  {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
-    final ARIBLKFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+
+    final languages = List.generate(
+      resume.languages.length,
+      (index) => {
+        'name': resume.languages[index].language.trim(),
+        'level': resume.languages[index].proficiency.trim(),
+      },
+    );
+
+    List<Map<String, String>> getProjects() {
+      final List<Map<String, String>> projects = [];
+      for (int i = 0; i < resume.projects.length; i++) {
+        projects.add({
+          'title': resume.projects[i].name.trim(),
+          'description': resume.projects[i].description.trim(),
+          'link': resume.projects[i].link.trim(),
+          'tech': resume.projects[i].tech.trim(),
+        });
+      }
+      return projects;
+    }
+
+    List<Map<String, String>> getCertifications() {
+      final List<Map<String, String>> certifications = [];
+      for (int i = 0; i < resume.certifications.length; i++) {
+        certifications.add({
+          'title': resume.certifications[i].title.trim(),
+          'issuer': resume.certifications[i].issuer.trim(),
+          'date': resume.certifications[i].date.trim(),
+        });
+      }
+      return certifications;
+    }
+
+
+    final projects = getProjects();
+    final certifications = getCertifications();
 
     pdf.addPage(
       pw.Page(
@@ -190,7 +227,7 @@ class ResumeTemplate1Generator  {
                         ],
 
                         // Address
-                        if (_addressController.text.isNotEmpty) ...[
+                        if (resume.address.isNotEmpty) ...[
                           pw.Row(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
@@ -199,7 +236,7 @@ class ResumeTemplate1Generator  {
                               pw.SizedBox(width: 5),
                               pw.Expanded(
                                 child: pw.Text(
-                                  _addressController.text,
+                                  resume.address,
                                   style: pw.TextStyle(
                                     fontSize: 10,
                                     color: PdfColors.white,
@@ -214,10 +251,10 @@ class ResumeTemplate1Generator  {
 
                         //pw.Divider(thickness: 1, color: PdfColors.white),
 
-                        if (_websiteControllers.isNotEmpty) ...[
-                          ..._websiteControllers.asMap().entries.map((entry) {
+                        if (resume.websites.isNotEmpty) ...[
+                          ...resume.websites.asMap().entries.map((entry) {
                             int index = entry.key;
-                            TextEditingController controller = entry.value;
+                            TextEditingController controller = entry.value as TextEditingController;
 
                             return pw.Column(
                               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -252,8 +289,7 @@ class ResumeTemplate1Generator  {
                         ],
 
                         // Languages
-                        if (languages
-                            .any((l) => l.values.any((v) => v.isNotEmpty))) ...[
+                        if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
                           pw.Text(
                             'Languages',
                             style: pw.TextStyle(
@@ -298,10 +334,10 @@ class ResumeTemplate1Generator  {
                         ],
 
                         // Skills Summary
-                        ..._skillControllers.asMap().entries.map((entry) {
+                        ...resume.skills.asMap().entries.map((entry) {
                           final int categoryIndex = entry.key;
-                          final List<TextEditingController> skills = entry.value;
-                          final String categoryTitle = __skillTitles[categoryIndex].text.trim();
+                          final List<TextEditingController> skills = entry.value as List<TextEditingController>;
+                          final String categoryTitle = resume.skills[categoryIndex].category.trim();
                           final bool allSkillsEmpty = skills.every((controller) => controller.text.trim().isEmpty);
                           final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
 
@@ -370,86 +406,57 @@ class ResumeTemplate1Generator  {
                     children: [
                       pw.SizedBox(height: 20),
                       // PROFILLE
-                      if (_aboutMeController.text.isNotEmpty)
+                      if (resume.aboutMe.isNotEmpty)
                         pw.Text('PROFILLE',
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
-                      if (_aboutMeController.text.isNotEmpty)
+                      if (resume.aboutMe.isNotEmpty)...[
                         pw.SizedBox(height: 5),
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.Text(_aboutMeController.text,
-                            style: pw.TextStyle(
-                                fontSize: 10, color: PdfColors.grey)),
-                      if (_aboutMeController.text.isNotEmpty)
+                        pw.Text(resume.aboutMe,
+                            style: pw.TextStyle( fontSize: 10, color: PdfColors.grey)),
                         pw.SizedBox(height: 10),
-
-                      if (_aboutMeController.text.isNotEmpty)
                         pw.Divider(thickness: 1, color: PdfColors.grey),
+                      ],
 
                       // Education
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle.any(
-                              (controller) => controller.text.isNotEmpty)) ...[
+                      if (resume.educationList.isNotEmpty && resume.educationList.any((edu) => edu.startDate.trim().isNotEmpty || edu.endDate.trim().isNotEmpty || edu.school.trim().isNotEmpty || edu.degree.trim().isNotEmpty)) ...[
                         pw.Text('Education',
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
                         pw.SizedBox(height: 5),
-                        ..._educationControllers.asMap().entries.map((entry) {
+                        ...resume.educationList.asMap().entries.map((entry) {
                           int index = entry.key;
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                if (_startEducation[index]
-                                        .text
-                                        .trim()
-                                        .isNotEmpty ||
-                                    _endEducation[index].text.trim().isNotEmpty)
+                                if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
                                   pw.Text(
-                                    _startEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty &&
-                                            _endEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty
-                                        ? '${_startEducation[index].text.trim()} - ${_endEducation[index].text.trim()}'
-                                        : _startEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty
-                                            ? _startEducation[index].text.trim()
-                                            : _endEducation[index].text.trim(),
-                                    style: pw.TextStyle(
-                                        fontSize: 8, color: PdfColors.grey),
+                                    resume.educationList[index].startDate.trim().isNotEmpty && 
+                                    resume.educationList[index].endDate.trim().isNotEmpty ? 
+                                    '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}' : 
+                                    resume.educationList[index].startDate.trim().isNotEmpty ? resume.educationList[index].startDate.trim() : 
+                                    resume.educationList[index].endDate.trim(),
+                                    style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                   ),
                                 pw.SizedBox(width: 5),
                                 pw.Text(
-                                  _startEducation[index].text.isNotEmpty
-                                      ? '${_startEducation[index].text} - ${_endEducation[index].text}'
-                                      : _endEducation[index].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 8, color: PdfColors.grey),
+                                  resume.educationList[index].startDate.trim().isNotEmpty
+                                      ? '${resume.educationList[index].startDate} - ${resume.educationList[index].endDate}'
+                                      : resume.educationList[index].endDate,
+                                  style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                 ),
                               ]),
                               /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
                             pw.SizedBox(height: 5),*/
                               /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
                             pw.SizedBox(height: 5),*/
-                              if (_degreeTitle[index].text.isNotEmpty)
-                                pw.Text(_degreeTitle[index].text,
+                              if (resume.educationList[index].degree.isNotEmpty)
+                                pw.Text(resume.educationList[index].degree,
                                     style: pw.TextStyle(
                                         fontSize: 13,
                                         color: PdfColors.grey900,
@@ -460,23 +467,11 @@ class ResumeTemplate1Generator  {
                         }),
                       ],
 
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle
-                              .any((controller) => controller.text.isNotEmpty))
+                      if (resume.educationList.isNotEmpty && resume.educationList.any((edu) => edu.startDate.trim().isNotEmpty || edu.endDate.trim().isNotEmpty || edu.school.trim().isNotEmpty || edu.degree.trim().isNotEmpty))
                         pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Work Experience
-                      if (_ExperienceControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _jobTitle.any(
-                              (controller) => controller.text.isNotEmpty) ||
+                      if (resume.experiences.isNotEmpty && resume.experiences.any((controller) => controller.company.trim().isNotEmpty) ||
                           _companyName.any(
                               (controller) => controller.text.isNotEmpty) ||
                           _startdatejob.any(
@@ -529,8 +524,7 @@ class ResumeTemplate1Generator  {
                       ],
 
                       //Project
-                      if (projects
-                          .any((p) => p.values.any((v) => v.isNotEmpty))) ...[
+                      if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Projects',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -568,8 +562,7 @@ class ResumeTemplate1Generator  {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
                       // Certifications
-                      if (certifications
-                          .any((c) => c.values.any((v) => v.isNotEmpty))) ...[
+                      if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Certifications',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -588,14 +581,10 @@ class ResumeTemplate1Generator  {
                                         font: EBGaramondBoldFont)),
                               if (cert['issuer']!.isNotEmpty)
                                 pw.Text('Issued by: ${cert['issuer']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               if (cert['date']!.isNotEmpty)
                                 pw.Text('Date: ${cert['date']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );
