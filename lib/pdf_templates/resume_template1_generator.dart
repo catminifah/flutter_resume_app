@@ -471,25 +471,16 @@ class ResumeTemplate1Generator  {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Work Experience
-                      if (resume.experiences.isNotEmpty && resume.experiences.any((controller) => controller.company.trim().isNotEmpty) ||
-                          _companyName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startdatejob.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _enddatejob.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _detailjob.any(
-                              (controller) => controller.text.isNotEmpty)) ...[
+                      if (resume.experiences.isNotEmpty && resume.experiences.any((controller) => controller.company.trim().isNotEmpty || controller.startDate.trim().isNotEmpty || controller.endDate.trim().isNotEmpty || controller.description.trim().isNotEmpty )) ...[
                         pw.Text('Work Experience',
                             style: pw.TextStyle(
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
                         pw.SizedBox(height: 5),
-                        ..._ExperienceControllers.asMap().entries.map((entry) {
+                        ...resume.experiences.asMap().entries.map((entry) {
                           int index = entry.key;
-                          final safeIndex =
-                              index < _companyName.length ? index : 0;
+                          final safeIndex = index < _companyName.length ? index : 0;
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [

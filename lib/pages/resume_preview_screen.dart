@@ -4,7 +4,6 @@ import 'package:flutter_resume_app/colors/background_color.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/pdf_templates/resume_template1_generator.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'dart:io';
 
 class ResumePreviewScreen extends StatefulWidget {
