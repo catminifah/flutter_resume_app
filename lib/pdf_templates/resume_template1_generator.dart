@@ -114,12 +114,9 @@ class ResumeTemplate1Generator  {
                         for (int i = 0; i < steps; i++) {
                           for (double y = 0; y < segmentHeight; y++) {
                             final t = y / segmentHeight;
-                            final r = colors[i].red +
-                                t * (colors[i + 1].red - colors[i].red);
-                            final g = colors[i].green +
-                                t * (colors[i + 1].green - colors[i].green);
-                            final b = colors[i].blue +
-                                t * (colors[i + 1].blue - colors[i].blue);
+                            final r = colors[i].red + t * (colors[i + 1].red - colors[i].red);
+                            final g = colors[i].green + t * (colors[i + 1].green - colors[i].green);
+                            final b = colors[i].blue + t * (colors[i + 1].blue - colors[i].blue);
 
                             canvas
                               ..setFillColor(PdfColor(r, g, b))
@@ -225,8 +222,7 @@ class ResumeTemplate1Generator  {
                         if (resume.phoneNumber.isNotEmpty) ...[
                           pw.Row(
                             children: [
-                              pw.Image(pw.MemoryImage(phoneIcon),
-                                  width: 12, height: 12),
+                              pw.Image(pw.MemoryImage(phoneIcon), width: 12, height: 12),
                               pw.SizedBox(width: 5),
                               pw.Text(resume.phoneNumber,
                                   style: pw.TextStyle(
@@ -275,11 +271,9 @@ class ResumeTemplate1Generator  {
                                 style: pw.TextStyle(fontSize: 10)),*/
                                 if (controller.text.isNotEmpty)
                                   pw.Row(
-                                    crossAxisAlignment:
-                                        pw.CrossAxisAlignment.start,
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                                     children: [
-                                      pw.Image(pw.MemoryImage(wabIcon),
-                                          width: 12, height: 12),
+                                      pw.Image(pw.MemoryImage(wabIcon), width: 12, height: 12),
                                       pw.SizedBox(width: 5),
                                       pw.Expanded(
                                         child: pw.Text(
@@ -319,8 +313,7 @@ class ResumeTemplate1Generator  {
                             }
 
                             return pw.Padding(
-                              padding:
-                                  const pw.EdgeInsets.only(left: 10, bottom: 2),
+                              padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
                               child: pw.Row(
                                 children: [
                                   pw.Container(
@@ -335,8 +328,7 @@ class ResumeTemplate1Generator  {
                                   pw.SizedBox(width: 5),
                                   pw.Text(
                                     level.isNotEmpty ? '$name ($level)' : name,
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.white),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
                                   ),
                                 ],
                               ),
@@ -380,8 +372,7 @@ class ResumeTemplate1Generator  {
                                       pw.Container(
                                         width: 5,
                                         height: 5,
-                                        margin:
-                                            const pw.EdgeInsets.only(top: 4),
+                                        margin: const pw.EdgeInsets.only(top: 4),
                                         decoration: pw.BoxDecoration(
                                           color: PdfColors.blueGrey900,
                                           shape: pw.BoxShape.circle,
@@ -390,9 +381,7 @@ class ResumeTemplate1Generator  {
                                       pw.SizedBox(width: 5),
                                       pw.Text(
                                         skillText,
-                                        style: pw.TextStyle(
-                                            fontSize: 10,
-                                            color: PdfColors.white),
+                                        style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
                                       ),
                                     ],
                                   ),
@@ -426,8 +415,7 @@ class ResumeTemplate1Generator  {
                                 color: PdfColors.blue)),
                       if (resume.aboutMe.isNotEmpty)...[
                         pw.SizedBox(height: 5),
-                        pw.Text(resume.aboutMe,
-                            style: pw.TextStyle( fontSize: 10, color: PdfColors.grey)),
+                        pw.Text(resume.aboutMe, style: pw.TextStyle( fontSize: 10, color: PdfColors.grey)),
                         pw.SizedBox(height: 10),
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
@@ -483,33 +471,23 @@ class ResumeTemplate1Generator  {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Work Experience
-                      if (resume.experiences.any((work) =>
-                          work.company.trim().isNotEmpty ||
-                          work.description.trim().isNotEmpty ||
-                          work.startDate.trim().isNotEmpty ||
-                          work.endDate.trim().isNotEmpty ||
-                          work.position.trim().isNotEmpty)) ...[
-                        pw.Text('Work Experience',
-                            style: pw.TextStyle( fontSize: 16, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                      if (resume.experiences.any((work) => work.company.trim().isNotEmpty || work.description.trim().isNotEmpty || work.startDate.trim().isNotEmpty || work.endDate.trim().isNotEmpty || work.position.trim().isNotEmpty)) ...[
+                        pw.Text('Work Experience', style: pw.TextStyle( fontSize: 16, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
                         pw.SizedBox(height: 5),
                         ...resume.experiences.map((work) {
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                pw.Text(work.company,
-                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
+                                pw.Text(work.company, style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
                                 pw.SizedBox(width: 5),
-                                pw.Text(
-                                  '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
+                                pw.Text( '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
                                   style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                 ),
                               ]),
-                              pw.Text(work.position,
-                                  style: pw.TextStyle( fontSize: 12, fontWeight: pw.FontWeight.normal, color: PdfColors.grey900, font: EBGaramondFont)),
+                              pw.Text(work.position, style: pw.TextStyle( fontSize: 12, fontWeight: pw.FontWeight.normal, color: PdfColors.grey900, font: EBGaramondFont)),
                               pw.SizedBox(width: 5),
-                              pw.Text(work.description,
-                                  style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
+                              pw.Text(work.description, style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );
