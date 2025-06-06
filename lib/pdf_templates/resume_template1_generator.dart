@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart' show rootBundle, Uint8List, ByteData;
-import 'package:flutter/widgets.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
