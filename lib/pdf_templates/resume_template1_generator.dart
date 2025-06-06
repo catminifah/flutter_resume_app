@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle, Uint8List, ByteData;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
-import 'package:flutter_resume_app/services/resume_from_controllers.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -68,9 +66,23 @@ class ResumeTemplate1Generator  {
       return certifications;
     }
 
+    List<Map<String, String>> getExperiences() {
+      final List<Map<String, String>> experience = [];
+      for (int i = 0; i < resume.experiences.length; i++) {
+        experience.add({
+          'company': resume.experiences[i].company.trim(),
+          'position': resume.experiences[i].position.trim(),
+          'startDate': resume.experiences[i].startDate.trim(),
+          'endDate': resume.experiences[i].endDate.trim(),
+          'description': resume.experiences[i].description.trim(),
+        });
+      }
+      return experience;
+    }
 
     final projects = getProjects();
     final certifications = getCertifications();
+    final experiences = getExperiences();
 
     pdf.addPage(
       pw.Page(
@@ -184,7 +196,7 @@ class ResumeTemplate1Generator  {
                           ),
                           softWrap: true,
                         ),
-                        if (/*!(resume.lastname.isEmpty && resume.firstname.isEmpty)*/resume.lastname.isEmpty && resume.firstname.isNotEmpty || resume.firstname.isNotEmpty)...[
+                        if (resume.lastname.isEmpty && resume.firstname.isNotEmpty || resume.firstname.isNotEmpty)...[
                           pw.SizedBox(height: 10),
                           pw.Divider(thickness: 1, color: PdfColors.white),
                         ],
@@ -471,42 +483,33 @@ class ResumeTemplate1Generator  {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Work Experience
-                      if (resume.experiences.isNotEmpty && resume.experiences.any((controller) => controller.company.trim().isNotEmpty || controller.startDate.trim().isNotEmpty || controller.endDate.trim().isNotEmpty || controller.description.trim().isNotEmpty )) ...[
+                      if (resume.experiences.any((work) =>
+                          work.company.trim().isNotEmpty ||
+                          work.description.trim().isNotEmpty ||
+                          work.startDate.trim().isNotEmpty ||
+                          work.endDate.trim().isNotEmpty ||
+                          work.position.trim().isNotEmpty)) ...[
                         pw.Text('Work Experience',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
+                            style: pw.TextStyle( fontSize: 16, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
                         pw.SizedBox(height: 5),
-                        ...resume.experiences.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          final safeIndex = index < _companyName.length ? index : 0;
+                        ...resume.experiences.map((work) {
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                pw.Text(_companyName[safeIndex].text,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
+                                pw.Text(work.company,
+                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
                                 pw.SizedBox(width: 5),
                                 pw.Text(
-                                  '${_startdatejob[safeIndex].text} - ${_enddatejob[safeIndex].text.isEmpty ? 'PRESENT' : _enddatejob[safeIndex].text}',
-                                  style: pw.TextStyle(
-                                      fontSize: 8, color: PdfColors.grey),
+                                  '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
+                                  style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                 ),
                               ]),
-                              pw.Text(_jobTitle[safeIndex].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: pw.FontWeight.normal,
-                                      color: PdfColors.grey900,
-                                      font: EBGaramondFont)),
+                              pw.Text(work.position,
+                                  style: pw.TextStyle( fontSize: 12, fontWeight: pw.FontWeight.normal, color: PdfColors.grey900, font: EBGaramondFont)),
                               pw.SizedBox(width: 5),
-                              pw.Text(_detailjob[safeIndex].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 10, color: PdfColors.grey800)),
+                              pw.Text(work.description,
+                                  style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );
@@ -528,24 +531,16 @@ class ResumeTemplate1Generator  {
                             children: [
                               if (project['title']!.isNotEmpty)
                                 pw.Text(project['title']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
+                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
                               if (project['tech']!.isNotEmpty)
                                 pw.Text('Tech: ${project['tech']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               if (project['description']!.isNotEmpty)
                                 pw.Text(project['description']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               if (project['link']!.isNotEmpty)
                                 pw.Text('Link: ${project['link']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.blue)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.blue)),
                               pw.SizedBox(height: 10),
                             ],
                           );
