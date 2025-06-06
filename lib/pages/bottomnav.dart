@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/home_screen.dart';
-import 'package:flutter_resume_app/pages/resume_editor.dart';
+import 'package:flutter_resume_app/pages/resume_preview_screen.dart';
 import 'package:flutter_resume_app/pages/setting_screen.dart';
 import 'package:flutter_resume_app/star/star8_painter.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
@@ -29,7 +29,7 @@ class _BottomNavState extends State<BottomNav> {
     Icons.settings,
   ];
 
-  final List<String> labels = ['Home', 'Create', 'Setting'];
+  final List<String> labels = ['Home', 'Preview', 'Setting'];
 
   int _previousIndex = 0;
 
@@ -48,16 +48,16 @@ class _BottomNavState extends State<BottomNav> {
   late Widget currentPage;
   
   late HomeScreen home;
-  late ResumeEditor createreume;
+  late ResumePreviewScreen reumepreview;
   late SettingScreen settingresume;
 
   @override
   void initState() {
     _itemKeys = List.generate(icons.length, (_) => GlobalKey());
     home=HomeScreen();
-    createreume=ResumeEditor();
+    reumepreview=ResumePreviewScreen();
     settingresume=SettingScreen();
-    pages=[home,createreume,settingresume];
+    pages=[home,reumepreview,settingresume];
     currentPage = home;
     super.initState();
   }

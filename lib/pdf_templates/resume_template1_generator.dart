@@ -262,14 +262,14 @@ class ResumeTemplate1Generator  {
                         if (resume.websites.isNotEmpty) ...[
                           ...resume.websites.asMap().entries.map((entry) {
                             int index = entry.key;
-                            TextEditingController controller = entry.value as TextEditingController;
+                            String website = entry.value;
 
                             return pw.Column(
                               crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
                                 /*pw.Text('Website Title: ${titleController.text}',
                                 style: pw.TextStyle(fontSize: 10)),*/
-                                if (controller.text.isNotEmpty)
+                                if (website.isNotEmpty)
                                   pw.Row(
                                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                                     children: [
@@ -277,7 +277,7 @@ class ResumeTemplate1Generator  {
                                       pw.SizedBox(width: 5),
                                       pw.Expanded(
                                         child: pw.Text(
-                                          controller.text,
+                                          website,
                                           style: pw.TextStyle(
                                             fontSize: 10,
                                             color: PdfColors.white,
@@ -340,9 +340,11 @@ class ResumeTemplate1Generator  {
                         // Skills Summary
                         ...resume.skills.asMap().entries.map((entry) {
                           final int categoryIndex = entry.key;
-                          final List<TextEditingController> skills = entry.value as List<TextEditingController>;
-                          final String categoryTitle = resume.skills[categoryIndex].category.trim();
-                          final bool allSkillsEmpty = skills.every((controller) => controller.text.trim().isEmpty);
+                          final skillCategory = entry.value;
+
+                          final String categoryTitle = skillCategory.category.trim();
+                          final List<String> skills = skillCategory.items;
+                          final bool allSkillsEmpty = skills.every((s) => s.trim().isEmpty);
                           final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
 
                           if (isCategoryEmpty) return pw.SizedBox();
@@ -362,7 +364,7 @@ class ResumeTemplate1Generator  {
                               if (categoryTitle.isNotEmpty)
                                 pw.SizedBox(height: 5),
                               ...skills.map((skillController) {
-                                final skillText = skillController.text.trim();
+                                final skillText = skillController.trim();
                                 if (skillText.isEmpty) return pw.SizedBox();
 
                                 return pw.Padding(
@@ -434,22 +436,19 @@ class ResumeTemplate1Generator  {
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
+                                if (resume.educationList[index].school.isNotEmpty)
+                                pw.Text(resume.educationList[index].school,
+                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
+                                pw.SizedBox(width: 5),
                                 if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
                                   pw.Text(
-                                    resume.educationList[index].startDate.trim().isNotEmpty && 
-                                    resume.educationList[index].endDate.trim().isNotEmpty ? 
-                                    '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}' : 
-                                    resume.educationList[index].startDate.trim().isNotEmpty ? resume.educationList[index].startDate.trim() : 
-                                    resume.educationList[index].endDate.trim(),
+                                    resume.educationList[index].startDate.trim().isNotEmpty && resume.educationList[index].endDate.trim().isNotEmpty ? 
+                                    '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
+                                        : resume.educationList[index].startDate.trim().isNotEmpty ? resume.educationList[index].startDate.trim()
+                                        : resume.educationList[index].endDate.trim(),
                                     style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                   ),
                                 pw.SizedBox(width: 5),
-                                pw.Text(
-                                  resume.educationList[index].startDate.trim().isNotEmpty
-                                      ? '${resume.educationList[index].startDate} - ${resume.educationList[index].endDate}'
-                                      : resume.educationList[index].endDate,
-                                  style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
-                                ),
                               ]),
                               /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
                             pw.SizedBox(height: 5),*/

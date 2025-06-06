@@ -38,9 +38,8 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
       email: 'lisarut_mo.chef@example.com',
       phoneNumber: '098-888-1234',
       address: '123 Dessert Lane, Bangkok',
-      aboutMe:
-          'A passionate dessert chef with 8+ years of experience specializing in Thai and French sweets. Focused on innovation and quality.',
-      websites: ['https://lalisa-desserts.com'],
+      aboutMe: 'A passionate dessert chef with 8+ years of experience specializing in Thai and French sweets. Focused on innovation and quality.',
+      websites: [],
       skills: [
         SkillCategory(
           category: 'Cooking',
@@ -56,7 +55,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
           name: 'Thai-French Fusion Dessert Menu',
           description: 'Developed a seasonal dessert menu combining Thai ingredients with French techniques.',
           tech: 'Thai herbs, French pastry methods',
-          link: 'https://lalisa-desserts.com/fusion2024',
+          link: 'https://lisaratmana-desserts.com/fusion2024',
         ),
       ],
       certifications: [
@@ -71,7 +70,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
         LanguageSkill(language: 'English', proficiency: 'Fluent'),
         LanguageSkill(language: 'French', proficiency: 'Intermediate'),
       ],
-      profileImage: (await rootBundle.load('assets/images/profile_resume.jpg')).buffer.asUint8List(),
+      profileImage: (await rootBundle.load('assets/images/profile_resume.jpeg')).buffer.asUint8List(),
       id: '',
       experiences: [
         Experience(
@@ -110,7 +109,10 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
 
     final outputDir = await getTemporaryDirectory();
     final file = File('${outputDir.path}/sample_resume.pdf');
-    await file.writeAsBytes(pdfBytes as List<int>);
+    final pdfUint8List = await pdfBytes;
+    await file.writeAsBytes(pdfUint8List);
+
+    if (!mounted) return;
 
     setState(() {
       _localPdfPath = file.path;
@@ -121,10 +123,6 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Resume Preview'),
-        backgroundColor: Colors.deepPurple.shade700,
-      ),
       body: Stack(
         children: [
           //---------------------------------------- background color -------------------------------------//
@@ -154,7 +152,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
               ? const Center(child: CircularProgressIndicator())
               : _localPdfPath != null
                   ? Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
