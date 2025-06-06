@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_resume_app/colors/background_color.dart';
 import 'package:flutter_resume_app/models/certification.dart';
 import 'package:flutter_resume_app/models/education.dart';
 import 'package:flutter_resume_app/models/experience.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/skill_category.dart';
 import 'package:flutter_resume_app/pdf_templates/resume_template1_generator.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:twinkling_stars/twinkling_stars.dart';
 
 class ResumePreviewScreen extends StatefulWidget {
   const ResumePreviewScreen({Key? key}) : super(key: key);
@@ -121,17 +123,65 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Resume Preview'),
+        backgroundColor: Colors.deepPurple.shade700,
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _localPdfPath != null
-              ? PDFView(
-                  filePath: _localPdfPath!,
-                  enableSwipe: true,
-                  swipeHorizontal: false,
-                  autoSpacing: true,
-                  pageFling: true,
-                ): const Center(child: Text('Failed to load PDF')),
+      body: Stack(
+        children: [
+          //---------------------------------------- background color -------------------------------------//
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: BackgroundColors.iBackgroundColors,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          //---------------------------------------- background color -------------------------------------//
+          //---------------------------------------- background star -------------------------------------//
+          TwinklingStarsBackground(
+            starColors: const [Colors.white],
+            starShapes: [
+              StarShape.diamond,
+              StarShape.fivePoint,
+              StarShape.sixPoint,
+              StarShape.sparkle3
+            ],
+            child: const SizedBox.expand(),
+          ),
+          //---------------------------------------- background star -------------------------------------//
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _localPdfPath != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: PDFView(
+                            filePath: _localPdfPath!,
+                            enableSwipe: true,
+                            swipeHorizontal: false,
+                            autoSpacing: true,
+                            pageFling: true,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const Center(child: Text('Failed to load PDF')),
+        ],
+      ),
     );
   }
+
 }
