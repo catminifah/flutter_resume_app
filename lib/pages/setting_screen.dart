@@ -13,12 +13,141 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepPurple[300],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Select Language',
+              style: TextStyle(color: Colors.white)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('English',
+                      style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('ภาษาไทย',
+                      style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showThemeDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: Colors.black87,
+      builder: (context) {
+        final mediaQuery = MediaQuery.of(context);
+        final maxHeight = mediaQuery.size.height * 0.6; // สูงสุด 60% ของหน้าจอ
+        final bottomInset = mediaQuery.viewInsets.bottom; // รองรับ keyboard
+
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: bottomInset + 16,
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: maxHeight,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Select Theme',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildThemeOption('Starry Night'),
+                  _buildThemeOption('Pastel Sky'),
+                  _buildThemeOption('Galaxy Blue'),
+                  _buildThemeOption('Dark Matter'),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeOption(String themeName) {
+    return ListTile(
+      title: Text(themeName, style: const TextStyle(color: Colors.white)),
+      onTap: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  void _showResetConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.red[100],
+        title: const Text('Reset All Data?'),
+        content: const Text('This will erase all resumes and settings.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('All data has been reset.')),
+              );
+            },
+            child: const Text('Confirm', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutDialog() {
+    showAboutDialog(
+      context: context,
+      applicationName: 'Resume Star',
+      applicationVersion: '1.0.0',
+      applicationLegalese: '© 2025 YourName',
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 16),
+          child: Text(
+              'An aesthetic resume builder with starry background themes.'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     SizeConfig.init(context);
-    double width = SizeConfig.screenW!;
-    double height = SizeConfig.screenH!;
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
@@ -52,74 +181,66 @@ class _SettingScreenState extends State<SettingScreen> {
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Column(
-                        children: [
-                          Stack(
+                      Container(
+                        height: MediaQuery.of(context).size.height / 4,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(40),
+                            bottomRight: Radius.circular(40),
+                          ),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Colors.purple,
+                              Colors.blueAccent,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height / 4,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(40),
-                                    bottomRight: Radius.circular(40),
+                              TwinklingStarsBackground(
+                                starCount: 150,
+                                starColors: PastelStarColor.iPastelStarColor,
+                                starShapes: const [
+                                  StarShape.diamond,
+                                  StarShape.fivePoint,
+                                  StarShape.sixPoint,
+                                  StarShape.sparkle3,
+                                  StarShape.star4,
+                                ],
+                                child: const SizedBox.expand(),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/icons_home/setting_resume.png',
+                                    width: MediaQuery.of(context).size.height / 5,
+                                    height: MediaQuery.of(context).size.height / 5,
+                                    fit: BoxFit.contain,
                                   ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.purple,
-                                      Colors.blueAccent,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                                  const SizedBox(width: 25),
+                                  Text(
+                                    'Setting',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isLandscape ? 20.sp : 30.sp,
+                                      fontFamily: 'SweetLollipop',
+                                      letterSpacing: 1,
+                                      wordSpacing: 4,
+                                    ),
                                   ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      TwinklingStarsBackground(
-                                        starCount: 150,
-                                        starColors: PastelStarColor.iPastelStarColor,
-                                        starShapes: [
-                                          StarShape.diamond,
-                                          StarShape.fivePoint,
-                                          StarShape.sixPoint,
-                                          StarShape.sparkle3,
-                                          StarShape.star4,
-                                        ],
-                                        child: const SizedBox.expand(),
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons_home/setting_resume.png',
-                                            width: MediaQuery.of(context).size.height / 5,
-                                            height: MediaQuery.of(context).size.height / 5,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Text(
-                                            'Setting',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: isLandscape ? 20.sp : 30.sp,
-                                              fontFamily: 'SweetLollipop',
-                                              letterSpacing: 1,
-                                              wordSpacing: 4,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -128,20 +249,55 @@ class _SettingScreenState extends State<SettingScreen> {
                   pinned: true,
                   delegate: _StickyHeaderDelegate(
                     minHeight: 200,
-                    maxHeight: 400,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /*_buildNewResumeButton(isLandscape),
-                          const SizedBox(height: 8),
-                          _buildMyResumeHeader(isLandscape),
-                          const SizedBox(height: 8),
-                          const Divider(color: Colors.white24),
-                          const SizedBox(height: 8),
-                          Expanded(child: buildResumeListFuture(),),*/
-                        ],
+                    maxHeight: 600,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints( maxWidth: 600),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 16),
+                                      _buildSettingTile(
+                                        icon: Icons.language,
+                                        title: 'Language',
+                                        subtitle: 'English',
+                                        onTap: _showLanguageDialog,
+                                      ),
+                                      const Divider(color: Colors.white24),
+                                      _buildSettingTile(
+                                        icon: Icons.palette,
+                                        title: 'Theme',
+                                        subtitle: 'Starry Night',
+                                        onTap: _showThemeDialog,
+                                      ),
+                                      const Divider(color: Colors.white24),
+                                      _buildSettingTile(
+                                        icon: Icons.restart_alt,
+                                        title: 'Reset All Data',
+                                        subtitle: 'Clear all resume entries',
+                                        onTap: _showResetConfirmationDialog,
+                                      ),
+                                      const Divider(color: Colors.white24),
+                                      _buildSettingTile(
+                                        icon: Icons.info_outline,
+                                        title: 'About App',
+                                        subtitle: 'Version 1.0.0',
+                                        onTap: _showAboutDialog,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -151,6 +307,30 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSettingTile({
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+      ),
+      subtitle: subtitle != null
+          ? Text(subtitle,
+              style: TextStyle(color: Colors.white70, fontSize: 13.sp))
+          : null,
+      trailing: const Icon(Icons.chevron_right, color: Colors.white),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      tileColor: Colors.white.withOpacity(0.05),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }
 }
