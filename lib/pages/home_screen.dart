@@ -7,7 +7,6 @@ import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart'
 import 'package:flutter_resume_app/pages/resume_editor.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 
@@ -101,7 +100,14 @@ class _HomeScreen extends State<HomeScreen> {
                           const SizedBox(height: 10),
                           _buildMyResumeHeader(isLandscape),
                           //const SizedBox(height: 8),
-                          const Divider(color: Colors.white24),
+                          Center(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: isLandscape ? 600 : double.infinity,
+                              ),
+                              child: const Divider(color: Colors.white24),
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           Expanded(child: buildResumeListFuture(),),
                           const SizedBox(height: 8),
@@ -243,141 +249,151 @@ class _HomeScreen extends State<HomeScreen> {
   Widget _buildNewResumeButton(var isLandscape) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ResumeEditor()),
-                );
-              },
-              child: SizedBox(
-                height: SizeConfig.scaleH(80),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFF4E71FF).withOpacity(0.9),
-                            Color(0xFF8DD8FF).withOpacity(0.9),
-                            Color(0xFFBBFBFF).withOpacity(0.9),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white30),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: TwinklingStarsBackground(
-                          starColors: PastelStarColor.iPastelStarColor,
-                          starShapes: [
-                            StarShape.diamond,
-                            StarShape.fivePoint,
-                            StarShape.sixPoint,
-                            StarShape.sparkle3,
-                            StarShape.star4,
-                          ],
-                          child: const SizedBox.expand(),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            'assets/icons_home/new_resume.png',
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(width: SizeConfig.scaleW(8)),
-                          Text(
-                            'New\nResume',
-                            style: TextStyle(
-                              fontFamily: 'Orbitron',
-                              fontSize: isLandscape ? 8.sp : 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF010A1A).withOpacity(0.9),
-                              letterSpacing: 1.2,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: isLandscape ? 600 : double.infinity,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ResumeEditor()),
+                    );
+                  },
+                  child: SizedBox(
+                    height: SizeConfig.scaleH(80),
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF4E71FF).withOpacity(0.9),
+                                Color(0xFF8DD8FF).withOpacity(0.9),
+                                Color(0xFFBBFBFF).withOpacity(0.9),
+                              ],
                             ),
-                            textAlign: TextAlign.center,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white30),
                           ),
-                        ],
-                      ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: TwinklingStarsBackground(
+                              starColors: PastelStarColor.iPastelStarColor,
+                              starShapes: [
+                                StarShape.diamond,
+                                StarShape.fivePoint,
+                                StarShape.sixPoint,
+                                StarShape.sparkle3,
+                                StarShape.star4,
+                              ],
+                              child: const SizedBox.expand(),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'assets/icons_home/new_resume.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.contain,
+                              ),
+                              SizedBox(width: SizeConfig.scaleW(8)),
+                              Text(
+                                'New\nResume',
+                                style: TextStyle(
+                                  fontFamily: 'Orbitron',
+                                  fontSize: isLandscape ? 8.sp : 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF010A1A).withOpacity(0.9),
+                                  letterSpacing: 1.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {},
-              child: SizedBox(
-                height: SizeConfig.scaleH(80),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFFFF9A9E).withOpacity(0.9),
-                            Color(0xFFFECFEF).withOpacity(0.9),
-                            Color(0xFFF6F3FF).withOpacity(0.9),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white30),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: TwinklingStarsBackground(
-                          starColors: PastelStarColor.iPastelStarColor,
-                          starShapes: [
-                            StarShape.fivePoint,
-                            StarShape.sparkle3,
-                            StarShape.star4,
-                          ],
-                          child: const SizedBox.expand(),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            'assets/icons_home/guidebook_resume.png',
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(width: SizeConfig.scaleW(8)),
-                          Text(
-                            'App\nGuide',
-                            style: TextStyle(
-                              fontFamily: 'Orbitron',
-                              fontSize: isLandscape ? 8.sp : 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF010A1A).withOpacity(0.9),
-                              letterSpacing: 1.2,
+
+              SizedBox(width: 16),
+
+              // ปุ่ม App Guide
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    height: SizeConfig.scaleH(80),
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFFF9A9E).withOpacity(0.9),
+                                Color(0xFFFECFEF).withOpacity(0.9),
+                                Color(0xFFF6F3FF).withOpacity(0.9),
+                              ],
                             ),
-                            textAlign: TextAlign.center,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.white30),
                           ),
-                        ],
-                      ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: TwinklingStarsBackground(
+                              starColors: PastelStarColor.iPastelStarColor,
+                              starShapes: [
+                                StarShape.fivePoint,
+                                StarShape.sparkle3,
+                                StarShape.star4,
+                              ],
+                              child: const SizedBox.expand(),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'assets/icons_home/guidebook_resume.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.contain,
+                              ),
+                              SizedBox(width: SizeConfig.scaleW(8)),
+                              Text(
+                                'App\nGuide',
+                                style: TextStyle(
+                                  fontFamily: 'Orbitron',
+                                  fontSize: isLandscape ? 8.sp : 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF010A1A).withOpacity(0.9),
+                                  letterSpacing: 1.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
