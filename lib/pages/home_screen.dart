@@ -297,7 +297,8 @@ class _HomeScreen extends State<HomeScreen> {
                           SizedBox(width: SizeConfig.scaleW(8)),
                           Text(
                             'New\nResume',
-                            style: GoogleFonts.orbitron(
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
                               fontSize: isLandscape ? 8.sp : 14.sp,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF010A1A).withOpacity(0.9),
@@ -359,7 +360,8 @@ class _HomeScreen extends State<HomeScreen> {
                           SizedBox(width: SizeConfig.scaleW(8)),
                           Text(
                             'App\nGuide',
-                            style: GoogleFonts.orbitron(
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
                               fontSize: isLandscape ? 8.sp : 14.sp,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF010A1A).withOpacity(0.9),
@@ -391,7 +393,8 @@ class _HomeScreen extends State<HomeScreen> {
           const Icon(Icons.cloud, size: 20, color: Colors.white70),
           SizedBox(width: SizeConfig.scaleW(4)),
           Text('My resume',
-            style: GoogleFonts.orbitron(
+            style: TextStyle(
+              fontFamily: 'Orbitron',
               color: Colors.white70,
               fontWeight: FontWeight.bold,
               fontSize: isLandscape ? 5.sp : 12.sp,

@@ -53,6 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           SafeArea(
             child: OrientationBuilder(
               builder: (context, orientation) {
+                SizeConfig.init(context);
                 bool isLandscape = orientation == Orientation.landscape;
 
                 return Column(
@@ -72,7 +73,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Expanded(
+                                SizedBox(
+                                  height: isLandscape ? height * 0.5 : height * 0.35,
                                   child: Image.asset(
                                     contents[i].image,
                                     fit: BoxFit.contain,
@@ -82,7 +84,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 Text(
                                   contents[i].title,
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.orbitron(
+                                  style: TextStyle(
+                                    fontFamily: 'Orbitron',
                                     fontSize: isLandscape ? 24 : 28,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -92,7 +95,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 Text(
                                   contents[i].desc,
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.mulish(
+                                  style: TextStyle(
+                                    fontFamily: 'Mulish-Regular',
                                     fontSize: isLandscape ? 16 : 18,
                                     color: Colors.white70,
                                   ),
@@ -140,7 +144,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                               child: Text(
                                 "START",
-                                style: GoogleFonts.orbitron(
+                                style: TextStyle(
+                                  fontFamily: 'Orbitron',
                                   fontSize: isLandscape ? 16 : 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -156,7 +161,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   },
                                   child: Text(
                                     "SKIP",
-                                    style: GoogleFonts.orbitron(
+                                    style: TextStyle(
+                                      fontFamily: 'Orbitron',
                                       fontSize: isLandscape ? 14 : 16,
                                       color: Colors.white70,
                                       fontWeight: FontWeight.bold,

@@ -78,6 +78,8 @@ flutter:
     - assets/icons/web.png
     - assets/fonts/
     - assets/fonts/SweetLollipop.ttf
+    - assets/fonts/Mulish-Regular.ttf
+    - assets/fonts/Orbitron.ttf
     - assets/images/
     - assets/onboarding-style-images/
     - assets/icons_home/
@@ -85,6 +87,8 @@ flutter:
     - family: SweetLollipop
       fonts:
         - asset: assets/fonts/SweetLollipop.ttf
+        - asset: assets/fonts/Mulish-Regular.ttf
+        - asset: assets/fonts/Orbitron.ttf
 
 flutter_launcher_icons:
   android: true
