@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: BackgroundColors.iBackgroundColors,
+                colors: BackgroundColorsGalaxy.iBackgroundColors,
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),

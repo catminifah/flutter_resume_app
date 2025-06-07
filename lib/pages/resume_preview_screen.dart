@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/models/certification.dart';
 import 'package:flutter_resume_app/models/education.dart';
 import 'package:flutter_resume_app/models/experience.dart';
@@ -129,7 +129,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: BackgroundColors.iBackgroundColors,
+                colors: BackgroundColorsGalaxy.iBackgroundColors,
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),

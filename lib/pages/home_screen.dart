@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/resume_service.dart';
@@ -51,7 +51,7 @@ class _HomeScreen extends State<HomeScreen> {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: BackgroundColors.iBackgroundColors,
+                colors: BackgroundColorsGalaxy.iBackgroundColors,
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),

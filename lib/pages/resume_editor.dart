@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/services/shared_preferences.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -1053,7 +1053,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: BackgroundColors.iBackgroundColors,
+                  colors: BackgroundColorsGalaxy.iBackgroundColors,
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),

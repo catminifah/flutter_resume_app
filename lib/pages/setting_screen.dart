@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color.dart';
+import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -81,7 +81,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                   const SizedBox(height: 16),
-                  _buildThemeOption('Starry Night'),
                   _buildThemeOption('Pastel Sky'),
                   _buildThemeOption('Galaxy Blue'),
                   _buildThemeOption('Dark Matter'),
@@ -158,7 +157,7 @@ class _SettingScreenState extends State<SettingScreen> {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: BackgroundColors.iBackgroundColors,
+                colors: BackgroundColorsGalaxy.iBackgroundColors,
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
