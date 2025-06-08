@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/theme/dynamic_background.dart';
+import 'package:flutter_resume_app/theme/theme_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -58,8 +60,8 @@ class _SettingScreenState extends State<SettingScreen> {
       backgroundColor: Colors.black87,
       builder: (context) {
         final mediaQuery = MediaQuery.of(context);
-        final maxHeight = mediaQuery.size.height * 0.6; // สูงสุด 60% ของหน้าจอ
-        final bottomInset = mediaQuery.viewInsets.bottom; // รองรับ keyboard
+        final maxHeight = mediaQuery.size.height * 0.6;
+        final bottomInset = mediaQuery.viewInsets.bottom;
 
         return Padding(
           padding: EdgeInsets.only(
@@ -97,6 +99,14 @@ class _SettingScreenState extends State<SettingScreen> {
     return ListTile(
       title: Text(themeName, style: const TextStyle(color: Colors.white)),
       onTap: () {
+        final provider = context.read<ThemeProvider>();
+        if (themeName == 'Galaxy Blue') {
+          provider.setTheme(AppTheme.galaxyBlue);
+        } else if (themeName == 'Dark Matter') {
+          provider.setTheme(AppTheme.darkMatter);
+        } else if (themeName == 'Pastel Sky') {
+          provider.setTheme(AppTheme.pastelSky);
+        }
         Navigator.pop(context);
       },
     );
@@ -151,32 +161,8 @@ class _SettingScreenState extends State<SettingScreen> {
 
     return Scaffold(
       extendBody: true,
-      body: Stack(
-        children: [
-          //---------------------------------------- background color -------------------------------------//
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: BackgroundColorsGalaxy.iBackgroundColors,
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          //---------------------------------------- background color -------------------------------------//
-          //---------------------------------------- background star --------------------------------------//
-          TwinklingStarsBackground(
-            starColors: const [Colors.white],
-            starShapes: [
-              StarShape.diamond,
-              StarShape.fivePoint,
-              StarShape.sixPoint,
-              StarShape.sparkle3
-            ],
-            child: const SizedBox.expand(),
-          ),
-          //---------------------------------------- background star -------------------------------------//
-          SafeArea(
+      body: DynamicBackground(
+        child: SafeArea(
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -304,7 +290,6 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
           ),
-        ],
       ),
     );
   }

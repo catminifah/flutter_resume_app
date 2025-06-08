@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
+import 'package:flutter_resume_app/colors/background_color_dark.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
 class DarkMatterBackground extends StatelessWidget {
@@ -16,7 +16,7 @@ class DarkMatterBackground extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: BackgroundColorsGalaxy.iBackgroundColors,
+              colors: BackgroundColorsDark.iBackgroundColors,
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),

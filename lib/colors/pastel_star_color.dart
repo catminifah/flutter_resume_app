@@ -12,4 +12,10 @@ class PastelStarColor {
     LavenderPurple,
     RoyalPurple
   ];
+  static const List<Color> PastelStarColorBackground = [
+    RoyalPurple,
+    LavenderPurple,
+    Mauvelous,
+    MistyRose,
+  ];
 }

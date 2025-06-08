@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/resume_service.dart';
 import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart';
 import 'package:flutter_resume_app/pages/resume_editor.dart';
 import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
@@ -45,85 +45,65 @@ class _HomeScreen extends State<HomeScreen> {
     return Scaffold(
       //backgroundColor: Colors.transparent,
       extendBody: true,
-      body: Stack(
-        children: [
-          //---------------------------------------- background color -------------------------------------//
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: BackgroundColorsGalaxy.iBackgroundColors,
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          //---------------------------------------- background color -------------------------------------//
-          //---------------------------------------- background star -------------------------------------//
-          TwinklingStarsBackground(
-            starColors: const [Colors.white],
-            starShapes: [
-              StarShape.diamond,
-              StarShape.fivePoint,
-              StarShape.sixPoint,
-              StarShape.sparkle3
-            ],
-            child: const SizedBox.expand(),
-          ),
-          //---------------------------------------- background star -------------------------------------//
-          SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      //---------------------------------------- AppBar -------------------------------------//
-                      _buildAppBar(isLandscape),
-                      //---------------------------------------- AppBar -------------------------------------//
-                      SizedBox(height: isLandscape ? SizeConfig.scaleH(0) : SizeConfig.scaleH(10)),
-                      //------------------------------------- Onboarding -------------------------------------//
-                      OnboardingWidgetState(),
-                      //------------------------------------- Onboarding -------------------------------------//
-                    ],
-                  ),
+      body: DynamicBackground(
+        child: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    //---------------------------------------- AppBar -------------------------------------//
+                    _buildAppBar(isLandscape),
+                    //---------------------------------------- AppBar -------------------------------------//
+                    SizedBox(
+                        height: isLandscape
+                            ? SizeConfig.scaleH(0)
+                            : SizeConfig.scaleH(10)),
+                    //------------------------------------- Onboarding -------------------------------------//
+                    OnboardingWidgetState(),
+                    //------------------------------------- Onboarding -------------------------------------//
+                  ],
                 ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _StickyHeaderDelegate(
-                    minHeight: 200,
-                    maxHeight: 400,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildNewResumeButton(isLandscape),
-                          const SizedBox(height: 10),
-                          _buildMyResumeHeader(isLandscape),
-                          //const SizedBox(height: 8),
-                          Center(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: isLandscape ? 600 : double.infinity,
-                              ),
-                              child: const Divider(color: Colors.white24),
+              ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _StickyHeaderDelegate(
+                  minHeight: 200,
+                  maxHeight: 400,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildNewResumeButton(isLandscape),
+                        const SizedBox(height: 10),
+                        _buildMyResumeHeader(isLandscape),
+                        //const SizedBox(height: 8),
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: isLandscape ? 600 : double.infinity,
                             ),
+                            child: const Divider(color: Colors.white24),
                           ),
-                          const SizedBox(height: 8),
-                          Expanded(child: buildResumeListFuture(),),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: buildResumeListFuture(),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
-  /////////////////////////////////////////////////// Widget //////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////// Widget function //////////////////////////////////////////////////////////////////
   //------------------------------ Widget App bar ----------------------------------------//
   Widget _buildAppBar(var isLandscape) {
     Size size = MediaQuery.of(context).size;
@@ -325,10 +305,7 @@ class _HomeScreen extends State<HomeScreen> {
                   ),
                 ),
               ),
-
               SizedBox(width: 16),
-
-              // ปุ่ม App Guide
               Expanded(
                 child: GestureDetector(
                   onTap: () {},

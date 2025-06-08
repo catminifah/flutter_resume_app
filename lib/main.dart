@@ -2,8 +2,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_resume_app/pages/splash_screen.dart';
+import 'package:flutter_resume_app/theme/theme_provider.dart';
 //import 'package:flutter_resume_app/services/shared_preferences.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+//import 'package:flutter_screenutil/flutter_screenutil.dart';
 //import 'package:image_cropper/image_cropper.dart';
 //import 'package:image_picker/image_picker.dart';
 //import 'package:pdf/pdf.dart';
@@ -11,9 +12,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 //import 'package:path_provider/path_provider.dart';
 //import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 //import 'package:intl/intl.dart';
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -21,23 +25,44 @@ void main() {
       statusBarBrightness: Brightness.dark,
     ),
   );
-  runApp(const ResumeApp());
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const ResumeApp(),
+    ),
+  );
 }
 
 class ResumeApp extends StatelessWidget {
   const ResumeApp({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          title: 'Flutter Resume',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(primarySwatch: Colors.blue),
-          home: const SplashScreen(),
+        return Consumer<ThemeProvider>(
+          builder: (context, themeProvider, _) {
+            if (themeProvider.currentTheme == null) {
+              return const MaterialApp(
+                home: Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
+
+            return MaterialApp(
+              title: 'Star Resume',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const SplashScreen(),
+            );
+          },
         );
       },
     );

@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/colors/background_color_galaxy.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
 import 'package:flutter_resume_app/size_config.dart';
-import 'package:twinkling_stars/twinkling_stars.dart';
+import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:confetti/confetti.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -92,29 +91,9 @@ class _SplashScreenState extends State<SplashScreen>
     SizeConfig.init(context);
     double width = SizeConfig.screenW!;
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: BackgroundColorsGalaxy.iBackgroundColors,
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-          // Twinkling Stars
-          TwinklingStarsBackground(
-            starColors: const [Colors.white],
-            starShapes: [
-              StarShape.diamond,
-              StarShape.fivePoint,
-              StarShape.sixPoint,
-              StarShape.sparkle3
-            ],
-            child: const SizedBox.expand(),
-          ),
-          Center(
+      body: DynamicBackground(
+        child: SafeArea(
+          child: Center(
             child: SizedBox(
               width: width,
               child: Stack(
@@ -165,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
