@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/pages/bottomnav.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
@@ -27,6 +28,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     _controller = PageController();
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   @override

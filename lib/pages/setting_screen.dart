@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/star/starry_background_painter.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_resume_app/theme/theme_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -54,10 +56,10 @@ class _SettingScreenState extends State<SettingScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      backgroundColor: Colors.black87,
       builder: (context) {
         final mediaQuery = MediaQuery.of(context);
         final maxHeight = mediaQuery.size.height * 0.6;
@@ -70,30 +72,45 @@ class _SettingScreenState extends State<SettingScreen> {
             top: 16,
             bottom: bottomInset + 16,
           ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: maxHeight,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Select Theme',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildThemeOption('Pastel Sky'),
-                  _buildThemeOption('Galaxy Blue'),
-                  _buildThemeOption('Dark Matter'),
-                ],
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: StarryBackgroundPainter(starCount: 40),
+                ),
               ),
-            ),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: maxHeight),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Select Theme',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildThemeOption('Pastel Sky'),
+                        _buildThemeOption('Galaxy Blue'),
+                        _buildThemeOption('Dark Matter'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+
 
   Widget _buildThemeOption(String themeName) {
     return ListTile(
@@ -147,10 +164,20 @@ class _SettingScreenState extends State<SettingScreen> {
       children: [
         const Padding(
           padding: EdgeInsets.only(top: 16),
-          child: Text(
-              'An aesthetic resume builder with starry background themes.'),
+          child: Text( 'An aesthetic resume builder with starry background themes.'),
         ),
       ],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
     );
   }
 
@@ -307,8 +334,7 @@ class _SettingScreenState extends State<SettingScreen> {
         style: TextStyle(color: Colors.white, fontSize: 16.sp),
       ),
       subtitle: subtitle != null
-          ? Text(subtitle,
-              style: TextStyle(color: Colors.white70, fontSize: 13.sp))
+          ? Text(subtitle, style: TextStyle(color: Colors.white70, fontSize: 13.sp))
           : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.white),
       onTap: onTap,

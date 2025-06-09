@@ -3,18 +3,13 @@ import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class ResumeTemplate1Generator  {
-
+class ResumeTemplate1Generator {
   Future<Uint8List> loadIcon(String path) async {
     final ByteData data = await rootBundle.load(path);
     return data.buffer.asUint8List();
   }
 
-  
-
-
   Future<Future<Uint8List>> generatePdfFromResume(ResumeModel resume) async {
-
     final pdf = pw.Document();
 
     final bgImageData = await rootBundle.load('images/background.jpg');
@@ -28,9 +23,12 @@ class ResumeTemplate1Generator  {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
-    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ARIBLKFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
 
     final languages = List.generate(
       resume.languages.length,
@@ -113,9 +111,12 @@ class ResumeTemplate1Generator  {
                         for (int i = 0; i < steps; i++) {
                           for (double y = 0; y < segmentHeight; y++) {
                             final t = y / segmentHeight;
-                            final r = colors[i].red + t * (colors[i + 1].red - colors[i].red);
-                            final g = colors[i].green + t * (colors[i + 1].green - colors[i].green);
-                            final b = colors[i].blue + t * (colors[i + 1].blue - colors[i].blue);
+                            final r = colors[i].red +
+                                t * (colors[i + 1].red - colors[i].red);
+                            final g = colors[i].green +
+                                t * (colors[i + 1].green - colors[i].green);
+                            final b = colors[i].blue +
+                                t * (colors[i + 1].blue - colors[i].blue);
 
                             canvas
                               ..setFillColor(PdfColor(r, g, b))
@@ -139,7 +140,8 @@ class ResumeTemplate1Generator  {
                               height: 120,
                               decoration: pw.BoxDecoration(
                                 shape: pw.BoxShape.circle,
-                                border: pw.Border.all(color: PdfColors.white, width: 2),
+                                border: pw.Border.all(
+                                    color: PdfColors.white, width: 2),
                                 //color: PdfColors.white,
                               ),
                               child: pw.Padding(
@@ -183,7 +185,9 @@ class ResumeTemplate1Generator  {
                           softWrap: true,
                         ),
                         pw.Text(
-                          resume.lastname.isNotEmpty ? '${resume.lastname[0].toUpperCase()}${resume.lastname.substring(1)}' : '',
+                          resume.lastname.isNotEmpty
+                              ? '${resume.lastname[0].toUpperCase()}${resume.lastname.substring(1)}'
+                              : '',
                           style: pw.TextStyle(
                             fontSize: 22,
                             fontWeight: pw.FontWeight.bold,
@@ -192,7 +196,9 @@ class ResumeTemplate1Generator  {
                           ),
                           softWrap: true,
                         ),
-                        if (resume.lastname.isEmpty && resume.firstname.isNotEmpty || resume.firstname.isNotEmpty)...[
+                        if (resume.lastname.isEmpty &&
+                                resume.firstname.isNotEmpty ||
+                            resume.firstname.isNotEmpty) ...[
                           pw.SizedBox(height: 10),
                           pw.Divider(thickness: 1, color: PdfColors.white),
                         ],
@@ -202,7 +208,7 @@ class ResumeTemplate1Generator  {
                           pw.Row(
                             children: [
                               pw.Image(pw.MemoryImage(emailIcon),
-                                width: 12, height: 12),
+                                  width: 12, height: 12),
                               pw.SizedBox(width: 5),
                               pw.Text(
                                 resume.email,
@@ -221,7 +227,8 @@ class ResumeTemplate1Generator  {
                         if (resume.phoneNumber.isNotEmpty) ...[
                           pw.Row(
                             children: [
-                              pw.Image(pw.MemoryImage(phoneIcon), width: 12, height: 12),
+                              pw.Image(pw.MemoryImage(phoneIcon),
+                                  width: 12, height: 12),
                               pw.SizedBox(width: 5),
                               pw.Text(resume.phoneNumber,
                                   style: pw.TextStyle(
@@ -270,9 +277,11 @@ class ResumeTemplate1Generator  {
                                 style: pw.TextStyle(fontSize: 10)),*/
                                 if (website.isNotEmpty)
                                   pw.Row(
-                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
                                     children: [
-                                      pw.Image(pw.MemoryImage(wabIcon), width: 12, height: 12),
+                                      pw.Image(pw.MemoryImage(wabIcon),
+                                          width: 12, height: 12),
                                       pw.SizedBox(width: 5),
                                       pw.Expanded(
                                         child: pw.Text(
@@ -294,7 +303,8 @@ class ResumeTemplate1Generator  {
                         ],
 
                         // Languages
-                        if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
+                        if (languages
+                            .any((l) => l.values.any((v) => v.isNotEmpty))) ...[
                           pw.Text(
                             'Languages',
                             style: pw.TextStyle(
@@ -316,18 +326,19 @@ class ResumeTemplate1Generator  {
                               child: pw.Row(
                                 children: [
                                   pw.Container(
-                                    width: 5,
-                                    height: 5,
-                                    margin: const pw.EdgeInsets.only(top: 4),
+                                    width: 3,
+                                    height: 3,
+                                    margin: const pw.EdgeInsets.only(bottom: 1),
                                     decoration: pw.BoxDecoration(
-                                      color: PdfColors.blueGrey900,
+                                      color: PdfColors.white,
                                       shape: pw.BoxShape.circle,
                                     ),
                                   ),
                                   pw.SizedBox(width: 5),
                                   pw.Text(
                                     level.isNotEmpty ? '$name ($level)' : name,
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
+                                    style: pw.TextStyle(
+                                        fontSize: 10, color: PdfColors.white),
                                   ),
                                 ],
                               ),
@@ -341,10 +352,13 @@ class ResumeTemplate1Generator  {
                           final int categoryIndex = entry.key;
                           final skillCategory = entry.value;
 
-                          final String categoryTitle = skillCategory.category.trim();
+                          final String categoryTitle =
+                              skillCategory.category.trim();
                           final List<String> skills = skillCategory.items;
-                          final bool allSkillsEmpty = skills.every((s) => s.trim().isEmpty);
-                          final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
+                          final bool allSkillsEmpty =
+                              skills.every((s) => s.trim().isEmpty);
+                          final bool isCategoryEmpty =
+                              categoryTitle.isEmpty && allSkillsEmpty;
 
                           if (isCategoryEmpty) return pw.SizedBox();
 
@@ -367,22 +381,24 @@ class ResumeTemplate1Generator  {
                                 if (skillText.isEmpty) return pw.SizedBox();
 
                                 return pw.Padding(
-                                  padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
+                                  padding: const pw.EdgeInsets.only( left: 10, bottom: 2),
                                   child: pw.Row(
                                     children: [
                                       pw.Container(
-                                        width: 5,
-                                        height: 5,
-                                        margin: const pw.EdgeInsets.only(top: 4),
+                                        width: 3,
+                                        height: 3,
+                                        margin: const pw.EdgeInsets.only(bottom: 1),
                                         decoration: pw.BoxDecoration(
-                                          color: PdfColors.blueGrey900,
+                                          color: PdfColors.white,
                                           shape: pw.BoxShape.circle,
                                         ),
                                       ),
                                       pw.SizedBox(width: 5),
                                       pw.Text(
                                         skillText,
-                                        style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
+                                        style: pw.TextStyle(
+                                            fontSize: 10,
+                                            color: PdfColors.white),
                                       ),
                                     ],
                                   ),
@@ -414,15 +430,22 @@ class ResumeTemplate1Generator  {
                                 fontSize: 16,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.blue)),
-                      if (resume.aboutMe.isNotEmpty)...[
+                      if (resume.aboutMe.isNotEmpty) ...[
                         pw.SizedBox(height: 5),
-                        pw.Text(resume.aboutMe, style: pw.TextStyle( fontSize: 10, color: PdfColors.grey)),
+                        pw.Text(resume.aboutMe,
+                            style: pw.TextStyle(
+                                fontSize: 10, color: PdfColors.grey)),
                         pw.SizedBox(height: 10),
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
 
                       // Education
-                      if (resume.educationList.isNotEmpty && resume.educationList.any((edu) => edu.startDate.trim().isNotEmpty || edu.endDate.trim().isNotEmpty || edu.school.trim().isNotEmpty || edu.degree.trim().isNotEmpty)) ...[
+                      if (resume.educationList.isNotEmpty &&
+                          resume.educationList.any((edu) =>
+                              edu.startDate.trim().isNotEmpty ||
+                              edu.endDate.trim().isNotEmpty ||
+                              edu.school.trim().isNotEmpty ||
+                              edu.degree.trim().isNotEmpty)) ...[
                         pw.Text('Education',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -435,17 +458,39 @@ class ResumeTemplate1Generator  {
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                if (resume.educationList[index].school.isNotEmpty)
-                                pw.Text(resume.educationList[index].school,
-                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
+                                if (resume
+                                    .educationList[index].school.isNotEmpty)
+                                  pw.Text(resume.educationList[index].school,
+                                      style: pw.TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: pw.FontWeight.bold,
+                                          font: EBGaramondBoldFont)),
                                 pw.SizedBox(width: 5),
-                                if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
+                                if (resume.educationList[index].startDate
+                                        .trim()
+                                        .isNotEmpty ||
+                                    resume.educationList[index].endDate
+                                        .trim()
+                                        .isNotEmpty)
                                   pw.Text(
-                                    resume.educationList[index].startDate.trim().isNotEmpty && resume.educationList[index].endDate.trim().isNotEmpty ? 
-                                    '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
-                                        : resume.educationList[index].startDate.trim().isNotEmpty ? resume.educationList[index].startDate.trim()
-                                        : resume.educationList[index].endDate.trim(),
-                                    style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
+                                    resume.educationList[index].startDate
+                                                .trim()
+                                                .isNotEmpty &&
+                                            resume.educationList[index].endDate
+                                                .trim()
+                                                .isNotEmpty
+                                        ? '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
+                                        : resume.educationList[index].startDate
+                                                .trim()
+                                                .isNotEmpty
+                                            ? resume
+                                                .educationList[index].startDate
+                                                .trim()
+                                            : resume
+                                                .educationList[index].endDate
+                                                .trim(),
+                                    style: pw.TextStyle(
+                                        fontSize: 8, color: PdfColors.grey),
                                   ),
                                 pw.SizedBox(width: 5),
                               ]),
@@ -465,27 +510,54 @@ class ResumeTemplate1Generator  {
                         }),
                       ],
 
-                      if (resume.educationList.isNotEmpty && resume.educationList.any((edu) => edu.startDate.trim().isNotEmpty || edu.endDate.trim().isNotEmpty || edu.school.trim().isNotEmpty || edu.degree.trim().isNotEmpty))
+                      if (resume.educationList.isNotEmpty &&
+                          resume.educationList.any((edu) =>
+                              edu.startDate.trim().isNotEmpty ||
+                              edu.endDate.trim().isNotEmpty ||
+                              edu.school.trim().isNotEmpty ||
+                              edu.degree.trim().isNotEmpty))
                         pw.Divider(thickness: 1, color: PdfColors.grey),
 
                       // Work Experience
-                      if (resume.experiences.any((work) => work.company.trim().isNotEmpty || work.description.trim().isNotEmpty || work.startDate.trim().isNotEmpty || work.endDate.trim().isNotEmpty || work.position.trim().isNotEmpty)) ...[
-                        pw.Text('Work Experience', style: pw.TextStyle( fontSize: 16, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                      if (resume.experiences.any((work) =>
+                          work.company.trim().isNotEmpty ||
+                          work.description.trim().isNotEmpty ||
+                          work.startDate.trim().isNotEmpty ||
+                          work.endDate.trim().isNotEmpty ||
+                          work.position.trim().isNotEmpty)) ...[
+                        pw.Text('Work Experience',
+                            style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.blue)),
                         pw.SizedBox(height: 5),
                         ...resume.experiences.map((work) {
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                pw.Text(work.company, style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
+                                pw.Text(work.company,
+                                    style: pw.TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: pw.FontWeight.bold,
+                                        font: EBGaramondBoldFont)),
                                 pw.SizedBox(width: 5),
-                                pw.Text( '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
-                                  style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
+                                pw.Text(
+                                  '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
+                                  style: pw.TextStyle(
+                                      fontSize: 8, color: PdfColors.grey),
                                 ),
                               ]),
-                              pw.Text(work.position, style: pw.TextStyle( fontSize: 12, fontWeight: pw.FontWeight.normal, color: PdfColors.grey900, font: EBGaramondFont)),
+                              pw.Text(work.position,
+                                  style: pw.TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: pw.FontWeight.normal,
+                                      color: PdfColors.grey900,
+                                      font: EBGaramondFont)),
                               pw.SizedBox(width: 5),
-                              pw.Text(work.description, style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
+                              pw.Text(work.description,
+                                  style: pw.TextStyle(
+                                      fontSize: 10, color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );
@@ -494,7 +566,8 @@ class ResumeTemplate1Generator  {
                       ],
 
                       //Project
-                      if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) ...[
+                      if (projects
+                          .any((p) => p.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Projects',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -507,16 +580,24 @@ class ResumeTemplate1Generator  {
                             children: [
                               if (project['title']!.isNotEmpty)
                                 pw.Text(project['title']!,
-                                    style: pw.TextStyle( fontSize: 14, fontWeight: pw.FontWeight.bold, font: EBGaramondBoldFont)),
+                                    style: pw.TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: pw.FontWeight.bold,
+                                        font: EBGaramondBoldFont)),
                               if (project['tech']!.isNotEmpty)
-                                pw.Text('Tech: ${project['tech']}',
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
+                                pw.Text('${project['tech']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
                               if (project['description']!.isNotEmpty)
                                 pw.Text(project['description']!,
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
                               if (project['link']!.isNotEmpty)
-                                pw.Text('Link: ${project['link']}',
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.blue)),
+                                pw.Text('${project['link']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10, color: PdfColors.blue)),
                               pw.SizedBox(height: 10),
                             ],
                           );
@@ -524,7 +605,8 @@ class ResumeTemplate1Generator  {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
                       // Certifications
-                      if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) ...[
+                      if (certifications
+                          .any((c) => c.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Certifications',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -535,18 +617,25 @@ class ResumeTemplate1Generator  {
                           return pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                              if (cert['title']!.isNotEmpty)
-                                pw.Text(cert['title']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
+                              pw.Row(children: [
+                                if (cert['title']!.isNotEmpty)
+                                  pw.Text(cert['title']!,
+                                      style: pw.TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: pw.FontWeight.bold,
+                                          font: EBGaramondBoldFont)),
+                                pw.SizedBox(width: 5),
+                                if (cert['date']!.isNotEmpty)
+                                  pw.Text('${cert['date']}',
+                                      style: pw.TextStyle(
+                                          fontSize: 8, color: PdfColors.grey)),
+                                pw.SizedBox(width: 5),
+                              ]),
                               if (cert['issuer']!.isNotEmpty)
-                                pw.Text('Issued by: ${cert['issuer']}',
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
-                              if (cert['date']!.isNotEmpty)
-                                pw.Text('Date: ${cert['date']}',
-                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
+                                pw.Text('${cert['issuer']}',
+                                    style: pw.TextStyle(
+                                        fontSize: 10,
+                                        color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );

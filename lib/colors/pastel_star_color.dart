@@ -20,6 +20,6 @@ class PastelStarColor {
     OxfordBlue,
     RoyalPurple2,
     SkyBlue,
-    NavajoWhite,
+    Mauvelous,
   ];
 }

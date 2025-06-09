@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
@@ -26,8 +27,14 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _scaleController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+
+    _scaleController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
     _rotationController = AnimationController(
       vsync: this,
@@ -42,8 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _scaleController, curve: Curves.easeIn),
     );
 
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 2));
+    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
 
     _scaleController.forward();
     _confettiController.play();

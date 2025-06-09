@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show rootBundle, SystemChrome, SystemUiOverlayStyle;
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_resume_app/models/certification.dart';
 import 'package:flutter_resume_app/models/education.dart';
@@ -28,6 +28,12 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
   void initState() {
     super.initState();
     _generatePdfWithSampleData();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   Future<void> _generatePdfWithSampleData() async {

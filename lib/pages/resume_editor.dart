@@ -410,8 +410,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                         ],
 
                         // Languages
-                        if (languages
-                            .any((l) => l.values.any((v) => v.isNotEmpty))) ...[
+                        if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
                           pw.Text(
                             'Languages',
                             style: pw.TextStyle(
