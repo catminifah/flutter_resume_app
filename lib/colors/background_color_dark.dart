@@ -8,7 +8,10 @@ class BackgroundColorsDark {
 
   static const List<Color> iBackgroundColors = [
     b1,
+    b1,
     b3,
+    b3,
+    b4,
     b4,
     b2,
   ];

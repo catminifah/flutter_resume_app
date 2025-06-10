@@ -252,22 +252,24 @@ class _HomeScreen extends State<HomeScreen> {
                     );
                   },
                   child: SizedBox(
-                    height: SizeConfig.scaleH(80),
+                    height: 100,
+                    width: 100,
                     child: Stack(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                          /*decoration: BoxDecoration(
+                            /*gradient: LinearGradient(
                               colors: [
-                                Color(0xFF4E71FF).withOpacity(0.9),
-                                Color(0xFF8DD8FF).withOpacity(0.9),
-                                Color(0xFFBBFBFF).withOpacity(0.9),
+                                // Color(0xFF4E71FF).withOpacity(0.9),
+                                // Color(0xFF8DD8FF).withOpacity(0.9),
+                                // Color(0xFFBBFBFF).withOpacity(0.9),
                               ],
-                            ),
+                            ),*/
+                            //color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: Colors.white30),
-                          ),
-                          child: ClipRRect(
+                          ),*/
+                          /*child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: TwinklingStarsBackground(
                               starColors: PastelStarColor.iPastelStarColor,
@@ -280,10 +282,10 @@ class _HomeScreen extends State<HomeScreen> {
                               ],
                               child: const SizedBox.expand(),
                             ),
-                          ),
+                          ),*/
                         ),
                         Center(
-                          child: Row(
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Image.asset(
@@ -297,9 +299,9 @@ class _HomeScreen extends State<HomeScreen> {
                                 'New\nResume',
                                 style: TextStyle(
                                   fontFamily: 'Orbitron',
-                                  fontSize: isLandscape ? 8.sp : 14.sp,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF010A1A).withOpacity(0.9),
+                                  color: Colors.white.withOpacity(0.8),
                                   letterSpacing: 1.2,
                                 ),
                                 textAlign: TextAlign.center,
@@ -317,18 +319,19 @@ class _HomeScreen extends State<HomeScreen> {
                 child: GestureDetector(
                   onTap: () {},
                   child: SizedBox(
-                    height: SizeConfig.scaleH(80),
+                    height: 100/*SizeConfig.scaleH(80)*/,
+                    width: 100,
                     child: Stack(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                          /*decoration: BoxDecoration(
+                            /*gradient: LinearGradient(
                               colors: [
                                 Color(0xFFFF9A9E).withOpacity(0.9),
                                 Color(0xFFFECFEF).withOpacity(0.9),
                                 Color(0xFFF6F3FF).withOpacity(0.9),
                               ],
-                            ),
+                            ),*/
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: Colors.white30),
                           ),
@@ -343,10 +346,10 @@ class _HomeScreen extends State<HomeScreen> {
                               ],
                               child: const SizedBox.expand(),
                             ),
-                          ),
+                          ),*/
                         ),
                         Center(
-                          child: Row(
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Image.asset(
@@ -360,9 +363,9 @@ class _HomeScreen extends State<HomeScreen> {
                                 'App\nGuide',
                                 style: TextStyle(
                                   fontFamily: 'Orbitron',
-                                  fontSize: isLandscape ? 8.sp : 14.sp,
+                                  fontSize: 10/*isLandscape ? 8.sp : 14.sp*/,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF010A1A).withOpacity(0.9),
+                                  color: Colors.white.withOpacity(0.8),
                                   letterSpacing: 1.2,
                                 ),
                                 textAlign: TextAlign.center,

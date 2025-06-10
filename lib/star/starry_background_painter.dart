@@ -1,48 +1,99 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/star/star_painter.dart';
 
 class StarryBackgroundPainter extends CustomPainter {
   final int starCount;
-  final List<Color> starColors;
 
-  StarryBackgroundPainter({
-    required this.starCount,
-    this.starColors = const [
-      Colors.white,
-      Colors.pinkAccent,
-      Colors.lightBlueAccent,
-      Colors.amberAccent,
-      Colors.purpleAccent,
-    ],
-  });
+  StarryBackgroundPainter({required this.starCount});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final random = Random();
+    final gradient = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+    Color(0xFF8E7DBE).withOpacity(0.2),
+    Color(0xFFA6D6D6).withOpacity(0.2),
+    Color(0xFFF4F8D3).withOpacity(0.2),
+    Color(0xFFF7CFD8).withOpacity(0.2),
+  ],
+    );
+    final bgPaint = Paint()..shader = gradient.createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, bgPaint);
+    final starColors = [
+      Colors.purple.withOpacity(0.4),
+      Colors.yellowAccent.withOpacity(0.4),
+      Colors.lightBlueAccent.withOpacity(0.4),
+      Colors.pinkAccent.withOpacity(0.4),
+    ];
 
-    for (int i = 0; i < starCount; i++) {
-      final starSize = random.nextDouble() * 8 + 4; // 4 - 12 px
-      final position = Offset(
-        random.nextDouble() * size.width,
-        random.nextDouble() * size.height,
-      );
+    final random = Random(12345);
+    final placedStars = <Offset>[];
+
+    int attempts = 0;
+    while (placedStars.length < starCount && attempts < starCount * 10) {
+      attempts++;
+
+      final starSize = random.nextDouble() * 10 + 10;
+      final x = random.nextDouble() * size.width;
+      final y = random.nextDouble() * size.height;
+      final position = Offset(x, y);
+
+      const minDistance = 24.0;
+      bool tooClose = placedStars.any((other) =>
+          (position - other).distance < minDistance);
+
+      if (tooClose) continue;
+
+      placedStars.add(position);
+
       final color = starColors[random.nextInt(starColors.length)];
+      final angle = random.nextDouble() * 2 * pi;
 
-      final painter = StarPainter(color: color);
-      painter.paint(
-        canvas,
-        Size(starSize, starSize),
-      );
+      final path = _createStarPath(starSize);
+      final glowPaint = Paint()
+        ..color = color.withOpacity(0.3)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
 
       canvas.save();
-      canvas.translate(position.dx, position.dy);
-      painter.paint(canvas, Size(starSize, starSize));
+      canvas.translate(x, y);
+      canvas.drawCircle(Offset.zero, starSize * 0.5, glowPaint);
+      canvas.rotate(angle);
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill,
+      );
       canvas.restore();
     }
   }
 
+  Path _createStarPath(double size) {
+    final path = Path();
+    const points = 5;
+    final center = Offset.zero;
+    final outerRadius = size / 2;
+    final innerRadius = outerRadius / 2.5;
+
+    for (int i = 0; i < points * 2; i++) {
+      final isEven = i % 2 == 0;
+      final radius = isEven ? outerRadius : innerRadius;
+      final angle = (pi / points) * i - pi / 2;
+      final x = center.dx + radius * cos(angle);
+      final y = center.dy + radius * sin(angle);
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+
+    path.close();
+    return path;
+  }
+
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant StarryBackgroundPainter oldDelegate) =>
+      oldDelegate.starCount != starCount;
 }

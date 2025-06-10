@@ -196,9 +196,7 @@ class ResumeTemplate1Generator {
                           ),
                           softWrap: true,
                         ),
-                        if (resume.lastname.isEmpty &&
-                                resume.firstname.isNotEmpty ||
-                            resume.firstname.isNotEmpty) ...[
+                        if (resume.lastname.isEmpty && resume.firstname.isNotEmpty || resume.firstname.isNotEmpty) ...[
                           pw.SizedBox(height: 10),
                           pw.Divider(thickness: 1, color: PdfColors.white),
                         ],
@@ -303,8 +301,7 @@ class ResumeTemplate1Generator {
                         ],
 
                         // Languages
-                        if (languages
-                            .any((l) => l.values.any((v) => v.isNotEmpty))) ...[
+                        if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
                           pw.Text(
                             'Languages',
                             style: pw.TextStyle(
@@ -337,8 +334,7 @@ class ResumeTemplate1Generator {
                                   pw.SizedBox(width: 5),
                                   pw.Text(
                                     level.isNotEmpty ? '$name ($level)' : name,
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.white),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
                                   ),
                                 ],
                               ),
@@ -352,13 +348,10 @@ class ResumeTemplate1Generator {
                           final int categoryIndex = entry.key;
                           final skillCategory = entry.value;
 
-                          final String categoryTitle =
-                              skillCategory.category.trim();
+                          final String categoryTitle = skillCategory.category.trim();
                           final List<String> skills = skillCategory.items;
-                          final bool allSkillsEmpty =
-                              skills.every((s) => s.trim().isEmpty);
-                          final bool isCategoryEmpty =
-                              categoryTitle.isEmpty && allSkillsEmpty;
+                          final bool allSkillsEmpty = skills.every((s) => s.trim().isEmpty);
+                          final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
 
                           if (isCategoryEmpty) return pw.SizedBox();
 
@@ -458,39 +451,21 @@ class ResumeTemplate1Generator {
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Row(children: [
-                                if (resume
-                                    .educationList[index].school.isNotEmpty)
+                                if (resume.educationList[index].school.isNotEmpty)
                                   pw.Text(resume.educationList[index].school,
                                       style: pw.TextStyle(
                                           fontSize: 14,
                                           fontWeight: pw.FontWeight.bold,
                                           font: EBGaramondBoldFont)),
                                 pw.SizedBox(width: 5),
-                                if (resume.educationList[index].startDate
-                                        .trim()
-                                        .isNotEmpty ||
-                                    resume.educationList[index].endDate
-                                        .trim()
-                                        .isNotEmpty)
+                                if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
                                   pw.Text(
-                                    resume.educationList[index].startDate
-                                                .trim()
-                                                .isNotEmpty &&
-                                            resume.educationList[index].endDate
-                                                .trim()
-                                                .isNotEmpty
+                                    resume.educationList[index].startDate.trim().isNotEmpty && resume.educationList[index].endDate.trim().isNotEmpty
                                         ? '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
-                                        : resume.educationList[index].startDate
-                                                .trim()
-                                                .isNotEmpty
-                                            ? resume
-                                                .educationList[index].startDate
-                                                .trim()
-                                            : resume
-                                                .educationList[index].endDate
-                                                .trim(),
-                                    style: pw.TextStyle(
-                                        fontSize: 8, color: PdfColors.grey),
+                                        : resume.educationList[index].startDate.trim().isNotEmpty
+                                            ? resume.educationList[index].startDate.trim()
+                                            : resume.educationList[index].endDate.trim(),
+                                    style: pw.TextStyle(fontSize: 8, color: PdfColors.grey),
                                   ),
                                 pw.SizedBox(width: 5),
                               ]),

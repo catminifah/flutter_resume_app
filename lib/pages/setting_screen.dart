@@ -72,39 +72,57 @@ class _SettingScreenState extends State<SettingScreen> {
             top: 16,
             bottom: bottomInset + 16,
           ),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: StarryBackgroundPainter(starCount: 40),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: maxHeight),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: StarryBackgroundPainter(starCount: 40),
                   ),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Select Theme',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        const SizedBox(height: 16),
-                        _buildThemeOption('Pastel Sky'),
-                        _buildThemeOption('Galaxy Blue'),
-                        _buildThemeOption('Dark Matter'),
-                      ],
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: maxHeight),
+                  child: Container(
+                    /*decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),*/
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [
+                                Colors.pink,
+                                Colors.yellow,
+                                Colors.lightBlueAccent
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(Rect.fromLTWH( 0, 0, bounds.width, bounds.height)),
+                            child: Text(
+                              'Select Theme',
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontFamily: 'SweetLollipop',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),Divider(color: Colors.white24.withOpacity(0.4)),
+                          const SizedBox(height: 16),
+                          _buildThemeOption('Pastel Sky'),
+                          _buildThemeOption('Galaxy Blue'),
+                          _buildThemeOption('Dark Matter'),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
