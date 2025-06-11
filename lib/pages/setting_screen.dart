@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/starry_background_painter.dart';
+import 'package:flutter_resume_app/star/twinkling_star_icon.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_resume_app/theme/theme_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -132,7 +133,26 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget _buildThemeOption(String themeName) {
     return ListTile(
-      title: Text(themeName, style: const TextStyle(color: Colors.white)),
+      leading: TwinklingStarIcon(
+        size: 32,
+        colorPool: themeName == 'Galaxy Blue'
+            ? [Color(0xFF4F91FF), Color(0xFF70D7FF), Colors.white]
+            : themeName == 'Dark Matter'
+                ? [
+                    Color(0xFF7B1FA2),
+                    Color(0xFF512DA8),
+                    Colors.deepPurpleAccent
+                  ]
+                : [Color(0xFFEFA6B3), Color(0xFF7FB7B7), Colors.white],
+      ),
+      title: Text(
+        themeName,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       onTap: () {
         final provider = context.read<ThemeProvider>();
         if (themeName == 'Galaxy Blue') {
@@ -146,6 +166,7 @@ class _SettingScreenState extends State<SettingScreen> {
       },
     );
   }
+
 
   void _showResetConfirmationDialog() {
     showDialog(

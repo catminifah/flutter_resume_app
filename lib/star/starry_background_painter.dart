@@ -12,10 +12,10 @@ class StarryBackgroundPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-    Color(0xFF8E7DBE).withOpacity(0.2),
-    Color(0xFFA6D6D6).withOpacity(0.2),
-    Color(0xFFF4F8D3).withOpacity(0.2),
-    Color(0xFFF7CFD8).withOpacity(0.2),
+    Color.fromARGB(255, 163, 136, 235).withOpacity(0.2),
+    Color.fromARGB(255, 96, 228, 228).withOpacity(0.2),
+    Color.fromARGB(255, 237, 252, 106).withOpacity(0.2),
+    Color.fromARGB(255, 250, 136, 161).withOpacity(0.2),
   ],
     );
     final bgPaint = Paint()..shader = gradient.createShader(Offset.zero & size);
