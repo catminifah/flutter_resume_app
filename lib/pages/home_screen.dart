@@ -254,62 +254,30 @@ class _HomeScreen extends State<HomeScreen> {
                   child: SizedBox(
                     height: 100,
                     width: 100,
-                    child: Stack(
-                      children: [
-                        Container(
-                          /*decoration: BoxDecoration(
-                            /*gradient: LinearGradient(
-                              colors: [
-                                // Color(0xFF4E71FF).withOpacity(0.9),
-                                // Color(0xFF8DD8FF).withOpacity(0.9),
-                                // Color(0xFFBBFBFF).withOpacity(0.9),
-                              ],
-                            ),*/
-                            //color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white30),
-                          ),*/
-                          /*child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: TwinklingStarsBackground(
-                              starColors: PastelStarColor.iPastelStarColor,
-                              starShapes: [
-                                StarShape.diamond,
-                                StarShape.fivePoint,
-                                StarShape.sixPoint,
-                                StarShape.sparkle3,
-                                StarShape.star4,
-                              ],
-                              child: const SizedBox.expand(),
-                            ),
-                          ),*/
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                'assets/icons_home/new_resume.png',
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(width: SizeConfig.scaleW(8)),
-                              Text(
-                                'New\nResume',
-                                style: TextStyle(
-                                  fontFamily: 'Orbitron',
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white.withOpacity(0.8),
-                                  letterSpacing: 1.2,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/icons_home/new_resume.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: SizeConfig.scaleW(8)),
+                          Text(
+                            'New\nResume',
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withOpacity(0.8),
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -321,59 +289,65 @@ class _HomeScreen extends State<HomeScreen> {
                   child: SizedBox(
                     height: 100/*SizeConfig.scaleH(80)*/,
                     width: 100,
-                    child: Stack(
-                      children: [
-                        Container(
-                          /*decoration: BoxDecoration(
-                            /*gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFFF9A9E).withOpacity(0.9),
-                                Color(0xFFFECFEF).withOpacity(0.9),
-                                Color(0xFFF6F3FF).withOpacity(0.9),
-                              ],
-                            ),*/
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white30),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/icons_home/tips_resume.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: TwinklingStarsBackground(
-                              starColors: PastelStarColor.iPastelStarColor,
-                              starShapes: [
-                                StarShape.fivePoint,
-                                StarShape.sparkle3,
-                                StarShape.star4,
-                              ],
-                              child: const SizedBox.expand(),
+                          SizedBox(width: SizeConfig.scaleW(8)),
+                          Text(
+                            'Resume\nTips',
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
+                              fontSize: 10/*isLandscape ? 8.sp : 14.sp*/,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withOpacity(0.8),
+                              letterSpacing: 1.2,
                             ),
-                          ),*/
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                'assets/icons_home/guidebook_resume.png',
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(width: SizeConfig.scaleW(8)),
-                              Text(
-                                'App\nGuide',
-                                style: TextStyle(
-                                  fontFamily: 'Orbitron',
-                                  fontSize: 10/*isLandscape ? 8.sp : 14.sp*/,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white.withOpacity(0.8),
-                                  letterSpacing: 1.2,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    height: 100/*SizeConfig.scaleH(80)*/,
+                    width: 100,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/icons_home/guidebook_resume.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: SizeConfig.scaleW(8)),
+                          Text(
+                            'App\nGuide',
+                            style: TextStyle(
+                              fontFamily: 'Orbitron',
+                              fontSize: 10/*isLandscape ? 8.sp : 14.sp*/,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withOpacity(0.8),
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -122,11 +122,11 @@ class _SplashScreenState extends State<SplashScreen>
                             },
                             blendMode: BlendMode.srcIn,
                             child: const Text(
-                              'Star Resume App',
+                              'Resume Star',
                               style: TextStyle(
                                 fontSize: 30,
                                 letterSpacing: 1.5,
-                                fontFamily: 'SweetLollipop',
+                                fontFamily: 'SOLAR_SPACE_DEMO',
                               ),
                             ),
                           )

@@ -81,6 +81,9 @@ flutter:
     - assets/fonts/SweetLollipop.ttf
     - assets/fonts/Mulish-Regular.ttf
     - assets/fonts/Orbitron.ttf
+    - assets/fonts/Fireplace_PERSONAL_USE_ONLY.ttf
+    - assets/fonts/SOLAR_SPACE_DEMO.ttf
+    - assets/fonts/MidnightConstellations.ttf
     - assets/images/
     - assets/onboarding-style-images/
     - assets/icons_home/
@@ -88,8 +91,21 @@ flutter:
     - family: SweetLollipop
       fonts:
         - asset: assets/fonts/SweetLollipop.ttf
+    - family: Mulish
+      fonts:
         - asset: assets/fonts/Mulish-Regular.ttf
+    - family: Orbitron
+      fonts:
         - asset: assets/fonts/Orbitron.ttf
+    - family: Fireplace
+      fonts:
+        - asset: assets/fonts/Fireplace_PERSONAL_USE_ONLY.ttf
+    - family: SOLAR_SPACE_DEMO
+      fonts:
+        - asset: assets/fonts/SOLAR_SPACE_DEMO.ttf
+    - family: MidnightConstellations
+      fonts:
+        - asset: assets/fonts/MidnightConstellations.ttf
 
 flutter_launcher_icons:
   android: true

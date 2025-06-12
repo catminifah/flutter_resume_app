@@ -108,7 +108,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               'Select Theme',
                               style: const TextStyle(
                                 fontSize: 25,
-                                fontFamily: 'SweetLollipop',
+                                fontFamily: 'Fireplace',
                                 color: Colors.white,
                               ),
                             ),
@@ -152,6 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
           color: Colors.white,
           fontSize: 16,
           fontWeight: FontWeight.bold,
+          fontFamily: 'MidnightConstellations',
         ),
       ),
       onTap: () {
@@ -195,7 +196,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  void _showAboutDialog() {
+  /*void _showAboutDialog() {
     showAboutDialog(
       context: context,
       applicationName: 'Resume Star',
@@ -207,6 +208,65 @@ class _SettingScreenState extends State<SettingScreen> {
           child: Text( 'An aesthetic resume builder with starry background themes.'),
         ),
       ],
+    );
+  }*/
+
+  void _showCustomAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Resume Star',
+          style: TextStyle(
+            fontFamily: 'SOLAR_SPACE_DEMO',
+            fontSize: 36,
+            foreground: Paint()
+              ..shader = LinearGradient(
+                colors: <Color>[
+                  Colors.purple,
+                  Colors.blueAccent,
+                ],
+              ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Version 1.0.0',
+              style: TextStyle(
+                fontFamily: 'Mulish',
+                fontSize: 16,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '© 2025 YourName',
+              style: TextStyle(
+                fontFamily: 'Mulish',
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'An aesthetic resume builder with starry background themes.',
+              style: TextStyle(
+                fontFamily: 'MidnightConstellations',
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -278,18 +338,24 @@ class _SettingScreenState extends State<SettingScreen> {
                                     fit: BoxFit.contain,
                                   ),
                                   const SizedBox(width: 25),
-                                  Text(
+                                ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: [PastelStarColor.SkyBlue, PastelStarColor.Mauvelous],
+                                  ).createShader(Rect.fromLTWH(
+                                      0, 0, bounds.width, bounds.height)),
+                                  child: Text(
                                     'Setting',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isLandscape ? 20.sp : 30.sp,
+                                      fontSize: isLandscape ? 20.sp : 25.sp,
                                       fontFamily: 'SweetLollipop',
                                       letterSpacing: 1,
                                       wordSpacing: 4,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
                             ],
                           ),
                         ),
@@ -341,7 +407,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                         icon: Icons.info_outline,
                                         title: 'About App',
                                         subtitle: 'Version 1.0.0',
-                                        onTap: _showAboutDialog,
+                                        onTap: () => _showCustomAboutDialog(context),
                                       ),
                                     ],
                                   ),

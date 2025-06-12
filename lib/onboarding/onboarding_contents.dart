@@ -19,13 +19,11 @@ List<OnboardingContents> contents = [
   OnboardingContents(
     title: "Export and share your resume as a polished PDF.",
     image: "assets/images/image2.png",
-    desc:
-        "Download or send your resume with one tap — fast and professional.",
+    desc: "Download or send your resume with one tap — fast and professional.",
   ),
   OnboardingContents(
     title: "Completely free and effortless to use.",
     image: "assets/images/image3.png",
-    desc:
-        "No sign-up required. Just open the app and start building.",
+    desc: "No sign-up required. Just open the app and start building.",
   ),
 ];
