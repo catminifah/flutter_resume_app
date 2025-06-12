@@ -268,8 +268,7 @@ class ResumeTemplate1Generator {
                                 style: pw.TextStyle(fontSize: 10)),*/
                                 if (website.isNotEmpty)
                                   pw.Row(
-                                    crossAxisAlignment:
-                                        pw.CrossAxisAlignment.start,
+                                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                                     children: [
                                       pw.Image(pw.MemoryImage(wabIcon),
                                           width: 12, height: 12),
@@ -420,8 +419,7 @@ class ResumeTemplate1Generator {
                       if (resume.aboutMe.isNotEmpty) ...[
                         pw.SizedBox(height: 5),
                         pw.Text(resume.aboutMe,
-                            style: pw.TextStyle(
-                                fontSize: 10, color: PdfColors.grey)),
+                            style: pw.TextStyle( fontSize: 10, color: PdfColors.grey)),
                         pw.SizedBox(height: 10),
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
@@ -513,8 +511,7 @@ class ResumeTemplate1Generator {
                                 pw.SizedBox(width: 5),
                                 pw.Text(
                                   '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
-                                  style: pw.TextStyle(
-                                      fontSize: 8, color: PdfColors.grey),
+                                  style: pw.TextStyle( fontSize: 8, color: PdfColors.grey),
                                 ),
                               ]),
                               pw.Text(work.position,
@@ -563,8 +560,7 @@ class ResumeTemplate1Generator {
                                         color: PdfColors.grey800)),
                               if (project['link']!.isNotEmpty)
                                 pw.Text('${project['link']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.blue)),
+                                    style: pw.TextStyle( fontSize: 10, color: PdfColors.blue)),
                               pw.SizedBox(height: 10),
                             ],
                           );
@@ -572,8 +568,7 @@ class ResumeTemplate1Generator {
                         pw.Divider(thickness: 1, color: PdfColors.grey),
                       ],
                       // Certifications
-                      if (certifications
-                          .any((c) => c.values.any((v) => v.isNotEmpty))) ...[
+                      if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Certifications',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -594,8 +589,7 @@ class ResumeTemplate1Generator {
                                 pw.SizedBox(width: 5),
                                 if (cert['date']!.isNotEmpty)
                                   pw.Text('${cert['date']}',
-                                      style: pw.TextStyle(
-                                          fontSize: 8, color: PdfColors.grey)),
+                                      style: pw.TextStyle( fontSize: 8, color: PdfColors.grey)),
                                 pw.SizedBox(width: 5),
                               ]),
                               if (cert['issuer']!.isNotEmpty)
