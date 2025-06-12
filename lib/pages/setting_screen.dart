@@ -133,14 +133,15 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget _buildThemeOption(String themeName) {
     return ListTile(
+      horizontalTitleGap: 3,
       leading: TwinklingStarIcon(
-        size: 32,
+        size: 15,
         colorPool: themeName == 'Galaxy Blue'
             ? [Color(0xFF4F91FF), Color(0xFF70D7FF), Colors.white]
             : themeName == 'Dark Matter'
                 ? [
-                    Color(0xFF7B1FA2),
-                    Color(0xFF512DA8),
+                    Color.fromARGB(255, 200, 160, 218),
+                    Color.fromARGB(255, 157, 133, 214),
                     Colors.deepPurpleAccent
                   ]
                 : [Color(0xFFEFA6B3), Color(0xFF7FB7B7), Colors.white],

@@ -35,7 +35,7 @@ class _TwinklingStarIconState extends State<TwinklingStarIcon>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    );//..repeat(reverse: true);
 
     _rotation = Tween<double>(begin: 0, end: 2 * pi).animate(
       CurvedAnimation(parent: _controller, curve: Curves.linear),
@@ -68,6 +68,9 @@ class _TwinklingStarIconState extends State<TwinklingStarIcon>
   void _startWithDelay() async {
     final delay = Duration(milliseconds: _random.nextInt(1000));
     await Future.delayed(delay);
+
+    if (!mounted) return;
+
     _controller.repeat(reverse: true);
     _colorController.forward();
   }
@@ -118,4 +121,4 @@ class _TwinklingStarIconState extends State<TwinklingStarIcon>
       },
     );
   }
-}
+} 

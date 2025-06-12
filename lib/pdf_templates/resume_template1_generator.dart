@@ -23,12 +23,9 @@ class ResumeTemplate1Generator {
     final addressIcon = await loadIcon('assets/icons/address.png');
     final wabIcon = await loadIcon('assets/icons/web.png');
 
-    final ARIBLKFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
 
     final languages = List.generate(
       resume.languages.length,
@@ -111,12 +108,9 @@ class ResumeTemplate1Generator {
                         for (int i = 0; i < steps; i++) {
                           for (double y = 0; y < segmentHeight; y++) {
                             final t = y / segmentHeight;
-                            final r = colors[i].red +
-                                t * (colors[i + 1].red - colors[i].red);
-                            final g = colors[i].green +
-                                t * (colors[i + 1].green - colors[i].green);
-                            final b = colors[i].blue +
-                                t * (colors[i + 1].blue - colors[i].blue);
+                            final r = colors[i].red + t * (colors[i + 1].red - colors[i].red);
+                            final g = colors[i].green + t * (colors[i + 1].green - colors[i].green);
+                            final b = colors[i].blue + t * (colors[i + 1].blue - colors[i].blue);
 
                             canvas
                               ..setFillColor(PdfColor(r, g, b))
@@ -140,8 +134,7 @@ class ResumeTemplate1Generator {
                               height: 120,
                               decoration: pw.BoxDecoration(
                                 shape: pw.BoxShape.circle,
-                                border: pw.Border.all(
-                                    color: PdfColors.white, width: 2),
+                                border: pw.Border.all( color: PdfColors.white, width: 2),
                                 //color: PdfColors.white,
                               ),
                               child: pw.Padding(
@@ -226,7 +219,7 @@ class ResumeTemplate1Generator {
                           pw.Row(
                             children: [
                               pw.Image(pw.MemoryImage(phoneIcon),
-                                  width: 12, height: 12),
+                                width: 12, height: 12),
                               pw.SizedBox(width: 5),
                               pw.Text(resume.phoneNumber,
                                   style: pw.TextStyle(
@@ -531,8 +524,7 @@ class ResumeTemplate1Generator {
                                       font: EBGaramondFont)),
                               pw.SizedBox(width: 5),
                               pw.Text(work.description,
-                                  style: pw.TextStyle(
-                                      fontSize: 10, color: PdfColors.grey800)),
+                                  style: pw.TextStyle( fontSize: 10, color: PdfColors.grey800)),
                               pw.SizedBox(height: 10),
                             ],
                           );
@@ -541,8 +533,7 @@ class ResumeTemplate1Generator {
                       ],
 
                       //Project
-                      if (projects
-                          .any((p) => p.values.any((v) => v.isNotEmpty))) ...[
+                      if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) ...[
                         pw.Text('Projects',
                             style: pw.TextStyle(
                                 fontSize: 16,
@@ -627,11 +618,6 @@ class ResumeTemplate1Generator {
       ),
     );
 
-    /*// Save PDF to file
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/resume.pdf');
-    await file.writeAsBytes(await pdf.save());
-    return file;*/
     return pdf.save();
   }
 }
