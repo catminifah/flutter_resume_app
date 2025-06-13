@@ -54,12 +54,19 @@ class _BottomNavState extends State<BottomNav> {
   @override
   void initState() {
     _itemKeys = List.generate(icons.length, (_) => GlobalKey());
-    home=HomeScreen();
+    home=HomeScreen(key: UniqueKey(), onRefresh: refreshHome);
     reumepreview=ResumePreviewScreen();
     settingresume=SettingScreen();
     pages=[home,reumepreview,settingresume];
     currentPage = home;
     super.initState();
+  }
+
+  void refreshHome() {
+    setState(() {
+      home = HomeScreen(key: UniqueKey(), onRefresh: refreshHome);
+      currentTabIndex = 0;
+    });
   }
   
   @override

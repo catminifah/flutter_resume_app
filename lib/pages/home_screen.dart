@@ -12,7 +12,10 @@ import 'package:twinkling_stars/twinkling_stars.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback onRefresh;
+  const HomeScreen({super.key,  required this.onRefresh});
+
+  get onResumeCreated => null;
 
   @override
   State<HomeScreen> createState() => _HomeScreen();
@@ -78,12 +81,17 @@ class _HomeScreen extends State<HomeScreen> {
                   minHeight: 200,
                   maxHeight: 400,
                   child: Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.only(
+                      top: isLandscape ? 0 : 16,
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildNewResumeButton(isLandscape),
-                        const SizedBox(height: 10),
+                        SizedBox(height: isLandscape ? 0 : 10),
                         _buildMyResumeHeader(isLandscape),
                         //const SizedBox(height: 8),
                         Center(
@@ -94,7 +102,7 @@ class _HomeScreen extends State<HomeScreen> {
                             child: const Divider(color: Colors.white24),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: isLandscape ? 0 : 8),
                         Expanded(
                           child: buildResumeListFuture(),
                         ),
@@ -235,7 +243,7 @@ class _HomeScreen extends State<HomeScreen> {
   //------------------------------ Widget Button New Resume ----------------------------------------//
   Widget _buildNewResumeButton(var isLandscape) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      padding: EdgeInsets.fromLTRB(16, isLandscape ? 0 : 10, 16, 0),
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -245,11 +253,17 @@ class _HomeScreen extends State<HomeScreen> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final result = await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ResumeEditor()),
+                      MaterialPageRoute(
+                          builder: (context) => const ResumeEditor()),
                     );
+
+                    if (result == true) {
+                      widget.onRefresh();
+                      setState(() {});
+                    }
                   },
                   child: SizedBox(
                     height: 100,
@@ -400,8 +414,7 @@ class _HomeScreen extends State<HomeScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-              child: Text(/*'No resumes found.'*/'',style: TextStyle(color: Colors.white70)));
+          return const Center( child: Text(/*'No resumes found.'*/'',style: TextStyle(color: Colors.white70)));
         }
 
         final resumes = snapshot.data!;
@@ -427,20 +440,26 @@ class _HomeScreen extends State<HomeScreen> {
                       border: Border.all(color: Colors.white24, width: 1),
                     ),
                     child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric( horizontal: 15, vertical: 2),
-                      leading: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white10,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white24, width: 1),
-                        ),
-                        child:
-                            const Icon(Icons.description, color: Colors.white),
-                      ),
-                      title: Text(
-                        '${item.firstname} ${item.lastname}',
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                      leading: item.profileImage != null
+                          ? CircleAvatar(
+                              radius: 25,
+                              backgroundImage: MemoryImage(item.profileImage!),
+                              backgroundColor: Colors.transparent,
+                            )
+                          : Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white24, width: 1),
+                              ),
+                              child: const Icon(Icons.description,
+                                  color: Colors.white),
+                            ),
+                      title: Text( '${item.firstname} ${item.lastname}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -459,13 +478,11 @@ class _HomeScreen extends State<HomeScreen> {
                           if (value == 'edit') {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => ResumeEditor( resume: item,),
-                              ),
+                              MaterialPageRoute(builder: (_) => ResumeEditor( resume: item,),),
                             ).then((_) => setState(() {}));
                           } else if (value == 'delete') {
                             await ResumeService.deleteResume(item.id);
-                            setState(() {}); // reload list
+                            setState(() {});
                           }
                         },
                         itemBuilder: (context) => [
