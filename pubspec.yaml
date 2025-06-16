@@ -75,10 +75,10 @@ flutter:
   
   assets:
     - images/
-    - assets/icons/email.png
-    - assets/icons/phone.png
-    - assets/icons/address.png
-    - assets/icons/web.png
+    - assets/icons/email_white.png
+    - assets/icons/phone_white.png
+    - assets/icons/address_white.png
+    - assets/icons/web_white.png
     - assets/fonts/
     - assets/fonts/SweetLollipop.ttf
     - assets/fonts/Mulish-Regular.ttf

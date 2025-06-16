@@ -12,16 +12,16 @@ class ResumeTemplate1Generator {
   Future<Future<Uint8List>> generatePdfFromResume(ResumeModel resume) async {
     final pdf = pw.Document();
 
-    final bgImageData = await rootBundle.load('images/background.jpg');
-    final bgImageBytes = bgImageData.buffer.asUint8List();
+    // final bgImageData = await rootBundle.load('images/background.jpg');
+    // final bgImageBytes = bgImageData.buffer.asUint8List();
 
     final pageWidth = PdfPageFormat.a4.width;
     final pageHeight = PdfPageFormat.a4.height;
 
-    final emailIcon = await loadIcon('assets/icons/email.png');
-    final phoneIcon = await loadIcon('assets/icons/phone.png');
-    final addressIcon = await loadIcon('assets/icons/address.png');
-    final wabIcon = await loadIcon('assets/icons/web.png');
+    final emailIcon = await loadIcon('assets/icons/email_white.png');
+    final phoneIcon = await loadIcon('assets/icons/phone_white.png');
+    final addressIcon = await loadIcon('assets/icons/address_white.png');
+    final wabIcon = await loadIcon('assets/icons/web_white.png');
 
     final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
     final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
@@ -144,7 +144,6 @@ class ResumeTemplate1Generator {
                                   height: 110,
                                   decoration: pw.BoxDecoration(
                                     shape: pw.BoxShape.circle,
-                                    //color: PdfColors.blue100,
                                   ),
                                   child: pw.Padding(
                                     padding: pw.EdgeInsets.all(5),
