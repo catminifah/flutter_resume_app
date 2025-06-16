@@ -10,7 +10,9 @@ import 'package:flutter_resume_app/models/project.dart';
 import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/skill_category.dart';
 import 'package:flutter_resume_app/pdf_templates/resume_template1_generator.dart';
+import 'package:flutter_resume_app/pdf_templates/resume_template2_generator.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ResumePreviewScreen extends StatefulWidget {
@@ -21,8 +23,10 @@ class ResumePreviewScreen extends StatefulWidget {
 }
 
 class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
-  String? _localPdfPath;
   bool _isLoading = true;
+
+  String? _pdfPathTemplate1;
+  String? _pdfPathTemplate2;
 
   @override
   void initState() {
@@ -109,56 +113,124 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
       ],
     );
 
-    final generator = ResumeTemplate1Generator();
-    final pdfBytes = await generator.generatePdfFromResume(sampleResume);
-
     final outputDir = await getTemporaryDirectory();
-    final file = File('${outputDir.path}/sample_resume.pdf');
-    final pdfUint8List = await pdfBytes;
-    await file.writeAsBytes(pdfUint8List);
+
+    //---------------------------------- Template 1 ---------------------------------//
+    final pdf1Bytes = await ResumeTemplate1Generator().generatePdfFromResume(sampleResume);
+    final file1 = File('${outputDir.path}/resume_template1.pdf');
+    await file1.writeAsBytes(await pdf1Bytes);
+
+    //---------------------------------- Template 2 ---------------------------------//
+    final pdf2Bytes = await ResumeTemplate2Generator().generatePdfFromResume(sampleResume);
+    final file2 = File('${outputDir.path}/resume_template2.pdf');
+    await file2.writeAsBytes(await pdf2Bytes);
 
     if (!mounted) return;
-
     setState(() {
-      _localPdfPath = file.path;
+      _pdfPathTemplate1 = file1.path;
+      _pdfPathTemplate2 = file2.path;
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isLandscape = size.width > size.height;
+
     return Scaffold(
       body: DynamicBackground(
-        child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _localPdfPath != null
-              ? Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: PDFView(
-                        filePath: _localPdfPath!,
-                        enableSwipe: true,
-                        swipeHorizontal: false,
-                        autoSpacing: true,
-                        pageFling: true,
-                      ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : isLandscape
+                  ? PageView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildPdfWithTitle("Template 1", _pdfPathTemplate1, size),
+                        _buildPdfWithTitle("Template 2", _pdfPathTemplate2, size),
+                      ],
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.all(8.0),
+                      children: [
+                        Text("Template 1",
+                            style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'MidnightConstellations')),
+                        const SizedBox(height: 8),
+                        _buildPdfViewer(_pdfPathTemplate1, size),
+                        const SizedBox(height: 24),
+                        Text("Template 2",
+                            style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'MidnightConstellations')),
+                        const SizedBox(height: 8),
+                        _buildPdfViewer(_pdfPathTemplate2, size),
+                      ],
                     ),
-                  ),
-                )
-              : const Center(child: Text('Failed to load PDF')),
-    ));
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPdfWithTitle(String title, String? path, Size screenSize) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontFamily: 'MidnightConstellations',
+          ),
+        ),
+        Expanded(
+          child: _buildPdfViewer(path, screenSize),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPdfViewer(String? path, Size screenSize) {
+    if (path == null) {
+      return const Text('PDF not available', style: TextStyle(color: Colors.white));
+    }
+
+    final isLandscape = screenSize.width > screenSize.height;
+
+    Widget pdf = PDFView(
+      filePath: path,
+      enableSwipe: true,
+      swipeHorizontal: isLandscape,
+      autoSpacing: false,
+      pageFling: true,
+      fitPolicy: FitPolicy.WIDTH,
+    );
+
+    if (isLandscape) {
+      return Center(
+        child: SizedBox(
+          width: screenSize.width * 0.3,
+          height: screenSize.height * 0.83,
+          child: ClipRRect(
+            //borderRadius: BorderRadius.circular(12),
+            child: pdf,
+          ),
+        ),
+      );
+    }
+    return AspectRatio(
+      aspectRatio: 0.707,
+      child: pdf,
+    );
   }
 
 }

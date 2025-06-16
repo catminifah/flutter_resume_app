@@ -50,6 +50,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^29.2.9
   provider: ^6.1.1
   uuid: ^4.0.0
+  flutter_cached_pdfview: ^0.4.3
 
 dev_dependencies:
   flutter_test:
