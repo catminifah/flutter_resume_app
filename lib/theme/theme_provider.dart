@@ -8,8 +8,8 @@ enum AppTheme {
 }
 
 class ThemeProvider extends ChangeNotifier {
-  AppTheme _currentTheme = AppTheme.galaxyBlue;
 
+  AppTheme _currentTheme = AppTheme.galaxyBlue;
   AppTheme get currentTheme => _currentTheme;
 
   ThemeProvider() {
