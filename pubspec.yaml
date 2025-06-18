@@ -46,6 +46,10 @@ flutter:
     - assets/icons/phone_white.png
     - assets/icons/address_white.png
     - assets/icons/web_white.png
+    - assets/icons/email_back.png
+    - assets/icons/phone_back.png
+    - assets/icons/address_back.png
+    - assets/icons/web_back.png
     - assets/fonts/
     - assets/fonts/SweetLollipop.ttf
     - assets/fonts/Mulish-Regular.ttf

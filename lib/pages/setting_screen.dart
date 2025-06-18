@@ -7,6 +7,7 @@ import 'package:flutter_resume_app/star/twinkling_star_icon.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_resume_app/theme/theme_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
@@ -50,6 +51,17 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _clearCache() async {
+    final tempDir = await getTemporaryDirectory();
+    if (await tempDir.exists()) {
+      await tempDir.delete(recursive: true);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Cache cleared successfully')),
     );
   }
 
@@ -170,46 +182,109 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
 
-  void _showResetConfirmationDialog() {
+  void _showClearCacheDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.red[100],
-        title: const Text('Reset All Data?'),
-        content: const Text('This will erase all resumes and settings.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+      barrierColor: Colors.black.withOpacity(0.4),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: SizedBox(
+          height: 210,
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF0D1B2A).withOpacity(0.5),
+                      Color(0xFF1B263B).withOpacity(0.5),
+                      Color(0xFF415A77).withOpacity(0.5),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              TwinklingStarsBackground(
+                starColors: const [Colors.white],
+                starShapes: [
+                  StarShape.diamond,
+                  StarShape.fivePoint,
+                  StarShape.sixPoint,
+                  StarShape.sparkle3,
+                ],
+                child: const SizedBox.expand(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Clear Cache',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Orbitron',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Are you sure you want to clear the cache?',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontFamily: 'Orbitron',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Orbitron',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            await _clearCache();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white10.withOpacity(0.3),
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            'Confirm',
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontFamily: 'Orbitron',
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('All data has been reset.')),
-              );
-            },
-            child: const Text('Confirm', style: TextStyle(color: Colors.red)),
-          ),
-        ],
+        ),
       ),
     );
   }
-
-  /*void _showAboutDialog() {
-    showAboutDialog(
-      context: context,
-      applicationName: 'Resume Star',
-      applicationVersion: '1.0.0',
-      applicationLegalese: '© 2025 YourName',
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: Text( 'An aesthetic resume builder with starry background themes.'),
-        ),
-      ],
-    );
-  }*/
 
   void _showCustomAboutDialog(BuildContext context) {
     showDialog(
@@ -396,12 +471,12 @@ class _SettingScreenState extends State<SettingScreen> {
                                         onTap: _showThemeDialog,
                                       ),
                                       const Divider(color: Colors.white24),
-                                      _buildSettingTile(
-                                        icon: Icons.restart_alt,
-                                        title: 'Reset All Data',
-                                        subtitle: 'Clear all resume entries',
-                                        onTap: _showResetConfirmationDialog,
-                                      ),
+                                    _buildSettingTile(
+                                      icon: Icons.cleaning_services,
+                                      title: 'Clear Cache',
+                                      subtitle: 'Remove temporary stored data',
+                                      onTap:  _showClearCacheDialog,
+                                    ),
                                       const Divider(color: Colors.white24),
                                       _buildSettingTile(
                                         icon: Icons.info_outline,

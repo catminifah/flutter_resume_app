@@ -277,13 +277,15 @@ class ResumeTemplate2Generator {
                 children: [
                   pw.Image(pw.MemoryImage(emailIcon), width: 12, height: 12),
                   pw.SizedBox(width: 5),
-                  pw.Text(
-                    resume.email,
-                    style: pw.TextStyle(
-                      fontSize: 10,
-                      color: PdfColors.white,
+                  pw.Expanded(
+                    child: pw.Text(
+                      resume.email,
+                      style: pw.TextStyle(
+                        fontSize: 10,
+                        color: PdfColors.white,
+                      ),
+                      softWrap: true,
                     ),
-                    softWrap: true,
                   ),
                 ],
               ),

@@ -40,8 +40,7 @@ class SizeConfig {
       blockH = (screenH! / designHeightLandscape * 0.75);
     }
 
-    print(
-        '[SizeConfig] w: $screenW h: $screenH orientation: ${isPortrait ? 'portrait' : 'landscape'}');
+    print('[SizeConfig] w: $screenW h: $screenH orientation: ${isPortrait ? 'portrait' : 'landscape'}');
   }
 
   static double scaleW(double inputWidth) => (blockW ?? 1.0) * inputWidth;

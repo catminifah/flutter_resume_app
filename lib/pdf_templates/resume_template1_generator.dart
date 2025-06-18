@@ -98,13 +98,15 @@ class ResumeTemplate1Generator {
           children: [
             pw.Image(pw.MemoryImage(emailIcon), width: 12, height: 12),
             pw.SizedBox(width: 5),
-            pw.Text(
-              resume.email,
-              style: pw.TextStyle(
-                fontSize: 10,
-                color: PdfColors.white,
+            pw.Expanded(
+              child: pw.Text(
+                resume.email,
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  color: PdfColors.white,
+                ),
+                softWrap: true,
               ),
-              softWrap: true,
             ),
           ],
         ),
@@ -318,8 +320,7 @@ class ResumeTemplate1Generator {
                 color: PdfColors.blue)),
       if (resume.aboutMe.isNotEmpty) ...[
         pw.SizedBox(height: 5),
-        pw.Text(resume.aboutMe,
-            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+        pw.Text(resume.aboutMe, style: pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
         pw.SizedBox(height: 10),
         pw.Divider(thickness: 1, color: PdfColors.grey),
       ],
@@ -350,17 +351,11 @@ class ResumeTemplate1Generator {
                           fontWeight: pw.FontWeight.bold,
                           font: EBGaramondBoldFont)),
                 pw.SizedBox(width: 5),
-                if (resume.educationList[index].startDate.trim().isNotEmpty ||
-                    resume.educationList[index].endDate.trim().isNotEmpty)
+                if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
                   pw.Text(
-                    resume.educationList[index].startDate.trim().isNotEmpty &&
-                            resume.educationList[index].endDate
-                                .trim()
-                                .isNotEmpty
+                    resume.educationList[index].startDate.trim().isNotEmpty && resume.educationList[index].endDate.trim().isNotEmpty
                         ? '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
-                        : resume.educationList[index].startDate
-                                .trim()
-                                .isNotEmpty
+                        : resume.educationList[index].startDate.trim().isNotEmpty
                             ? resume.educationList[index].startDate.trim()
                             : resume.educationList[index].endDate.trim(),
                     style: pw.TextStyle(fontSize: 8, color: PdfColors.grey),
