@@ -11,6 +11,7 @@ import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/skill_category.dart';
 import 'package:flutter_resume_app/pdf_templates/resume_template1_generator.dart';
 import 'package:flutter_resume_app/pdf_templates/resume_template2_generator.dart';
+import 'package:flutter_resume_app/pdf_templates/resume_template3_generator.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,6 +28,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
 
   String? _pdfPathTemplate1;
   String? _pdfPathTemplate2;
+  String? _pdfPathTemplate3;
 
   @override
   void initState() {
@@ -125,10 +127,16 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
     final file2 = File('${outputDir.path}/resume_template2.pdf');
     await file2.writeAsBytes(await pdf2Bytes);
 
+    //---------------------------------- Template 3 ---------------------------------//
+    final pdf3Bytes = await ResumeTemplate3Generator().generatePdfFromResume(sampleResume);
+    final file3 = File('${outputDir.path}/resume_template3.pdf');
+    await file3.writeAsBytes(await pdf3Bytes);
+
     if (!mounted) return;
     setState(() {
       _pdfPathTemplate1 = file1.path;
       _pdfPathTemplate2 = file2.path;
+      _pdfPathTemplate3 = file3.path;
       _isLoading = false;
     });
   }
@@ -150,6 +158,7 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
                       children: [
                         _buildPdfWithTitle("Template 1", _pdfPathTemplate1, size),
                         _buildPdfWithTitle("Template 2", _pdfPathTemplate2, size),
+                        _buildPdfWithTitle("Template 3", _pdfPathTemplate3, size),
                       ],
                     )
                   : ListView(
@@ -172,6 +181,15 @@ class _ResumePreviewScreenState extends State<ResumePreviewScreen> {
                                 fontFamily: 'MidnightConstellations')),
                         const SizedBox(height: 8),
                         _buildPdfViewer(_pdfPathTemplate2, size),
+                        const SizedBox(height: 24),
+                        Text("Template 3",
+                            style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'MidnightConstellations')),
+                        const SizedBox(height: 8),
+                        _buildPdfViewer(_pdfPathTemplate3, size),
                       ],
                     ),
         ),
