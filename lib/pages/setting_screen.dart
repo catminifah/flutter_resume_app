@@ -192,94 +192,98 @@ class _SettingScreenState extends State<SettingScreen> {
         child: SizedBox(
           height: 210,
           width: double.infinity,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF0D1B2A).withOpacity(0.5),
-                      Color(0xFF1B263B).withOpacity(0.5),
-                      Color(0xFF415A77).withOpacity(0.5),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF5409DA).withOpacity(0.3),
+                        Color(0xFF4E71FF).withOpacity(0.3),
+                        Color(0xFF8DD8FF).withOpacity(0.3),
+                        Color(0xFFBBFBFF).withOpacity(0.3),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
                 ),
-              ),
-              TwinklingStarsBackground(
-                starColors: const [Colors.white],
-                starShapes: [
-                  StarShape.diamond,
-                  StarShape.fivePoint,
-                  StarShape.sixPoint,
-                  StarShape.sparkle3,
-                ],
-                child: const SizedBox.expand(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Clear Cache',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Orbitron',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Are you sure you want to clear the cache?',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                        fontFamily: 'Orbitron',
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontFamily: 'Orbitron',
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            await _clearCache();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white10.withOpacity(0.3),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text(
-                            'Confirm',
-                            style: TextStyle(
-                              color: Colors.black45,
-                              fontFamily: 'Orbitron',
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                TwinklingStarsBackground(
+                  starColors: const [Colors.white],
+                  starShapes: [
+                    StarShape.diamond,
+                    StarShape.fivePoint,
+                    StarShape.sixPoint,
+                    StarShape.sparkle3,
                   ],
+                  child: const SizedBox.expand(),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Clear Cache',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Orbitron',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Are you sure you want to clear the cache?',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontFamily: 'Orbitron',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Orbitron',
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              await _clearCache();
+                            },
+                            /*style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white10.withOpacity(0.3),
+                              foregroundColor: Colors.white,
+                            ),*/
+                            child: const Text(
+                              'Confirm',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Orbitron',
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -365,57 +369,58 @@ class _SettingScreenState extends State<SettingScreen> {
       extendBody: true,
       body: DynamicBackground(
         child: SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height / 4,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40),
-                          ),
-                          gradient: const LinearGradient(
-                            colors: [
-                              Colors.purple,
-                              Colors.blueAccent,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 4,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(40),
+                          bottomRight: Radius.circular(40),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              TwinklingStarsBackground(
-                                starCount: 150,
-                                starColors: PastelStarColor.iPastelStarColor,
-                                starShapes: const [
-                                  StarShape.diamond,
-                                  StarShape.fivePoint,
-                                  StarShape.sixPoint,
-                                  StarShape.sparkle3,
-                                  StarShape.star4,
-                                ],
-                                child: const SizedBox.expand(),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    'assets/icons_home/setting_resume.png',
-                                    width: MediaQuery.of(context).size.height / 5,
-                                    height: MediaQuery.of(context).size.height / 5,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  const SizedBox(width: 25),
+                        gradient: const LinearGradient(
+                          colors: [Colors.purple, Colors.blueAccent],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            TwinklingStarsBackground(
+                              starCount: 150,
+                              starColors: PastelStarColor.iPastelStarColor,
+                              starShapes: const [
+                                StarShape.diamond,
+                                StarShape.fivePoint,
+                                StarShape.sixPoint,
+                                StarShape.sparkle3,
+                                StarShape.star4,
+                              ],
+                              child: const SizedBox.expand(),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  'assets/icons_home/setting_resume.png',
+                                  width: MediaQuery.of(context).size.height / 5,
+                                  height:
+                                      MediaQuery.of(context).size.height / 5,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(width: 25),
                                 ShaderMask(
                                   shaderCallback: (bounds) => LinearGradient(
-                                    colors: [PastelStarColor.SkyBlue, PastelStarColor.Mauvelous],
+                                    colors: [
+                                      PastelStarColor.SkyBlue,
+                                      PastelStarColor.Mauvelous
+                                    ],
                                   ).createShader(Rect.fromLTWH(
                                       0, 0, bounds.width, bounds.height)),
                                   child: Text(
@@ -431,73 +436,62 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                               ],
                             ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _StickyHeaderDelegate(
-                    minHeight: 200,
-                    maxHeight: 600,
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints( maxWidth: 600),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 16),
-                                      _buildSettingTile(
-                                        icon: Icons.language,
-                                        title: 'Language',
-                                        subtitle: 'English',
-                                        onTap: _showLanguageDialog,
-                                      ),
-                                      const Divider(color: Colors.white24),
-                                      _buildSettingTile(
-                                        icon: Icons.palette,
-                                        title: 'Theme',
-                                        subtitle: 'Starry Night',
-                                        onTap: _showThemeDialog,
-                                      ),
-                                      const Divider(color: Colors.white24),
-                                    _buildSettingTile(
-                                      icon: Icons.cleaning_services,
-                                      title: 'Clear Cache',
-                                      subtitle: 'Remove temporary stored data',
-                                      onTap:  _showClearCacheDialog,
-                                    ),
-                                      const Divider(color: Colors.white24),
-                                      _buildSettingTile(
-                                        icon: Icons.info_outline,
-                                        title: 'About App',
-                                        subtitle: 'Version 1.0.0',
-                                        onTap: () => _showCustomAboutDialog(context),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+              ),
+              SliverToBoxAdapter(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          const Divider(color: Colors.white24),
+                          _buildSettingTile(
+                            icon: Icons.language,
+                            title: 'Language',
+                            subtitle: 'English',
+                            onTap: _showLanguageDialog,
                           ),
-                        ),
+                          const Divider(color: Colors.white24),
+                          _buildSettingTile(
+                            icon: Icons.palette,
+                            title: 'Theme',
+                            subtitle: 'Starry Night',
+                            onTap: _showThemeDialog,
+                          ),
+                          const Divider(color: Colors.white24),
+                          _buildSettingTile(
+                            icon: Icons.cleaning_services,
+                            title: 'Clear Cache',
+                            subtitle: 'Remove temporary stored data',
+                            onTap: _showClearCacheDialog,
+                          ),
+                          const Divider(color: Colors.white24),
+                          _buildSettingTile(
+                            icon: Icons.info_outline,
+                            title: 'About App',
+                            subtitle: 'Version 1.0.0',
+                            onTap: () => _showCustomAboutDialog(context),
+                          ),
+                          const Divider(color: Colors.white24),
+                          const SizedBox(height: 32),
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
       ),
     );
   }
@@ -508,54 +502,21 @@ class _SettingScreenState extends State<SettingScreen> {
     String? subtitle,
     required VoidCallback onTap,
   }) {
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return ListTile(
       leading: Icon(icon, color: Colors.white),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+        style: TextStyle(color: Colors.white, fontSize: isLandscape ? 10.sp : 16.sp),
       ),
       subtitle: subtitle != null
-          ? Text(subtitle, style: TextStyle(color: Colors.white70, fontSize: 13.sp))
+          ? Text(subtitle, style: TextStyle(color: Colors.white70, fontSize: isLandscape ? 8.sp : 13.sp))
           : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.white),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       tileColor: Colors.white.withOpacity(0.05),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      //contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
-  }
-}
-
-class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  _StickyHeaderDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => maxHeight;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.transparent,
-      child: child,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
   }
 }

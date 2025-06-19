@@ -23,6 +23,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreen extends State<HomeScreen> {
 
+  String capitalize(String? s) {
+    if (s == null || s.isEmpty) return '';
+    return s[0].toUpperCase() + s.substring(1).toLowerCase();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -231,9 +236,9 @@ class _HomeScreen extends State<HomeScreen> {
             ],
           ),
           const Spacer(),
-          const Icon(Icons.help_outline, color: Colors.white70),
+          /*const Icon(Icons.help_outline, color: Colors.white70),
           SizedBox(width: SizeConfig.scaleW(10)),
-          const Icon(Icons.settings, color: Colors.white70),
+          const Icon(Icons.settings, color: Colors.white70),*/
         ],
       ),
     );
@@ -453,16 +458,17 @@ class _HomeScreen extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 color: Colors.white10,
                                 shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white24, width: 1),
+                                border: Border.all(color: Colors.white24, width: 1),
                               ),
                               child: const Icon(Icons.description,
                                   color: Colors.white),
                             ),
-                      title: Text( '${item.firstname} ${item.lastname}',
+                      title: Text(
+                        '${capitalize(item.firstname)}\n${capitalize(item.lastname)}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Orbitron',
                         ),
                       ),
                       subtitle: Text(
