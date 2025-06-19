@@ -96,6 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     SizeConfig.init(context);
     double width = SizeConfig.screenW!;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
       body: DynamicBackground(
         child: SafeArea(
@@ -109,28 +110,30 @@ class _SplashScreenState extends State<SplashScreen>
                     opacity: _fadeAnimation,
                     child: ScaleTransition(
                       scale: _scaleAnimation,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset('images/logoresume.png', width: 300),
-                          const SizedBox(height: 20),
-                          ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              return const LinearGradient(
-                                colors: PastelStarColor.iPastelStarColor,
-                              ).createShader(bounds);
-                            },
-                            blendMode: BlendMode.srcIn,
-                            child: const Text(
-                              'Resume Star',
-                              style: TextStyle(
-                                fontSize: 30,
-                                letterSpacing: 1.5,
-                                fontFamily: 'SOLAR_SPACE_DEMO',
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset('images/logoresume.png', width: isLandscape ? 150 : 200,),
+                            const SizedBox(height: 20),
+                            ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return const LinearGradient(
+                                  colors: PastelStarColor.iPastelStarColor,
+                                ).createShader(bounds);
+                              },
+                              blendMode: BlendMode.srcIn,
+                              child: const Text(
+                                'Resume Star',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'SOLAR_SPACE_DEMO',
+                                ),
                               ),
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

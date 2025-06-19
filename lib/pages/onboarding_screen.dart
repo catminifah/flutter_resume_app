@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/pages/bottomnav.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../onboarding/onboarding_contents.dart';
 import '../size_config.dart';
 import '../star/twinkling_stars_background.dart';
@@ -61,138 +62,150 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SizeConfig.init(context);
                 bool isLandscape = orientation == Orientation.landscape;
 
-                return Column(
+                return Stack(
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: PageView.builder(
-                        controller: _controller,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: contents.length,
-                        onPageChanged: (value) {
-                          setState(() => _currentPage = value);
-                        },
-                        itemBuilder: (context, i) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: isLandscape ? height * 0.5 : height * 0.35,
-                                  child: Image.asset(
-                                    contents[i].image,
-                                    fit: BoxFit.contain,
-                                  ),
+                    Column(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: PageView.builder(
+                            controller: _controller,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: contents.length,
+                            onPageChanged: (value) {
+                              setState(() => _currentPage = value);
+                            },
+                            itemBuilder: (context, i) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: isLandscape ? height * 0.3 : height * 0.35,
+                                      child: Image.asset(
+                                        contents[i].image,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      contents[i].title,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: 'Orbitron',
+                                        fontSize: isLandscape ? 10.sp : 28.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      contents[i].desc,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: 'Mulish-Regular',
+                                        fontSize: isLandscape ? 8.sp : 18.sp,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  contents[i].title,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Orbitron',
-                                    fontSize: isLandscape ? 24 : 28,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                              );
+                            },
+                          ),
+                        ),
+                        //const SizedBox(height: 10),
+                        
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: _currentPage + 1 == contents.length
+                              ? ElevatedButton(
+                                //--------------------------------------- button next page home ---------------------------------------------//
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const /*HomeScreen()*/BottomNav()),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.yellowAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isLandscape ? width * 0.12 : width * 0.2,
+                                      vertical: isLandscape ? 12 : 18,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  contents[i].desc,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Mulish-Regular',
-                                    fontSize: isLandscape ? 16 : 18,
-                                    color: Colors.white70,
+                                  child: Text(
+                                    "START",
+                                    style: TextStyle(
+                                      fontFamily: 'Orbitron',
+                                      fontSize: isLandscape ? 16 : 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
+                                )
+                                //--------------------------------------- button next page home ---------------------------------------------//
+                              : Row(
+                                //--------------------------------------- button next page home ---------------------------------------------//
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        _controller.jumpToPage(contents.length - 1);
+                                      },
+                                      child: Text(
+                                        "SKIP",
+                                        style: TextStyle(
+                                          fontFamily: 'Orbitron',
+                                          fontSize: isLandscape ? 14 : 16,
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    //--------------------------------------- button star------------------------------------------------//
+                                    GlowingStarButton(
+                                      onPressed: () {
+                                        _controller.nextPage(
+                                          duration: const Duration(milliseconds: 300),
+                                          curve: Curves.easeIn,
+                                        );
+                                      },
+                                      color: Colors.yellowAccent.withOpacity(0.9),
+                                      child: Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.black,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    //--------------------------------------- button star------------------------------------------------//
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
                     //--------------------------------------- dot star------------------------------------------------//
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        contents.length,
-                        (index) => DotIndicator(
-                          isActive: _currentPage == index,
-                          dotSize: 15,
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: isLandscape ? 85 : 120,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          contents.length,
+                          (index) => DotIndicator(
+                            isActive: _currentPage == index,
+                            dotSize: 15,
+                          ),
                         ),
                       ),
                     ),
                     //--------------------------------------- dot star------------------------------------------------//
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: _currentPage + 1 == contents.length
-                          ? ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const /*HomeScreen()*/BottomNav()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.yellowAccent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      isLandscape ? width * 0.12 : width * 0.2,
-                                  vertical: isLandscape ? 12 : 18,
-                                ),
-                              ),
-                              child: Text(
-                                "START",
-                                style: TextStyle(
-                                  fontFamily: 'Orbitron',
-                                  fontSize: isLandscape ? 16 : 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    _controller.jumpToPage(contents.length - 1);
-                                  },
-                                  child: Text(
-                                    "SKIP",
-                                    style: TextStyle(
-                                      fontFamily: 'Orbitron',
-                                      fontSize: isLandscape ? 14 : 16,
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                //--------------------------------------- button star------------------------------------------------//
-                                GlowingStarButton(
-                                  onPressed: () {
-                                    _controller.nextPage(
-                                      duration: const Duration(milliseconds: 300),
-                                      curve: Curves.easeIn,
-                                    );
-                                  },
-                                  color: Colors.yellowAccent.withOpacity(0.9),
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.black,
-                                    size: 30,
-                                  ),
-                                ),
-                                //--------------------------------------- button star------------------------------------------------//
-                              ],
-                            ),
-                    ),
                   ],
                 );
               },
