@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_resume_app/onboarding/onboarding_home_data.dart';
+import 'package:flutter_resume_app/data/onboarding_home_data.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 

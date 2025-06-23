@@ -4,7 +4,7 @@ import 'package:flutter_resume_app/pages/bottomnav.dart';
 import 'package:flutter_resume_app/star/dot_indicator.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../onboarding/onboarding_contents.dart';
+import '../data/onboarding_contents.dart';
 import '../size_config.dart';
 import '../star/twinkling_stars_background.dart';
 

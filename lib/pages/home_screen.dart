@@ -5,6 +5,7 @@ import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/resume_service.dart';
 import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart';
 import 'package:flutter_resume_app/pages/resume_editor.dart';
+import 'package:flutter_resume_app/pages/resume_tips_screen.dart';
 import 'package:flutter_resume_app/size_config.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -200,9 +201,7 @@ class _HomeScreen extends State<HomeScreen> {
               Stack(
                 alignment: Alignment.centerLeft,
                 children: [
-                  SizedBox(
-                    width: SizeConfig.scaleW(24),
-                  ),
+                  SizedBox( width: SizeConfig.scaleW(24),),
                   Text(
                     'e',
                     style: TextStyle(
@@ -261,8 +260,7 @@ class _HomeScreen extends State<HomeScreen> {
                   onTap: () async {
                     final result = await Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const ResumeEditor()),
+                      MaterialPageRoute( builder: (context) => const ResumeEditor()),
                     );
 
                     if (result == true) {
@@ -304,7 +302,12 @@ class _HomeScreen extends State<HomeScreen> {
               SizedBox(width: 16),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ResumeTipsScreen()),
+                    );
+                  },
                   child: SizedBox(
                     height: 100/*SizeConfig.scaleH(80)*/,
                     width: 100,
@@ -419,86 +422,106 @@ class _HomeScreen extends State<HomeScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center( child: Text(/*'No resumes found.'*/'',style: TextStyle(color: Colors.white70)));
+          return const Center(
+            child: Text(/*'No resumes found.'*/'', style: TextStyle(color: Colors.white70)));
         }
 
         final resumes = snapshot.data!;
+        final screenWidth = MediaQuery.of(context).size.width;
+        final maxCardWidth = screenWidth > 600 ? 500.0 : double.infinity;
 
         return ListView.builder(
           padding: const EdgeInsets.only(top: 16, bottom: 32),
           itemCount: resumes.length,
           itemBuilder: (context, index) {
             final item = resumes[index];
+
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFF4E71FF).withOpacity(0.2),
-                          const Color(0xFF8DD8FF).withOpacity(0.2),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white24, width: 1),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-                      leading: item.profileImage != null
-                          ? CircleAvatar(
-                              radius: 25,
-                              backgroundImage: MemoryImage(item.profileImage!),
-                              backgroundColor: Colors.transparent,
-                            )
-                          : Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white10,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white24, width: 1),
-                              ),
-                              child: const Icon(Icons.description,
-                                  color: Colors.white),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxCardWidth),
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color(0xFF4E71FF).withOpacity(0.2),
+                              const Color(0xFF8DD8FF).withOpacity(0.2),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white24, width: 1),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 2),
+                          leading: item.profileImage != null
+                              ? CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: MemoryImage(item.profileImage!),
+                                  backgroundColor: Colors.transparent,
+                                )
+                              : Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    shape: BoxShape.circle,
+                                    border: Border.all( color: Colors.white24, width: 1),
+                                  ),
+                                  child: const Icon(Icons.description, color: Colors.white),
+                                ),
+                          title: MediaQuery.of(context).orientation == Orientation.landscape
+                              ? Text(
+                                  '${capitalize(item.firstname)} ${capitalize(item.lastname)}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Orbitron',
+                                  ),
+                                )
+                              : Text(
+                                  '${capitalize(item.firstname)}\n${capitalize(item.lastname)}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Orbitron',
+                                  ),
+                                ),
+                          subtitle: Text(
+                            '${item.email} ${item.phoneNumber}',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
                             ),
-                      title: Text(
-                        '${capitalize(item.firstname)}\n${capitalize(item.lastname)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Orbitron',
+                          ),
+                          trailing: PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_vert, color: Colors.white70),
+                            onSelected: (value) async {
+                              if (value == 'edit') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ResumeEditor(resume: item),
+                                  ),
+                                ).then((_) => setState(() {}));
+                              } else if (value == 'delete') {
+                                await ResumeService.deleteResume(item.id);
+                                setState(() {});
+                              }
+                            },
+                            itemBuilder: (context) => const [
+                              PopupMenuItem(value: 'edit', child: Text('Edit')),
+                              PopupMenuItem( value: 'delete', child: Text('Delete')),
+                            ],
+                          ),
                         ),
                       ),
-                      subtitle: Text(
-                        item.email,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                      trailing: PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert, color: Colors.white70),
-                        onSelected: (value) async {
-                          if (value == 'edit') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => ResumeEditor( resume: item,),),
-                            ).then((_) => setState(() {}));
-                          } else if (value == 'delete') {
-                            await ResumeService.deleteResume(item.id);
-                            setState(() {});
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem( value: 'edit', child: Text('Edit')),
-                          const PopupMenuItem( value: 'delete', child: Text('Delete')),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },

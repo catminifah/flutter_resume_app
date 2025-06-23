@@ -1048,7 +1048,6 @@ class _ResumeEditorState extends State<ResumeEditor> {
   }
 
   Future<void> onSavePressed() async {
-    String? resumeId;
 
     final websitesList = _websiteControllers.map((e) => e.text.trim()).toList();
 
@@ -2690,7 +2689,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
                           icon: const Icon(Icons.save),
                           color: Colors.white,
                           tooltip: "Save",
-                          iconSize: 45,
+                          iconSize: 30,
                           style: IconButton.styleFrom(
                             backgroundColor: Colors.white.withOpacity(0.1),
                             shape: const CircleBorder(),
