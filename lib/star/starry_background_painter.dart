@@ -12,19 +12,19 @@ class StarryBackgroundPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-    Color.fromARGB(255, 163, 136, 235).withOpacity(0.2),
-    Color.fromARGB(255, 96, 228, 228).withOpacity(0.2),
-    Color.fromARGB(255, 237, 252, 106).withOpacity(0.2),
-    Color.fromARGB(255, 250, 136, 161).withOpacity(0.2),
-  ],
+        Color(0xFF03001C).withOpacity(0.8),
+        Color(0xFF301E67).withOpacity(0.8),
+        Color(0xFF5B8FB9).withOpacity(0.8),
+        Color(0xFFB6EADA).withOpacity(0.8),
+      ],
     );
     final bgPaint = Paint()..shader = gradient.createShader(Offset.zero & size);
     canvas.drawRect(Offset.zero & size, bgPaint);
     final starColors = [
-      Colors.purple.withOpacity(0.4),
-      Colors.yellowAccent.withOpacity(0.4),
-      Colors.lightBlueAccent.withOpacity(0.4),
-      Colors.pinkAccent.withOpacity(0.4),
+      Color(0xFF03001C).withOpacity(0.8),
+      Color(0xFF301E67).withOpacity(0.8),
+      Color(0xFF5B8FB9).withOpacity(0.8),
+      Color(0xFFB6EADA).withOpacity(0.8),
     ];
 
     final random = Random(12345);

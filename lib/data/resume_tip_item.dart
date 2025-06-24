@@ -5,12 +5,14 @@ class ResumeTipItem {
   final String description;
   final IconData icon;
   final Color iconColor;
+  final String image;
 
   ResumeTipItem({
     required this.title,
     required this.description,
     required this.icon,
     this.iconColor = Colors.white,
+    required this.image,
   });
 }
 
@@ -28,6 +30,7 @@ List<ResumeTipItem> resumeTips = [
         '• Photo (unless required)',
     icon: Icons.person,
     iconColor: Colors.tealAccent,
+    image: "assets/ResumeTipItem/personal_information.png",
   ),
   ResumeTipItem(
     title: 'Career Objective',
@@ -38,6 +41,7 @@ List<ResumeTipItem> resumeTips = [
         '• Keep it short and focused',
     icon: Icons.track_changes,
     iconColor: Colors.cyanAccent,
+    image: "assets/ResumeTipItem/personal_information.png",
   ),
   ResumeTipItem(
     title: 'Work Experience',
@@ -51,6 +55,7 @@ List<ResumeTipItem> resumeTips = [
         '• Keep it relevant to the job you are applying for',
     icon: Icons.work,
     iconColor: Colors.orangeAccent,
+    image: "assets/ResumeTipItem/work_experience.png",
   ),
   ResumeTipItem(
     title: 'Education',
@@ -61,6 +66,7 @@ List<ResumeTipItem> resumeTips = [
         '• Optional: GPA (if above average), awards, relevant coursework',
     icon: Icons.school,
     iconColor: Colors.lightBlueAccent,
+    image: "assets/ResumeTipItem/education.png",
   ),
   ResumeTipItem(
     title: 'Skills',
@@ -70,6 +76,7 @@ List<ResumeTipItem> resumeTips = [
         'Tip: Align your skills with the job description to increase relevance.',
     icon: Icons.build,
     iconColor: Colors.greenAccent,
+    image: "assets/ResumeTipItem/skills.png",
   ),
   ResumeTipItem(
     title: 'Projects or Portfolio',
@@ -79,6 +86,7 @@ List<ResumeTipItem> resumeTips = [
         '• Emphasize the impact or outcome (what problem did you solve?)',
     icon: Icons.folder_special,
     iconColor: Colors.deepPurpleAccent,
+    image: "assets/ResumeTipItem/projects_or_portfolio.png",
   ),
   ResumeTipItem(
     title: 'Certifications',
@@ -88,6 +96,7 @@ List<ResumeTipItem> resumeTips = [
         '• Add a link if it’s verifiable online',
     icon: Icons.workspace_premium,
     iconColor: Colors.yellowAccent,
+    image: "assets/ResumeTipItem/personal_information.png",
   ),
   ResumeTipItem(
     title: 'What to Avoid',
@@ -99,6 +108,7 @@ List<ResumeTipItem> resumeTips = [
         '• Adding unrelated experiences just to fill space',
     icon: Icons.cancel,
     iconColor: Colors.redAccent,
+    image: "assets/ResumeTipItem/what_to_avoid.jpg",
   ),
 ];
 

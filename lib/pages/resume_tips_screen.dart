@@ -41,13 +41,13 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
               children: [
                 Center(
                   child: Container(
-                    height: 100,
-                    width: 320,
+                    height: isLandscape ? 65 :100,
+                    width: isLandscape ? 380 : 320,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       gradient: const LinearGradient(
-                        colors: [Colors.purple, Colors.blueAccent],
-                        begin: Alignment.topLeft,
+                        colors: [Color(0xFF3674B5), Color(0xFF578FCA),Color(0xFFF5F0CD),Color(0xFFFADA7A),],
+                        begin: Alignment.topCenter,
                         end: Alignment.bottomRight,
                       ),
                     ),
@@ -68,8 +68,7 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                             child: const SizedBox.expand(),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 12),
+                            padding: const EdgeInsets.symmetric( horizontal: 16.0, vertical: 12),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -77,16 +76,16 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                                   child: ShaderMask(
                                     shaderCallback: (bounds) => LinearGradient(
                                       colors: [
-                                        PastelStarColor.SkyBlue,
-                                        PastelStarColor.Mauvelous,
+                                        Color(0xFF6EACDA),
+                                        Color(0xFFE2E2B6),
                                       ],
                                     ).createShader(Rect.fromLTWH( 0, 0, bounds.width, bounds.height)),
-                                    child: const Padding(
-                                      padding: EdgeInsets.only(right: 110),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 110),
                                       child: Text(
                                         'Pick the resume trick you want to explore',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: isLandscape ? 15 :18,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Orbitron',
                                           letterSpacing: 0.5,
@@ -97,16 +96,6 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                                     ),
                                   ),
                                 ),
-                                /*const SizedBox(width: 12),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Image.asset(
-                                    'assets/icons_home/resume_writing_tips.png',
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),*/
                               ],
                             ),
                           ),
@@ -115,8 +104,8 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                             right: 0,
                             child: Image.asset(
                               'assets/icons_home/resume_writing_tips.png',
-                              width: 100,
-                              height: 100,
+                              width: isLandscape ? 70 : 100,
+                              height: isLandscape ? 70 : 100,
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -128,6 +117,7 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                 const SizedBox(height: 16),
                 Expanded(
                   child: GridView.builder(
+                    padding: EdgeInsets.all(30),
                     itemCount: resumeTips.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -141,7 +131,7 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                     },
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -151,42 +141,46 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
   }
 
   Widget _buildCategoryCard(BuildContext context, ResumeTipItem tip) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ResumeTipDetailScreen(tip: tip),
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ResumeTipDetailScreen(tip: tip),
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white24),
           ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white24),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              tip.icon,
-              size: 40,
-              color: tip.iconColor,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              tip.title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Orbitron',
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                tip.icon,
+                size: 40,
+                color: tip.iconColor,
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Text(
+                tip.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Orbitron',
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

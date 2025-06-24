@@ -10,12 +10,6 @@ class ResumeTipDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(tip.title),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
       backgroundColor: Colors.black, // หรือ DynamicBackground ก็ได้
       body: DynamicBackground(
         child: SafeArea(

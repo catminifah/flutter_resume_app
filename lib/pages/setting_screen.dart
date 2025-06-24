@@ -23,28 +23,52 @@ class _SettingScreenState extends State<SettingScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.deepPurple[300],
+        return Dialog(
+          backgroundColor: Colors.transparent,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Select Language',
-              style: TextStyle(color: Colors.white)),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
               children: [
-                ListTile(
-                  title: const Text('English',
-                      style: TextStyle(color: Colors.white)),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Text('ภาษาไทย',
-                      style: TextStyle(color: Colors.white)),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                Positioned.fill(
+                    child: CustomPaint(
+                      painter: StarryBackgroundPainter(starCount: 40),
+                    ),
+                  ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Select Language',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Orbitron',
+                          ),
+                        ),
+                        Divider(color: Colors.white24.withOpacity(0.4)),
+                        const SizedBox(height: 16),
+                        ListTile(
+                          title: const Text('English',
+                              style: TextStyle(color: Colors.white,fontFamily: 'Orbitron',)),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('ภาษาไทย',
+                              style: TextStyle(color: Colors.white,fontFamily: 'Orbitron',)),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -96,41 +120,25 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: maxHeight),
-                  child: Container(
-                    /*decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),*/
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ShaderMask(
-                            shaderCallback: (bounds) => const LinearGradient(
-                              colors: [
-                                Colors.pink,
-                                Colors.yellow,
-                                Colors.lightBlueAccent
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ).createShader(Rect.fromLTWH( 0, 0, bounds.width, bounds.height)),
-                            child: Text(
-                              'Select Theme',
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontFamily: 'Fireplace',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),Divider(color: Colors.white24.withOpacity(0.4)),
-                          const SizedBox(height: 16),
-                          _buildThemeOption('Pastel Sky'),
-                          _buildThemeOption('Galaxy Blue'),
-                          _buildThemeOption('Dark Matter'),
-                        ],
-                      ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Select Theme',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Orbitron',
+                            color: Colors.white,
+                          ),
+                        ),
+                        Divider(color: Colors.white24.withOpacity(0.4)),
+                        const SizedBox(height: 16),
+                        _buildThemeOption('Pastel Sky'),
+                        _buildThemeOption('Galaxy Blue'),
+                        _buildThemeOption('Dark Matter'),
+                      ],
                     ),
                   ),
                 ),
@@ -202,10 +210,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     borderRadius: BorderRadius.circular(16),
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFF5409DA).withOpacity(0.3),
-                        Color(0xFF4E71FF).withOpacity(0.3),
-                        Color(0xFF8DD8FF).withOpacity(0.3),
-                        Color(0xFFBBFBFF).withOpacity(0.3),
+                        Color(0xFF03001C).withOpacity(0.8),
+                        Color(0xFF301E67).withOpacity(0.8),
+                        Color(0xFF5B8FB9).withOpacity(0.8),
+                        Color(0xFFB6EADA).withOpacity(0.8),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -368,129 +376,131 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       extendBody: true,
       body: DynamicBackground(
-        child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Stack(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 4,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40),
-                        ),
-                        gradient: const LinearGradient(
-                          colors: [Colors.purple, Colors.blueAccent],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height / 4,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            TwinklingStarsBackground(
-                              starCount: 150,
-                              starColors: PastelStarColor.iPastelStarColor,
-                              starShapes: const [
-                                StarShape.diamond,
-                                StarShape.fivePoint,
-                                StarShape.sixPoint,
-                                StarShape.sparkle3,
-                                StarShape.star4,
-                              ],
-                              child: const SizedBox.expand(),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(
-                                  'assets/icons_home/setting_resume.png',
-                                  width: MediaQuery.of(context).size.height / 5,
-                                  height:
-                                      MediaQuery.of(context).size.height / 5,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(width: 25),
-                                ShaderMask(
-                                  shaderCallback: (bounds) => LinearGradient(
-                                    colors: [
-                                      PastelStarColor.SkyBlue,
-                                      PastelStarColor.Mauvelous
-                                    ],
-                                  ).createShader(Rect.fromLTWH(
-                                      0, 0, bounds.width, bounds.height)),
-                                  child: Text(
-                                    'Setting',
-                                    style: TextStyle(
-                                      fontSize: isLandscape ? 20.sp : 25.sp,
-                                      fontFamily: 'SweetLollipop',
-                                      letterSpacing: 1,
-                                      wordSpacing: 4,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF03001C).withOpacity(0.8),
+                          Color(0xFF301E67).withOpacity(0.8),
+                          Color(0xFF5B8FB9).withOpacity(0.8),
+                          Color(0xFFB6EADA).withOpacity(0.8),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          const SizedBox(height: 16),
-                          const Divider(color: Colors.white24),
-                          _buildSettingTile(
-                            icon: Icons.language,
-                            title: 'Language',
-                            subtitle: 'English',
-                            onTap: _showLanguageDialog,
+                          TwinklingStarsBackground(
+                            starCount: 150,
+                            starColors: PastelStarColor.iPastelStarColor,
+                            starShapes: const [
+                              StarShape.diamond,
+                              StarShape.fivePoint,
+                              StarShape.sixPoint,
+                              StarShape.sparkle3,
+                              StarShape.star4,
+                            ],
+                            child: const SizedBox.expand(),
                           ),
-                          const Divider(color: Colors.white24),
-                          _buildSettingTile(
-                            icon: Icons.palette,
-                            title: 'Theme',
-                            subtitle: 'Starry Night',
-                            onTap: _showThemeDialog,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'assets/icons_home/setting_resume.png',
+                                width: MediaQuery.of(context).size.height / 5,
+                                height: MediaQuery.of(context).size.height / 5,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(width: 25),
+                              ShaderMask(
+                                shaderCallback: (bounds) => LinearGradient(
+                                  colors: [
+                                    PastelStarColor.SkyBlue,
+                                    PastelStarColor.Mauvelous
+                                  ],
+                                ).createShader(Rect.fromLTWH(
+                                    0, 0, bounds.width, bounds.height)),
+                                child: Text(
+                                  'Setting',
+                                  style: TextStyle(
+                                    fontSize: isLandscape ? 20.sp : 25.sp,
+                                    fontFamily: 'SweetLollipop',
+                                    letterSpacing: 1,
+                                    wordSpacing: 4,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const Divider(color: Colors.white24),
-                          _buildSettingTile(
-                            icon: Icons.cleaning_services,
-                            title: 'Clear Cache',
-                            subtitle: 'Remove temporary stored data',
-                            onTap: _showClearCacheDialog,
-                          ),
-                          const Divider(color: Colors.white24),
-                          _buildSettingTile(
-                            icon: Icons.info_outline,
-                            title: 'About App',
-                            subtitle: 'Version 1.0.0',
-                            onTap: () => _showCustomAboutDialog(context),
-                          ),
-                          const Divider(color: Colors.white24),
-                          const SizedBox(height: 32),
                         ],
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
+                        const Divider(color: Colors.white24),
+                        _buildSettingTile(
+                          icon: Icons.language,
+                          title: 'Language',
+                          subtitle: 'English',
+                          onTap: _showLanguageDialog,
+                        ),
+                        const Divider(color: Colors.white24),
+                        _buildSettingTile(
+                          icon: Icons.palette,
+                          title: 'Theme',
+                          subtitle: 'Starry Night',
+                          onTap: _showThemeDialog,
+                        ),
+                        const Divider(color: Colors.white24),
+                        _buildSettingTile(
+                          icon: Icons.cleaning_services,
+                          title: 'Clear Cache',
+                          subtitle: 'Remove temporary stored data',
+                          onTap: _showClearCacheDialog,
+                        ),
+                        const Divider(color: Colors.white24),
+                        _buildSettingTile(
+                          icon: Icons.info_outline,
+                          title: 'About App',
+                          subtitle: 'Version 1.0.0',
+                          onTap: () => _showCustomAboutDialog(context),
+                        ),
+                        const Divider(color: Colors.white24),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
