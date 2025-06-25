@@ -59,7 +59,8 @@ flutter:
     - assets/fonts/MidnightConstellations.ttf
     - assets/images/
     - assets/onboarding-style-images/
-    - assets/icons_home/
+    - assets/icons_image/
+    - assets/ResumeTipItem/
   fonts:
     - family: SweetLollipop
       fonts:

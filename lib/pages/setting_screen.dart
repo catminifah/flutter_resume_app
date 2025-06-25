@@ -420,7 +420,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Image.asset(
-                                'assets/icons_home/setting_resume.png',
+                                'assets/icons_image/setting_resume.png',
                                 width: MediaQuery.of(context).size.height / 5,
                                 height: MediaQuery.of(context).size.height / 5,
                                 fit: BoxFit.contain,

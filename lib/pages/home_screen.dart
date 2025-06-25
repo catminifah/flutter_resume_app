@@ -276,7 +276,7 @@ class _HomeScreen extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
-                            'assets/icons_home/new_resume.png',
+                            'assets/icons_image/new_resume.png',
                             width: 60,
                             height: 60,
                             fit: BoxFit.contain,
@@ -316,7 +316,7 @@ class _HomeScreen extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
-                            'assets/icons_home/tips_resume.png',
+                            'assets/icons_image/tips_resume.png',
                             width: 60,
                             height: 60,
                             fit: BoxFit.contain,
@@ -351,7 +351,7 @@ class _HomeScreen extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
-                            'assets/icons_home/guidebook_resume.png',
+                            'assets/icons_image/guidebook_resume.png',
                             width: 60,
                             height: 60,
                             fit: BoxFit.contain,
