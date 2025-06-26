@@ -91,32 +91,37 @@ class _ResumeTipDetailScreenState extends State<ResumeTipDetailScreen> {
     required Widget descriptionWidget,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: CustomPaint(
-        painter: StarDashedBorderPainter(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white10,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Orbitron',
-                ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return CustomPaint(
+            painter: StarDashedBorderPainter(),
+            child: Container(
+              width: constraints.maxWidth,
+              decoration: BoxDecoration(
+                color: Colors.white10,
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(height: 8),
-              descriptionWidget,
-            ],
-          ),
-        ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Orbitron',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  descriptionWidget,
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

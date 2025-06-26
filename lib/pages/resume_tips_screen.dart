@@ -74,46 +74,82 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
               ),
             ),
             SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: isLandscape ? 0 : 100),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-                      child: Text(
-                        'Resume Tip!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Orbitron',
-                        ),
+              child: isLandscape
+                  ? SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                            child: Text(
+                              'Resume Tip!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Orbitron',
+                              ),
+                            ),
+                          ),
+                          resumeTipPromptCard(isLandscape),
+                          const SizedBox(height: 10),
+                          GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(70, 16, 70, 16),
+                            itemCount: resumeTips.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 280,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1.3,
+                            ),
+                            itemBuilder: (context, index) {
+                              final tip = resumeTips[index];
+                              return _buildCategoryCard(context, tip);
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                    resumeTipPromptCard(isLandscape),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: resumeTips.length,
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: isLandscape ? 300 : 200,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: isLandscape ? 1.3 : 1,
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 100),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                          child: Text(
+                            'Resume Tip!',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Orbitron',
+                            ),
+                          ),
                         ),
-                        itemBuilder: (context, index) {
-                          final tip = resumeTips[index];
-                          return _buildCategoryCard(context, tip);
-                        },
-                      ),
+                        resumeTipPromptCard(isLandscape),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: GridView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: resumeTips.length,
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1,
+                            ),
+                            itemBuilder: (context, index) {
+                              final tip = resumeTips[index];
+                              return _buildCategoryCard(context, tip);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
             ),
           ],
         ),

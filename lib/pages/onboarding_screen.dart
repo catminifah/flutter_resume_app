@@ -76,40 +76,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               setState(() => _currentPage = value);
                             },
                             itemBuilder: (context, i) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: isLandscape ? height * 0.3 : height * 0.35,
-                                      child: Image.asset(
-                                        contents[i].image,
-                                        fit: BoxFit.contain,
+                              return SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: isLandscape ? height * 0.3 : height * 0.35,
+                                        child: Image.asset(
+                                          contents[i].image,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      contents[i].title,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'Orbitron',
-                                        fontSize: isLandscape ? 10.sp : 28.sp,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        contents[i].title,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Orbitron',
+                                          fontSize: isLandscape ? 10.sp : 28.sp,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      contents[i].desc,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'Mulish-Regular',
-                                        fontSize: isLandscape ? 8.sp : 18.sp,
-                                        color: Colors.white70,
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        contents[i].desc,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Mulish-Regular',
+                                          fontSize: isLandscape ? 8.sp : 18.sp,
+                                          color: Colors.white70,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                             },
