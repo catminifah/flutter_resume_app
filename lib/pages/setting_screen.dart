@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
-import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/widgets/size_config.dart';
 import 'package:flutter_resume_app/star/starry_background_painter.dart';
 import 'package:flutter_resume_app/star/twinkling_star_icon.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';

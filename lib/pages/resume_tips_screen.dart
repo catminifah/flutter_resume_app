@@ -3,9 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/data/resume_tip_item.dart';
 import 'package:flutter_resume_app/pages/resume_tip_detail_screen.dart';
-import 'package:flutter_resume_app/star/starry_background_painter.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
-import 'package:flutter_resume_app/widgets/rightIndented_card.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
 class ResumeTipsScreen extends StatefulWidget {
@@ -82,24 +80,29 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: isLandscape ? 0 : 100),
-                    ArrowBoxCard(
-  color: Colors.deepOrange,
-  child: Text(
-    'Resume Tip!',
-    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-  ),
-),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                      child: Text(
+                        'Resume Tip!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Orbitron',
+                        ),
+                      ),
+                    ),
                     resumeTipPromptCard(isLandscape),
                     SizedBox(height: 10),
                     Expanded(
                       child: GridView.builder(
-                        padding: const EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(16),
                         itemCount: resumeTips.length,
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: isLandscape ? 300 : 200,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: isLandscape ? 1.5 : 1,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: isLandscape ? 1.3 : 1,
                         ),
                         itemBuilder: (context, index) {
                           final tip = resumeTips[index];
@@ -107,7 +110,7 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -127,10 +130,10 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
             colors: [
-              Color(0xFF3674B5).withOpacity(0.3),
-              Color(0xFF578FCA).withOpacity(0.3),
-              Color(0xFFF5F0CD).withOpacity(0.3),
-              Color(0xFFFADA7A).withOpacity(0.3),
+              Color(0xFF3674B5).withOpacity(0.8),
+              Color(0xFF578FCA).withOpacity(0.8),
+              Color(0xFFF5F0CD).withOpacity(0.8),
+              Color(0xFFFADA7A).withOpacity(0.8),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
@@ -217,30 +220,57 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
             ),
           );
         },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white10,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white24),
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Icon(
-                tip.icon,
-                size: 40,
-                color: tip.iconColor,
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return const LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.white,
+                      Colors.transparent,
+                    ],
+                  ).createShader(bounds);
+                },
+                blendMode: BlendMode.dstIn,
+                child: Image.asset(
+                  tip.image,
+                  fit: BoxFit.cover,
+                ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                tip.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Orbitron',
+              Container(
+                decoration: BoxDecoration(
+                  color: tip.iconColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.white24),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      tip.icon,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      tip.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Orbitron',
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -249,4 +279,5 @@ class _ResumeTipsScreen extends State<ResumeTipsScreen> {
       ),
     );
   }
+
 }

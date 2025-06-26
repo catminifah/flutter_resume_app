@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color.dart';
 import 'package:flutter_resume_app/colors/pastel_star_color2.dart';
 import 'package:flutter_resume_app/pages/onboarding_screen.dart';
-import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/widgets/size_config.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:confetti/confetti.dart';
 

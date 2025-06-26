@@ -6,7 +6,7 @@ import 'package:flutter_resume_app/models/resume_service.dart';
 import 'package:flutter_resume_app/onboarding/onboarding_home_widget_state.dart';
 import 'package:flutter_resume_app/pages/resume_editor.dart';
 import 'package:flutter_resume_app/pages/resume_tips_screen.dart';
-import 'package:flutter_resume_app/size_config.dart';
+import 'package:flutter_resume_app/widgets/size_config.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
