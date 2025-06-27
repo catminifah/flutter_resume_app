@@ -31,6 +31,7 @@ dependencies:
   provider: ^6.1.1
   uuid: ^4.0.0
   flutter_cached_pdfview: ^0.4.3
+  permission_handler: ^11.3.0
 
 dev_dependencies:
   flutter_test:

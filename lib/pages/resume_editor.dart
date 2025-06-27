@@ -10,6 +10,10 @@ import 'package:flutter_resume_app/models/resume_model.dart';
 import 'package:flutter_resume_app/models/resume_service.dart';
 import 'package:flutter_resume_app/models/skill_category.dart';
 import 'package:flutter_resume_app/pages/resume_export_pdf.dart';
+import 'package:flutter_resume_app/pdf_templates/resume_template1_generator.dart';
+import 'package:flutter_resume_app/pdf_templates/resume_template2_generator.dart';
+import 'package:flutter_resume_app/pdf_templates/resume_template3_generator.dart';
+import 'package:flutter_resume_app/services/resume_from_controllers.dart';
 import 'package:flutter_resume_app/services/shared_preferences.dart';
 import 'package:flutter_resume_app/star/glowing_star_button.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
@@ -105,6 +109,8 @@ class _ResumeEditorState extends State<ResumeEditor> {
     'Template 2',
     'Template 3',
   ];
+
+  bool isNavigating = false;
 
   @override
   void initState() {
@@ -1064,13 +1070,9 @@ class _ResumeEditorState extends State<ResumeEditor> {
     final skillCategoriesList = <SkillCategory>[];
     for (int i = 0; i < _selectedSkillCategories.length; i++) {
       final category = _selectedSkillCategories[i] ?? 'Unknown';
-      final skills = _skillControllers[i]
-          .map((c) => c.text.trim())
-          .where((s) => s.isNotEmpty)
-          .toList();
+      final skills = _skillControllers[i].map((c) => c.text.trim()).where((s) => s.isNotEmpty).toList();
       if (skills.isNotEmpty) {
-        skillCategoriesList
-            .add(SkillCategory(category: category, items: skills));
+        skillCategoriesList.add(SkillCategory(category: category, items: skills));
       }
     }
 
@@ -1158,219 +1160,261 @@ class _ResumeEditorState extends State<ResumeEditor> {
     final isLandscape = size.width > size.height;
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, true);
-        return false;
-      },
-      child: DynamicBackground(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          //appBar: AppBar(title: const Text('Flutter')),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-                  _buildPhoto(),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      _buildFirstName(),
-                      SizedBox(width: 8),
-                      _buildLastName(),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  _buildEmail(),
-                  const SizedBox(height: 10),
-                  _buildAddress(),
-                  const SizedBox(height: 10),
-                  _buildPhoneNumber(),
-                  const SizedBox(height: 10),
-                  _buildAboutMe(),
-                  const SizedBox(height: 10),
-                  //------------------------------------------------------Website------------------------------------------------------//
-                  _buildWebsite(),
-                  //------------------------------------------------------Website------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //---------------------------------------------- Skill Section ------------------------------------------------------//
-                  _buildSkillSection(),
-                  //---------------------------------------------- Skill Section ------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //----------------------------------------------------Languages------------------------------------------------------//
-                  _buildLanguages(),
-                  //----------------------------------------------------Languages------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //------------------------------------------------------Experience------------------------------------------------------//
-                  _buildExperience(),
-                  //------------------------------------------------------Experience------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //------------------------------------------------------Education------------------------------------------------------//
-                  _buildEducation(),
-                  //------------------------------------------------------Education------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //------------------------------------------------------Projects------------------------------------------------------//
-                  _buildProjects(),
-                  //------------------------------------------------------Projects------------------------------------------------------//
-                  const SizedBox(height: 10),
-                  //-------------------------------------------------Certifications-----------------------------------------------------//
-                  _buildCertifications(),
-                  //-------------------------------------------------Certifications-----------------------------------------------------//
-                  const SizedBox(height: 5),
-                  const Divider(thickness: 1, color: Colors.white24),
-                  const SizedBox(height: 5),
-                  //------------------------------------------------------button------------------------------------------------------//
-                  Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Tip: Save to reuse or edit later",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white70,
-                            fontFamily: 'Orbitron',
-                          ),
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GlowingStarButton(
-                            onPressed: onSavePressed,
-                            color: Colors.greenAccent.withOpacity(0.9),
-                            child: const Icon(
-                              Icons.save_outlined,
-                              color: Colors.black38,
-                              size: 30,
+    return AbsorbPointer(
+      absorbing: isNavigating,
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, true);
+          return false;
+        },
+        child: DynamicBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            //appBar: AppBar(title: const Text('Flutter')),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                    _buildPhoto(),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        _buildFirstName(),
+                        SizedBox(width: 8),
+                        _buildLastName(),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _buildEmail(),
+                    const SizedBox(height: 10),
+                    _buildAddress(),
+                    const SizedBox(height: 10),
+                    _buildPhoneNumber(),
+                    const SizedBox(height: 10),
+                    _buildAboutMe(),
+                    const SizedBox(height: 10),
+                    //------------------------------------------------------Website------------------------------------------------------//
+                    _buildWebsite(),
+                    //------------------------------------------------------Website------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //---------------------------------------------- Skill Section ------------------------------------------------------//
+                    _buildSkillSection(),
+                    //---------------------------------------------- Skill Section ------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //----------------------------------------------------Languages------------------------------------------------------//
+                    _buildLanguages(),
+                    //----------------------------------------------------Languages------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //------------------------------------------------------Experience------------------------------------------------------//
+                    _buildExperience(),
+                    //------------------------------------------------------Experience------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //------------------------------------------------------Education------------------------------------------------------//
+                    _buildEducation(),
+                    //------------------------------------------------------Education------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //------------------------------------------------------Projects------------------------------------------------------//
+                    _buildProjects(),
+                    //------------------------------------------------------Projects------------------------------------------------------//
+                    const SizedBox(height: 10),
+                    //-------------------------------------------------Certifications-----------------------------------------------------//
+                    _buildCertifications(),
+                    //-------------------------------------------------Certifications-----------------------------------------------------//
+                    const SizedBox(height: 5),
+                    const Divider(thickness: 1, color: Colors.white24),
+                    const SizedBox(height: 5),
+                    //------------------------------------------------------button------------------------------------------------------//
+                    Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Tip: Save to reuse or edit later",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.white70,
+                              fontFamily: 'Orbitron',
                             ),
                           ),
-
-                          const SizedBox(width: 12),
-
-                          Expanded(
-                            child: SizedBox(
-                              height: 48,
-                              child: Theme(
-                                data: Theme.of(context).copyWith(
-                                  canvasColor: Colors.white.withOpacity(0.2),
-                                  dividerColor: Colors.transparent,
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: DropdownButtonFormField<String>(
-                                    value: _selectedTemplate,
-                                    style: const TextStyle(color: Colors.white),
-                                    dropdownColor: const Color.fromARGB(255, 228, 228, 228).withOpacity(0.9),
-                                    elevation: 2,
-                                    isDense: true,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedTemplate = value;
-                                      });
-                                    },
-                                    items: _templateOptions.map((templateName) {
-                                      return DropdownMenuItem<String>(
-                                        value: templateName,
-                                        child: Text(
-                                          templateName,
-                                          style: const TextStyle(
-                                              color: Colors.black87),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GlowingStarButton(
+                              onPressed: onSavePressed,
+                              color: Colors.greenAccent.withOpacity(0.9),
+                              child: const Icon(
+                                Icons.save_outlined,
+                                color: Colors.black38,
+                                size: 30,
+                              ),
+                            ),
+      
+                            const SizedBox(width: 12),
+      
+                            Expanded(
+                              child: SizedBox(
+                                height: 48,
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    canvasColor: Colors.white.withOpacity(0.2),
+                                    dividerColor: Colors.transparent,
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedTemplate,
+                                      style: const TextStyle(color: Colors.white),
+                                      dropdownColor: const Color.fromARGB(255, 228, 228, 228).withOpacity(0.9),
+                                      elevation: 2,
+                                      isDense: true,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedTemplate = value;
+                                        });
+                                      },
+                                      items: _templateOptions.map((templateName) {
+                                        return DropdownMenuItem<String>(
+                                          value: templateName,
+                                          child: Text(
+                                            templateName,
+                                            style: const TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Colors.white.withOpacity(0.1),
+                                        hintText: 'Select Template',
+                                        hintStyle: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white70,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
-                                    }).toList(),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white.withOpacity(0.1),
-                                      hintText: 'Select Template',
-                                      hintStyle: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white70,
-                                        fontWeight: FontWeight.bold,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        contentPadding: const EdgeInsets.symmetric( horizontal: 12, vertical: 10),
                                       ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      contentPadding: const EdgeInsets.symmetric( horizontal: 12, vertical: 10),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+      
+                            const SizedBox(width: 12),
+      
+                            GlowingStarButton(
+                              onPressed: () async {
 
-                          const SizedBox(width: 12),
+                                if (_selectedTemplate == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text( "Please select a resume template first")),
+                                  );
+                                  return;
+                                }
 
-                          GlowingStarButton(
-                            onPressed: () async {
-                              await Future.delayed( const Duration(seconds: 1));
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => ResumeExportPDF(),
-                                ),
-                              );
-                            },
-                            color: Colors.yellowAccent.withOpacity(0.9),
-                            child: const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.black,
-                              size: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                      /*Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: InkWell(
-                            onTap: _sharePdf,
-                            onHighlightChanged: (isHighlighted) {
-                              setState(() {
-                                _isButton2Highlighted = isHighlighted;
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: _isButton2Highlighted
-                                    ? Colors.green[900]
-                                    : Colors.green,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 4,
-                                  ),
-                                ],
+                                setState(() => isNavigating = true);
+                                await Future.delayed(const Duration( seconds: 1));
+                                final websitesList = _websiteControllers.map((e) => e.text.trim()).toList();
+
+                                final profileImageBytes = _profileImage != null
+                                    ? await _profileImage!.readAsBytes()
+                                    : null;
+
+                                final resume = getResumeFromControllers(
+                                  firstnameController: _FirstnameController,
+                                  lastnameController: _LastnameController,
+                                  emailController: _emailController,
+                                  addressController: _addressController,
+                                  phoneNumberController: _phoneNumberController,
+                                  aboutMeController: _aboutMeController,
+                                  websiteControllers: _websiteControllers,
+                                  skillTitles: __skillTitles,
+                                  selectedSkillCategories: _selectedSkillCategories,
+                                  skillControllers: _skillControllers,
+                                  companyName: _companyName,
+                                  position: _jobTitle,
+                                  startdatejob: _startdatejob,
+                                  enddatejob: _enddatejob,
+                                  detailjob: _detailjob,
+                                  universityName: _universityName,
+                                  degreeTitle: _degreeTitle,
+                                  startEducation: _startEducation,
+                                  endEducation: _endEducation,
+                                  projectTitleControllers: _projectTitleControllers,
+                                  projectDescriptionControllers: _projectDescriptionControllers,
+                                  projectLinkControllers: _projectLinkControllers,
+                                  projectTechControllers: _projectTechControllers,
+                                  certificationTitleControllers: _certificationTitleControllers,
+                                  certificationIssuerControllers: _certificationIssuerControllers,
+                                  certificationDateControllers: _certificationDateControllers,
+                                  languageNameControllers: _languageNameControllers,
+                                  languageproficiencyControllers: _languageLevelControllers,
+                                  profileImage: _profileImage != null
+                                      ? await _profileImage!.readAsBytes()
+                                      : null,
+                                );
+                                Uint8List? pdfBytes;
+                                if (_selectedTemplate == 'Template 1') {
+                                  pdfBytes = await await ResumeTemplate1Generator().generatePdfFromResume(resume);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+                                    ),
+                                  );
+                                  setState(() => isNavigating = false);
+                                } else if (_selectedTemplate == 'Template 2') {
+                                  pdfBytes = await await ResumeTemplate2Generator().generatePdfFromResume(resume);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+                                    ),
+                                  );
+
+                                  setState(() => isNavigating = false);
+                                } else if (_selectedTemplate == 'Template 3') {
+                                  pdfBytes = await await ResumeTemplate3Generator().generatePdfFromResume(resume);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+                                    ),
+                                  );
+
+                                  setState(() => isNavigating = false);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar( content: Text("Unknown template selected")),
+                                  );
+                                  setState(() => isNavigating = false);
+                                  return;
+                                }
+                                
+                              },
+                              color: Colors.yellowAccent.withOpacity(0.9),
+                              child: const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                                size: 30,
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.picture_as_pdf,
-                                    size: 40,
-                                    color: Colors.white,
-                                  ),
-                                  const Text(
-                                    'Generate & Share PDF',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),*/
-                    ],
-                  ),
-
-                  //------------------------------------------------------button------------------------------------------------------//
-                  const SizedBox(height: 30),
-                ],
+                      ],
+                    ),
+      
+                    //------------------------------------------------------button------------------------------------------------------//
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),
