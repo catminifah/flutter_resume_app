@@ -432,8 +432,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     PastelStarColor.SkyBlue,
                                     PastelStarColor.Mauvelous
                                   ],
-                                ).createShader(Rect.fromLTWH(
-                                    0, 0, bounds.width, bounds.height)),
+                                ).createShader(Rect.fromLTWH( 0, 0, bounds.width, bounds.height)),
                                 child: Text(
                                   'Setting',
                                   style: TextStyle(
