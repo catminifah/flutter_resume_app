@@ -13,8 +13,9 @@ class SkillCategory {
       items: List<String>.from(json['items'] ?? []),
     );
   }
+
   Map<String, dynamic> toJson() => {
     'category': category,
-    'skills': items,
+    'items': items,
   };
 }

@@ -20,10 +20,6 @@ import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:flutter_resume_app/widgets/size_config.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-/*import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';*/
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -47,6 +43,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
 
   // Personal Websites
   final List<TextEditingController> _websiteControllers = [];
+
   // Skills
   final List<String> _skillCategoryOptions = [
     'Programming',
@@ -180,664 +177,6 @@ class _ResumeEditorState extends State<ResumeEditor> {
     final ByteData data = await rootBundle.load(path);
     return data.buffer.asUint8List();
   }
-
-  /*Future<File> _generatePdf() async {
-    final pdf = pw.Document();
-
-    final bgImageData = await rootBundle.load('images/background.jpg');
-    final bgImageBytes = bgImageData.buffer.asUint8List();
-
-    final pageWidth = PdfPageFormat.a4.width;
-    final pageHeight = PdfPageFormat.a4.height;
-
-    final emailIcon = await loadIcon('assets/icons/email.png');
-    final phoneIcon = await loadIcon('assets/icons/phone.png');
-    final addressIcon = await loadIcon('assets/icons/address.png');
-    final wabIcon = await loadIcon('assets/icons/web.png');
-
-    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
-
-    final languages = List.generate(
-      _languageNameControllers.length,
-      (index) => {
-        'name': _languageNameControllers[index].text.trim(),
-        'level': _languageLevelControllers[index].text.trim(),
-      },
-    );
-    final projects = getProjects();
-    final certifications = getCertifications();
-
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat(pageWidth, pageHeight),
-        build: (context) => pw.Container(
-          padding: pw.EdgeInsets.all(0),
-          child: pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              // Left Column - Profile & Skills
-              pw.Container(
-                width: 200,
-                //color: PdfColors.blue100,
-                //padding: pw.EdgeInsets.all(10),
-                child: pw.Stack(children: [
-                  pw.Positioned.fill(
-                    child: pw.CustomPaint(
-                      painter: (PdfGraphics canvas, PdfPoint size) {
-                        final colors = [
-                          PdfColor.fromInt(0xFFE2E2B6), // #E2E2B6
-                          PdfColor.fromInt(0xFF6EACDA), // #6EACDA
-                          PdfColor.fromInt(0xFF03346E), // #03346E
-                          PdfColor.fromInt(0xFF021526), // #021526
-                        ];
-
-                        final steps = colors.length - 1;
-                        final segmentHeight = size.y / steps;
-
-                        for (int i = 0; i < steps; i++) {
-                          for (double y = 0; y < segmentHeight; y++) {
-                            final t = y / segmentHeight;
-                            final r = colors[i].red +
-                                t * (colors[i + 1].red - colors[i].red);
-                            final g = colors[i].green +
-                                t * (colors[i + 1].green - colors[i].green);
-                            final b = colors[i].blue +
-                                t * (colors[i + 1].blue - colors[i].blue);
-
-                            canvas
-                              ..setFillColor(PdfColor(r, g, b))
-                              ..drawRect(0, i * segmentHeight + y, size.x, 1)
-                              ..fillPath();
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                  pw.Padding(
-                    padding: pw.EdgeInsets.all(10),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        // Profile Image
-                        if (_profileImage != null)
-                          pw.Center(
-                            child: pw.Container(
-                              width: 120,
-                              height: 120,
-                              decoration: pw.BoxDecoration(
-                                shape: pw.BoxShape.circle,
-                                border: pw.Border.all(
-                                    color: PdfColors.white, width: 2),
-                                //color: PdfColors.white,
-                              ),
-                              child: pw.Padding(
-                                padding: pw.EdgeInsets.all(2),
-                                child: pw.Container(
-                                  width: 110,
-                                  height: 110,
-                                  decoration: pw.BoxDecoration(
-                                    shape: pw.BoxShape.circle,
-                                    //color: PdfColors.blue100,
-                                  ),
-                                  child: pw.Padding(
-                                    padding: pw.EdgeInsets.all(5),
-                                    child: pw.ClipOval(
-                                      child: pw.Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: pw.Image(
-                                          pw.MemoryImage(
-                                              _profileImage!.readAsBytesSync()),
-                                          fit: pw.BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        pw.SizedBox(height: 10),
-                        // Name
-                        pw.Text(
-                          _FirstnameController.text.isNotEmpty
-                              ? '${_FirstnameController.text[0].toUpperCase()}${_FirstnameController.text.substring(1)}'
-                              : '',
-                          style: pw.TextStyle(
-                            fontSize: 22,
-                            fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.white,
-                            font: ARIBLKFont,
-                          ),
-                          softWrap: true,
-                        ),
-                        pw.Text(
-                          _LastnameController.text.isNotEmpty
-                              ? '${_LastnameController.text[0].toUpperCase()}${_LastnameController.text.substring(1)}'
-                              : '',
-                          style: pw.TextStyle(
-                            fontSize: 22,
-                            fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.white,
-                            font: ARIBLKFont,
-                          ),
-                          softWrap: true,
-                        ),
-                        if (_LastnameController.text.isNotEmpty &&
-                                _FirstnameController.text.isNotEmpty ||
-                            _FirstnameController.text.isNotEmpty)
-                          pw.SizedBox(height: 10),
-                        if (_LastnameController.text.isNotEmpty &&
-                                _FirstnameController.text.isNotEmpty ||
-                            _FirstnameController.text.isNotEmpty)
-                          pw.Divider(thickness: 1, color: PdfColors.white),
-                        // Email
-                        if (_emailController.text.isNotEmpty) ...[
-                          pw.Row(
-                            children: [
-                              pw.Image(pw.MemoryImage(emailIcon),
-                                  width: 12, height: 12),
-                              pw.SizedBox(width: 5),
-                              pw.Text(
-                                _emailController.text,
-                                style: pw.TextStyle(
-                                  fontSize: 10,
-                                  color: PdfColors.white,
-                                ),
-                                softWrap: true,
-                              ),
-                            ],
-                          ),
-                          pw.SizedBox(height: 5),
-                        ],
-
-                        // NumberPhone
-                        if (_phoneNumberController.text.isNotEmpty) ...[
-                          pw.Row(
-                            children: [
-                              pw.Image(pw.MemoryImage(phoneIcon),
-                                  width: 12, height: 12),
-                              pw.SizedBox(width: 5),
-                              pw.Text(_phoneNumberController.text,
-                                  style: pw.TextStyle(
-                                    fontSize: 10,
-                                    color: PdfColors.white,
-                                  )),
-                            ],
-                          ),
-                          pw.SizedBox(height: 5),
-                        ],
-
-                        // Address
-                        if (_addressController.text.isNotEmpty) ...[
-                          pw.Row(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Image(pw.MemoryImage(addressIcon),
-                                  width: 12, height: 12),
-                              pw.SizedBox(width: 5),
-                              pw.Expanded(
-                                child: pw.Text(
-                                  _addressController.text,
-                                  style: pw.TextStyle(
-                                    fontSize: 10,
-                                    color: PdfColors.white,
-                                  ),
-                                  softWrap: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                          pw.SizedBox(height: 5),
-                        ],
-
-                        //pw.Divider(thickness: 1, color: PdfColors.white),
-
-                        if (_websiteControllers.isNotEmpty) ...[
-                          ..._websiteControllers.asMap().entries.map((entry) {
-                            int index = entry.key;
-                            TextEditingController controller = entry.value;
-
-                            return pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                /*pw.Text('Website Title: ${titleController.text}',
-                                style: pw.TextStyle(fontSize: 10)),*/
-                                if (controller.text.isNotEmpty)
-                                  pw.Row(
-                                    crossAxisAlignment:
-                                        pw.CrossAxisAlignment.start,
-                                    children: [
-                                      pw.Image(pw.MemoryImage(wabIcon),
-                                          width: 12, height: 12),
-                                      pw.SizedBox(width: 5),
-                                      pw.Expanded(
-                                        child: pw.Text(
-                                          controller.text,
-                                          style: pw.TextStyle(
-                                            fontSize: 10,
-                                            color: PdfColors.white,
-                                          ),
-                                          softWrap: true,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            );
-                          }),
-                          pw.SizedBox(height: 10),
-                          pw.Divider(thickness: 1, color: PdfColors.white),
-                        ],
-
-                        // Languages
-                        if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
-                          pw.Text(
-                            'Languages',
-                            style: pw.TextStyle(
-                              fontSize: 16,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.white,
-                            ),
-                          ),
-                          pw.SizedBox(height: 5),
-                          ...languages.map((lang) {
-                            final name = lang['name']?.trim() ?? '';
-                            final level = lang['level']?.trim() ?? '';
-                            if (name.isEmpty && level.isEmpty) {
-                              return pw.SizedBox();
-                            }
-
-                            return pw.Padding(
-                              padding:
-                                  const pw.EdgeInsets.only(left: 10, bottom: 2),
-                              child: pw.Row(
-                                children: [
-                                  pw.Container(
-                                    width: 5,
-                                    height: 5,
-                                    margin: const pw.EdgeInsets.only(top: 4),
-                                    decoration: pw.BoxDecoration(
-                                      color: PdfColors.blueGrey900,
-                                      shape: pw.BoxShape.circle,
-                                    ),
-                                  ),
-                                  pw.SizedBox(width: 5),
-                                  pw.Text(
-                                    level.isNotEmpty ? '$name ($level)' : name,
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.white),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                          pw.SizedBox(height: 10),
-                        ],
-
-                        // Skills Summary
-                        ..._skillControllers.asMap().entries.map((entry) {
-                          final int categoryIndex = entry.key;
-                          final List<TextEditingController> skills =
-                              entry.value;
-                          final String categoryTitle =
-                              __skillTitles[categoryIndex].text.trim();
-                          final bool allSkillsEmpty = skills.every(
-                              (controller) => controller.text.trim().isEmpty);
-                          final bool isCategoryEmpty =
-                              categoryTitle.isEmpty && allSkillsEmpty;
-
-                          if (isCategoryEmpty) return pw.SizedBox();
-
-                          return pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              if (categoryTitle.isNotEmpty)
-                                pw.Text(
-                                  categoryTitle,
-                                  style: pw.TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: pw.FontWeight.bold,
-                                    color: PdfColors.white,
-                                  ),
-                                ),
-                              if (categoryTitle.isNotEmpty)
-                                pw.SizedBox(height: 5),
-                              ...skills.map((skillController) {
-                                final skillText = skillController.text.trim();
-                                if (skillText.isEmpty) return pw.SizedBox();
-
-                                return pw.Padding(
-                                  padding: const pw.EdgeInsets.only(
-                                      left: 10, bottom: 2),
-                                  child: pw.Row(
-                                    children: [
-                                      pw.Container(
-                                        width: 5,
-                                        height: 5,
-                                        margin:
-                                            const pw.EdgeInsets.only(top: 4),
-                                        decoration: pw.BoxDecoration(
-                                          color: PdfColors.blueGrey900,
-                                          shape: pw.BoxShape.circle,
-                                        ),
-                                      ),
-                                      pw.SizedBox(width: 5),
-                                      pw.Text(
-                                        skillText,
-                                        style: pw.TextStyle(
-                                            fontSize: 10,
-                                            color: PdfColors.white),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                              pw.SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                        pw.SizedBox(height: 5),
-                      ],
-                    ),
-                  ),
-                ]),
-              ),
-
-              // Right Column - PROFILLE & Experience & Education
-              pw.Expanded(
-                child: pw.Container(
-                  padding: pw.EdgeInsets.only(left: 20, right: 20),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.SizedBox(height: 20),
-                      // PROFILLE
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.Text('PROFILLE',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.SizedBox(height: 5),
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.Text(_aboutMeController.text,
-                            style: pw.TextStyle(
-                                fontSize: 10, color: PdfColors.grey)),
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.SizedBox(height: 10),
-
-                      if (_aboutMeController.text.isNotEmpty)
-                        pw.Divider(thickness: 1, color: PdfColors.grey),
-
-                      // Education
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle.any(
-                              (controller) => controller.text.isNotEmpty)) ...[
-                        pw.Text('Education',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
-                        pw.SizedBox(height: 5),
-                        ..._educationControllers.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          return pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Row(children: [
-                                if (_startEducation[index]
-                                        .text
-                                        .trim()
-                                        .isNotEmpty ||
-                                    _endEducation[index].text.trim().isNotEmpty)
-                                  pw.Text(
-                                    _startEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty &&
-                                            _endEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty
-                                        ? '${_startEducation[index].text.trim()} - ${_endEducation[index].text.trim()}'
-                                        : _startEducation[index]
-                                                .text
-                                                .trim()
-                                                .isNotEmpty
-                                            ? _startEducation[index].text.trim()
-                                            : _endEducation[index].text.trim(),
-                                    style: pw.TextStyle(
-                                        fontSize: 8, color: PdfColors.grey),
-                                  ),
-                                pw.SizedBox(width: 5),
-                                pw.Text(
-                                  _startEducation[index].text.isNotEmpty
-                                      ? '${_startEducation[index].text} - ${_endEducation[index].text}'
-                                      : _endEducation[index].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 8, color: PdfColors.grey),
-                                ),
-                              ]),
-                              /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),*/
-                              /*if (_startEducation[index].text.isNotEmpty||_endEducation[index].text.isNotEmpty)
-                            pw.SizedBox(height: 5),*/
-                              if (_degreeTitle[index].text.isNotEmpty)
-                                pw.Text(_degreeTitle[index].text,
-                                    style: pw.TextStyle(
-                                        fontSize: 13,
-                                        color: PdfColors.grey900,
-                                        font: EBGaramondFont)),
-                              pw.SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                      ],
-
-                      if (_educationControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _endEducation.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _universityName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _degreeTitle
-                              .any((controller) => controller.text.isNotEmpty))
-                        pw.Divider(thickness: 1, color: PdfColors.grey),
-
-                      // Work Experience
-                      if (_ExperienceControllers.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _jobTitle.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _companyName.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _startdatejob.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _enddatejob.any(
-                              (controller) => controller.text.isNotEmpty) ||
-                          _detailjob.any(
-                              (controller) => controller.text.isNotEmpty)) ...[
-                        pw.Text('Work Experience',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
-                        pw.SizedBox(height: 5),
-                        ..._ExperienceControllers.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          final safeIndex =
-                              index < _companyName.length ? index : 0;
-                          return pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Row(children: [
-                                pw.Text(_companyName[safeIndex].text,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
-                                pw.SizedBox(width: 5),
-                                pw.Text(
-                                  '${_startdatejob[safeIndex].text} - ${_enddatejob[safeIndex].text.isEmpty ? 'PRESENT' : _enddatejob[safeIndex].text}',
-                                  style: pw.TextStyle(
-                                      fontSize: 8, color: PdfColors.grey),
-                                ),
-                              ]),
-                              pw.Text(_jobTitle[safeIndex].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: pw.FontWeight.normal,
-                                      color: PdfColors.grey900,
-                                      font: EBGaramondFont)),
-                              pw.SizedBox(width: 5),
-                              pw.Text(_detailjob[safeIndex].text,
-                                  style: pw.TextStyle(
-                                      fontSize: 10, color: PdfColors.grey800)),
-                              pw.SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                        pw.Divider(thickness: 1, color: PdfColors.grey),
-                      ],
-
-                      //Project
-                      if (projects
-                          .any((p) => p.values.any((v) => v.isNotEmpty))) ...[
-                        pw.Text('Projects',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
-                        pw.SizedBox(height: 5),
-                        ...projects.map((project) {
-                          return pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              if (project['title']!.isNotEmpty)
-                                pw.Text(project['title']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
-                              if (project['tech']!.isNotEmpty)
-                                pw.Text('Tech: ${project['tech']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
-                              if (project['description']!.isNotEmpty)
-                                pw.Text(project['description']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
-                              if (project['link']!.isNotEmpty)
-                                pw.Text('Link: ${project['link']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10, color: PdfColors.blue)),
-                              pw.SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                        pw.Divider(thickness: 1, color: PdfColors.grey),
-                      ],
-                      // Certifications
-                      if (certifications
-                          .any((c) => c.values.any((v) => v.isNotEmpty))) ...[
-                        pw.Text('Certifications',
-                            style: pw.TextStyle(
-                                fontSize: 16,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.blue)),
-                        pw.SizedBox(height: 5),
-                        ...certifications.map((cert) {
-                          return pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              if (cert['title']!.isNotEmpty)
-                                pw.Text(cert['title']!,
-                                    style: pw.TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: pw.FontWeight.bold,
-                                        font: EBGaramondBoldFont)),
-                              if (cert['issuer']!.isNotEmpty)
-                                pw.Text('Issued by: ${cert['issuer']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
-                              if (cert['date']!.isNotEmpty)
-                                pw.Text('Date: ${cert['date']}',
-                                    style: pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey800)),
-                              pw.SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                        pw.Divider(thickness: 1, color: PdfColors.grey),
-                      ]
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/resume.pdf');
-    await file.writeAsBytes(await pdf.save());
-    return file;
-  }*/
-
-  /*Future<void> _saveData() async {
-    _isButton1Highlighted = true;
-    await _storage.saveData('name', _FirstnameController.text);
-    await _storage.saveData('lastname', _LastnameController.text);
-    await _storage.saveData('email', _emailController.text);
-    await _storage.saveData('address', _addressController.text);
-    await _storage.saveData('phone', _phoneNumberController.text);
-    await _storage.saveData('aboutme', _aboutMeController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data saved successfully!')));
-    setState(() {
-      _isButton1Highlighted = false;
-    });
-  }*/
-
-  /*Future<void> _sharePdf() async {
-    setState(() {
-      _isButton2Highlighted = true;
-    });
-
-    try {
-      final pdfFile = await _generatePdf();
-      await Share.shareXFiles([XFile(pdfFile.path)],
-          text: 'Check out my resume!');
-    } catch (e) {
-      print('Error sharing PDF: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate or share PDF')),
-      );
-    } finally {
-      setState(() {
-        _isButton2Highlighted = false;
-      });
-    }
-  }*/
 
   void _addWebsiteField() {
     if (_websiteControllers.length < 3) {
@@ -983,28 +322,6 @@ class _ResumeEditorState extends State<ResumeEditor> {
     }
   }
 
-  /*Future<void> _selectDateEducation(BuildContext context,bool check,int index) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-
-    if (pickedDate != null) {
-      if(check){
-        setState(() {
-          _startEducation[index].text = DateFormat('yyyy').format(pickedDate);
-        });
-      }else{
-        setState(() {
-          _endEducation[index].text = DateFormat('yyyy').format(pickedDate);
-        });
-      }
-      
-    }
-  }*/
-
   void _addProjectField() {
     setState(() {
       _projectTitleControllers.add(TextEditingController());
@@ -1069,10 +386,14 @@ class _ResumeEditorState extends State<ResumeEditor> {
 
     final skillCategoriesList = <SkillCategory>[];
     for (int i = 0; i < _selectedSkillCategories.length; i++) {
-      final category = _selectedSkillCategories[i] ?? 'Unknown';
+      final category = __skillTitles[i].text.trim().isNotEmpty
+          ? __skillTitles[i].text.trim()
+          : (_selectedSkillCategories[i] ?? 'Unknown');
       final skills = _skillControllers[i].map((c) => c.text.trim()).where((s) => s.isNotEmpty).toList();
       if (skills.isNotEmpty) {
-        skillCategoriesList.add(SkillCategory(category: category, items: skills));
+        skillCategoriesList.add(
+          SkillCategory(category: category, items: skills),
+        );
       }
     }
 
@@ -1149,6 +470,101 @@ class _ResumeEditorState extends State<ResumeEditor> {
     } else {
       await ResumeService.update(resume);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("update resume")));
+    }
+  }
+
+  Future<void> _generateAndPreviewResumePdf() async {
+    if (_selectedTemplate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a resume template first")),
+      );
+      return;
+    }
+
+    setState(() => isNavigating = true);
+    await Future.delayed(const Duration(seconds: 1));
+    final websitesList = _websiteControllers.map((e) => e.text.trim()).toList();
+
+    final profileImageBytes = _profileImage != null ? await _profileImage!.readAsBytes() : null;
+
+    final processedSkillTitles = <TextEditingController>[];
+    for (int i = 0; i < __skillTitles.length; i++) {
+      if (_selectedSkillCategories[i] == 'Custom') {
+        processedSkillTitles.add(TextEditingController(text: __skillTitles[i].text.trim()));
+      } else {
+        processedSkillTitles.add(TextEditingController(
+            text: _selectedSkillCategories[i] ?? 'Other'));
+      }
+    }
+    final resume = getResumeFromControllers(
+      firstnameController: _FirstnameController,
+      lastnameController: _LastnameController,
+      emailController: _emailController,
+      addressController: _addressController,
+      phoneNumberController: _phoneNumberController,
+      aboutMeController: _aboutMeController,
+      websiteControllers: _websiteControllers,
+      skillTitles: processedSkillTitles,
+      selectedSkillCategories: _selectedSkillCategories,
+      skillControllers: _skillControllers,
+      companyName: _companyName,
+      position: _jobTitle,
+      startdatejob: _startdatejob,
+      enddatejob: _enddatejob,
+      detailjob: _detailjob,
+      universityName: _universityName,
+      degreeTitle: _degreeTitle,
+      startEducation: _startEducation,
+      endEducation: _endEducation,
+      projectTitleControllers: _projectTitleControllers,
+      projectDescriptionControllers: _projectDescriptionControllers,
+      projectLinkControllers: _projectLinkControllers,
+      projectTechControllers: _projectTechControllers,
+      certificationTitleControllers: _certificationTitleControllers,
+      certificationIssuerControllers: _certificationIssuerControllers,
+      certificationDateControllers: _certificationDateControllers,
+      languageNameControllers: _languageNameControllers,
+      languageproficiencyControllers: _languageLevelControllers,
+      profileImage: _profileImage != null ? await _profileImage!.readAsBytes() : null,
+    );
+    Uint8List? pdfBytes;
+    if (_selectedTemplate == 'Template 1') {
+      pdfBytes = await await ResumeTemplate1Generator().generatePdfFromResume(resume);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+        ),
+      );
+      setState(() => isNavigating = false);
+    } else if (_selectedTemplate == 'Template 2') {
+      pdfBytes =
+          await await ResumeTemplate2Generator().generatePdfFromResume(resume);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+        ),
+      );
+
+      setState(() => isNavigating = false);
+    } else if (_selectedTemplate == 'Template 3') {
+      pdfBytes =
+          await await ResumeTemplate3Generator().generatePdfFromResume(resume);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
+        ),
+      );
+
+      setState(() => isNavigating = false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Unknown template selected")),
+      );
+      setState(() => isNavigating = false);
+      return;
     }
   }
 
@@ -1310,94 +726,7 @@ class _ResumeEditorState extends State<ResumeEditor> {
       
                             GlowingStarButton(
                               onPressed: () async {
-
-                                if (_selectedTemplate == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text( "Please select a resume template first")),
-                                  );
-                                  return;
-                                }
-
-                                setState(() => isNavigating = true);
-                                await Future.delayed(const Duration( seconds: 1));
-                                final websitesList = _websiteControllers.map((e) => e.text.trim()).toList();
-
-                                final profileImageBytes = _profileImage != null
-                                    ? await _profileImage!.readAsBytes()
-                                    : null;
-
-                                final resume = getResumeFromControllers(
-                                  firstnameController: _FirstnameController,
-                                  lastnameController: _LastnameController,
-                                  emailController: _emailController,
-                                  addressController: _addressController,
-                                  phoneNumberController: _phoneNumberController,
-                                  aboutMeController: _aboutMeController,
-                                  websiteControllers: _websiteControllers,
-                                  skillTitles: __skillTitles,
-                                  selectedSkillCategories: _selectedSkillCategories,
-                                  skillControllers: _skillControllers,
-                                  companyName: _companyName,
-                                  position: _jobTitle,
-                                  startdatejob: _startdatejob,
-                                  enddatejob: _enddatejob,
-                                  detailjob: _detailjob,
-                                  universityName: _universityName,
-                                  degreeTitle: _degreeTitle,
-                                  startEducation: _startEducation,
-                                  endEducation: _endEducation,
-                                  projectTitleControllers: _projectTitleControllers,
-                                  projectDescriptionControllers: _projectDescriptionControllers,
-                                  projectLinkControllers: _projectLinkControllers,
-                                  projectTechControllers: _projectTechControllers,
-                                  certificationTitleControllers: _certificationTitleControllers,
-                                  certificationIssuerControllers: _certificationIssuerControllers,
-                                  certificationDateControllers: _certificationDateControllers,
-                                  languageNameControllers: _languageNameControllers,
-                                  languageproficiencyControllers: _languageLevelControllers,
-                                  profileImage: _profileImage != null
-                                      ? await _profileImage!.readAsBytes()
-                                      : null,
-                                );
-                                Uint8List? pdfBytes;
-                                if (_selectedTemplate == 'Template 1') {
-                                  pdfBytes = await await ResumeTemplate1Generator().generatePdfFromResume(resume);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
-                                    ),
-                                  );
-                                  setState(() => isNavigating = false);
-                                } else if (_selectedTemplate == 'Template 2') {
-                                  pdfBytes = await await ResumeTemplate2Generator().generatePdfFromResume(resume);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
-                                    ),
-                                  );
-
-                                  setState(() => isNavigating = false);
-                                } else if (_selectedTemplate == 'Template 3') {
-                                  pdfBytes = await await ResumeTemplate3Generator().generatePdfFromResume(resume);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ResumeExportPDF(pdfBytes: pdfBytes),
-                                    ),
-                                  );
-
-                                  setState(() => isNavigating = false);
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar( content: Text("Unknown template selected")),
-                                  );
-                                  setState(() => isNavigating = false);
-                                  return;
-                                }
-                                
+                                _generateAndPreviewResumePdf();
                               },
                               color: Colors.yellowAccent.withOpacity(0.9),
                               child: const Icon(

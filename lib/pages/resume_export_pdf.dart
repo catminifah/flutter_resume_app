@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,6 +24,12 @@ class _ResumeExportPDFState extends State<ResumeExportPDF> {
   void initState() {
     super.initState();
     _savePdfTempFile();
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   Future<void> _savePdfTempFile() async {
@@ -38,33 +45,39 @@ class _ResumeExportPDFState extends State<ResumeExportPDF> {
     }
   }
 
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      var status = await Permission.manageExternalStorage.status;
+      if (!status.isGranted) {
+        status = await Permission.manageExternalStorage.request();
+      }
+      return status.isGranted;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> _saveToDownloads() async {
     if (widget.pdfBytes == null) return;
 
     final status = await Permission.storage.request();
     
-    if (!status.isGranted) {
+    final hasPermission = await _requestStoragePermission();
+    if (!hasPermission) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Permission denied to save file')),
       );
       return;
     }
 
-    //final downloadsDir = Directory('/storage/emulated/0/Download');
-    Directory? downloadsDir;
-    if (Platform.isAndroid) {
-      downloadsDir = Directory('/storage/emulated/0/Download');
-    } else if (Platform.isIOS) {
-      downloadsDir = await getApplicationDocumentsDirectory();
-    }
-
-    if (downloadsDir == null) {
-      throw Exception('Cannot find suitable directory to save file.');
+    Directory downloadsDir =
+        Directory('/storage/emulated/0/Download');
+    if (!downloadsDir.existsSync()) {
+      downloadsDir.createSync(recursive: true);
     }
 
     final fileName = 'resume_${DateTime.now().millisecondsSinceEpoch}.pdf';
     final file = File('${downloadsDir.path}/$fileName');
-
     await file.writeAsBytes(widget.pdfBytes!);
 
     if (!mounted) return;
@@ -99,7 +112,7 @@ class _ResumeExportPDFState extends State<ResumeExportPDF> {
               children: [
                 // PDF Viewer
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.69,
                   child: PDFView(
                     filePath: localPath!,
                     enableSwipe: true,

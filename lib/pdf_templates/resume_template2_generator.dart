@@ -363,7 +363,12 @@ class ResumeTemplate2Generator {
               pw.SizedBox(height: 10),
             ],
 
-            pw.Divider(thickness: 1, color: PdfColors.white),
+            if (resume.email.isNotEmpty ||
+                resume.phoneNumber.isNotEmpty ||
+                resume.address.isNotEmpty ||
+                resume.websites.isNotEmpty) ...[
+              pw.Divider(thickness: 1, color: PdfColors.white),
+            ],
 
             // Languages
             if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[

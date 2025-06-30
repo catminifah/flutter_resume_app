@@ -48,9 +48,21 @@ ResumeModel getResumeFromControllers({
     phoneNumber: phoneNumberController.text.trim(),
     aboutMe: aboutMeController.text.trim(),
     websites: websiteControllers.map((c) => c.text.trim()).where((t) => t.isNotEmpty).toList(),
-    skills: List.generate(skillTitles.length,(i) => SkillCategory(
-      category: selectedSkillCategories[i] ?? 'Other', 
-      items: skillControllers[i].map((c) => c.text.trim()).where((t) => t.isNotEmpty).toList(),)),
+    skills: List.generate(skillTitles.length, (i) {
+      String category;
+      if (selectedSkillCategories[i] == 'Custom') {
+        category = skillTitles[i].text.trim();
+        if (category.isEmpty) {
+          category = 'Custom';
+        }
+      } else {
+        category = selectedSkillCategories[i] ?? 'Other';
+      }
+      return SkillCategory(
+        category: category,
+        items: skillControllers[i].map((c) => c.text.trim()).where((t) => t.isNotEmpty).toList(),
+      );
+    }),
     experiences: List.generate(companyName.length, (i) => Experience(
       company: companyName[i].text.trim(),
       position: position[i].text.trim(),
