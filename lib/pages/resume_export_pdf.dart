@@ -45,15 +45,11 @@ class _ResumeExportPDFState extends State<ResumeExportPDF> {
     }
   }
 
-  Future<bool> _requestStoragePermission() async {
-    if (Platform.isAndroid) {
-      var status = await Permission.manageExternalStorage.status;
-      if (!status.isGranted) {
-        status = await Permission.manageExternalStorage.request();
-      }
-      return status.isGranted;
+  Future<void> requestStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      print("Storage permission granted");
     } else {
-      return true;
+      print("Storage permission denied");
     }
   }
 
@@ -61,29 +57,25 @@ class _ResumeExportPDFState extends State<ResumeExportPDF> {
     if (widget.pdfBytes == null) return;
 
     final status = await Permission.storage.request();
+
+    Directory? downloadsDir;
+    if (Platform.isAndroid) {
+      downloadsDir = Directory("/storage/emulated/0/Download");
+    } else if (Platform.isIOS) {
+      downloadsDir = await getApplicationDocumentsDirectory();
+    }
     
-    final hasPermission = await _requestStoragePermission();
-    if (!hasPermission) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied to save file')),
-      );
-      return;
-    }
-
-    Directory downloadsDir =
-        Directory('/storage/emulated/0/Download');
-    if (!downloadsDir.existsSync()) {
-      downloadsDir.createSync(recursive: true);
-    }
-
     final fileName = 'resume_${DateTime.now().millisecondsSinceEpoch}.pdf';
-    final file = File('${downloadsDir.path}/$fileName');
-    await file.writeAsBytes(widget.pdfBytes!);
 
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Saved to ${file.path}')),
-    );
+    if (downloadsDir != null) {
+      final file = File("${downloadsDir.path}/$fileName");
+      await file.writeAsBytes(widget.pdfBytes!);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Saved to ${file.path}')),
+      );
+    }
+    
   }
 
   Future<void> _sharePdf() async {
