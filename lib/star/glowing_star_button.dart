@@ -20,8 +20,7 @@ class GlowingStarButton extends StatefulWidget {
   State<GlowingStarButton> createState() => _GlowingStarButtonState();
 }
 
-class _GlowingStarButtonState extends State<GlowingStarButton>
-    with SingleTickerProviderStateMixin {
+class _GlowingStarButtonState extends State<GlowingStarButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _rotation;
   late Animation<double> _scale;
