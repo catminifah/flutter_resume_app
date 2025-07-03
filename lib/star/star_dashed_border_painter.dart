@@ -20,7 +20,7 @@ class StarDashedBorderPainter extends CustomPainter {
     final path = Path()..addRRect(rrect);
     final pathMetrics = path.computeMetrics().toList();
 
-    final drawStar = (Offset center) {
+    drawStar(Offset center) {
       final starPath = Path();
       const points = 5;
       final outerRadius = starSize / 2;
@@ -40,7 +40,7 @@ class StarDashedBorderPainter extends CustomPainter {
       }
       starPath.close();
       canvas.drawPath(starPath, Paint()..color = color);
-    };
+    }
 
     for (final metric in pathMetrics) {
       double distance = 0;

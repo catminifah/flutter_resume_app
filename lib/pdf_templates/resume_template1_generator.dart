@@ -10,497 +10,426 @@ class ResumeTemplate1Generator {
     return data.buffer.asUint8List();
   }
 
-  List<pw.Widget> generateLeftColumnWidgets( ResumeModel resume,  pw.Font ARIBLKFont, Uint8List emailIcon, Uint8List phoneIcon,Uint8List addressIcon, Uint8List wabIcon, {bool showProfileImage = false}) {
-    final languages = List.generate(
-      resume.languages.length,
-      (index) => {
-        'name': resume.languages[index].language.trim(),
-        'level': resume.languages[index].proficiency.trim(),
-      },
-    );
-    final widgets = <pw.Widget>[];
-    if (showProfileImage && resume.profileImage != null) {
-      if (resume.profileImage != null) {
-        widgets.addAll([
-          pw.Center(
-            child: pw.Container(
-              width: 120,
-              height: 120,
-              decoration: pw.BoxDecoration(
-                shape: pw.BoxShape.circle,
-                border: pw.Border.all(color: PdfColors.white, width: 2),
-              ),
-              child: pw.Padding(
-                padding: pw.EdgeInsets.all(2),
-                child: pw.Container(
-                  width: 110,
-                  height: 110,
-                  decoration: pw.BoxDecoration(
-                    shape: pw.BoxShape.circle,
-                  ),
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.all(5),
-                    child: pw.ClipOval(
-                      child: pw.Container(
-                        width: 100,
-                        height: 100,
-                        child: pw.Image(
-                          pw.MemoryImage(resume.profileImage!),
-                          fit: pw.BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          pw.SizedBox(height: 10),
-        ]);
-      }
-    }
+  List<pw.Widget> generateLeftColumnWidgets(
+  ResumeModel resume,
+  pw.Font ARIBLKFont,
+  Uint8List emailIcon,
+  Uint8List phoneIcon,
+  Uint8List addressIcon,
+  Uint8List wabIcon, {
+  bool showProfileImage = false,
+}) {
+  final widgets = <pw.Widget>[];
 
+  final languages = resume.languages
+      .map((lang) => {
+            'name': lang.language.trim(),
+            'level': lang.proficiency.trim(),
+          })
+      .where((lang) => lang['name']!.isNotEmpty || lang['level']!.isNotEmpty)
+      .toList();
+
+  // Profile Image
+  if (showProfileImage && resume.profileImage != null) {
     widgets.addAll([
-      // Name
-      pw.Text(
-        resume.firstname.isNotEmpty
-            ? '${resume.firstname[0].toUpperCase()}${resume.firstname.substring(1)}'
-            : '',
-        style: pw.TextStyle(
-          fontSize: 22,
-          fontWeight: pw.FontWeight.bold,
-          color: PdfColors.white,
-          font: ARIBLKFont,
-        ),
-        softWrap: true,
-      ),
-      pw.Text(
-        resume.lastname.isNotEmpty
-            ? '${resume.lastname[0].toUpperCase()}${resume.lastname.substring(1)}'
-            : '',
-        style: pw.TextStyle(
-          fontSize: 22,
-          fontWeight: pw.FontWeight.bold,
-          color: PdfColors.white,
-          font: ARIBLKFont,
-        ),
-        softWrap: true,
-      ),
-      if (resume.lastname.isEmpty && resume.firstname.isNotEmpty ||
-          resume.firstname.isNotEmpty) ...[
-        pw.SizedBox(height: 10),
-        pw.Divider(thickness: 1, color: PdfColors.white),
-      ],
-
-      // Email
-      if (resume.email.isNotEmpty) ...[
-        pw.Row(
-          children: [
-            pw.Image(pw.MemoryImage(emailIcon), width: 12, height: 12),
-            pw.SizedBox(width: 5),
-            pw.Expanded(
-              child: pw.Text(
-                resume.email,
-                style: pw.TextStyle(
-                  fontSize: 10,
-                  color: PdfColors.white,
-                ),
-                softWrap: true,
+      pw.Center(
+        child: pw.Container(
+          width: 120,
+          height: 120,
+          decoration: pw.BoxDecoration(
+            shape: pw.BoxShape.circle,
+            border: pw.Border.all(color: PdfColors.white, width: 2),
+          ),
+          child: pw.Padding(
+            padding: pw.EdgeInsets.all(2),
+            child: pw.ClipOval(
+              child: pw.Image(
+                pw.MemoryImage(resume.profileImage!),
+                fit: pw.BoxFit.cover,
               ),
             ),
-          ],
-        ),
-        pw.SizedBox(height: 5),
-      ],
-
-      // NumberPhone
-      if (resume.phoneNumber.isNotEmpty) ...[
-        pw.Row(
-          children: [
-            pw.Image(pw.MemoryImage(phoneIcon), width: 12, height: 12),
-            pw.SizedBox(width: 5),
-            pw.Text(resume.phoneNumber,
-                style: pw.TextStyle(
-                  fontSize: 10,
-                  color: PdfColors.white,
-                )),
-          ],
-        ),
-        pw.SizedBox(height: 5),
-      ],
-
-      // Address
-      if (resume.address.isNotEmpty) ...[
-        pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Image(pw.MemoryImage(addressIcon), width: 12, height: 12),
-            pw.SizedBox(width: 5),
-            pw.Expanded(
-              child: pw.Text(
-                resume.address,
-                style: pw.TextStyle(
-                  fontSize: 10,
-                  color: PdfColors.white,
-                ),
-                softWrap: true,
-              ),
-            ),
-          ],
-        ),
-        pw.SizedBox(height: 5),
-      ],
-
-      if (resume.websites.isNotEmpty) ...[
-        ...resume.websites.asMap().entries.map((entry) {
-          int index = entry.key;
-          String website = entry.value;
-
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              if (website.isNotEmpty)
-                pw.Row(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Image(pw.MemoryImage(wabIcon), width: 12, height: 12),
-                    pw.SizedBox(width: 5),
-                    pw.Expanded(
-                      child: pw.Text(
-                        website,
-                        style: pw.TextStyle(
-                          fontSize: 10,
-                          color: PdfColors.white,
-                        ),
-                        softWrap: true,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          );
-        }),
-        pw.SizedBox(height: 10),
-      ],
-      
-      if (resume.email.isNotEmpty || resume.phoneNumber.isNotEmpty || resume.address.isNotEmpty || resume.websites.isNotEmpty) ...[
-        pw.Divider(thickness: 1, color: PdfColors.white),
-      ],
-
-      // Languages
-      if (languages.any((l) => l.values.any((v) => v.isNotEmpty))) ...[
-        pw.Text(
-          'Languages',
-          style: pw.TextStyle(
-            fontSize: 16,
-            fontWeight: pw.FontWeight.bold,
-            color: PdfColors.white,
           ),
         ),
-        pw.SizedBox(height: 5),
-        ...languages.map((lang) {
-          final name = lang['name']?.trim() ?? '';
-          final level = lang['level']?.trim() ?? '';
-          if (name.isEmpty && level.isEmpty) {
-            return pw.SizedBox();
-          }
+      ),
+      pw.SizedBox(height: 10),
+    ]);
+  }
 
-          return pw.Padding(
-            padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
-            child: pw.Row(
-              children: [
-                pw.Container(
-                  width: 3,
-                  height: 3,
-                  margin: const pw.EdgeInsets.only(bottom: 1),
-                  decoration: pw.BoxDecoration(
-                    color: PdfColors.white,
-                    shape: pw.BoxShape.circle,
-                  ),
-                ),
-                pw.SizedBox(width: 5),
-                pw.Text(
-                  level.isNotEmpty ? '$name ($level)' : name,
-                  style: pw.TextStyle(fontSize: 10, color: PdfColors.white),
-                ),
-              ],
-            ),
-          );
-        }),
-        pw.SizedBox(height: 10),
-      ],
+  // Name
+  if (resume.firstname.isNotEmpty) {
+    widgets.add(pw.Text(
+      '${resume.firstname[0].toUpperCase()}${resume.firstname.substring(1)}',
+      style: pw.TextStyle(
+        fontSize: 22,
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.white,
+        font: ARIBLKFont,
+      ),
+    ));
+  }
+  if (resume.lastname.isNotEmpty) {
+    widgets.add(pw.Text(
+      '${resume.lastname[0].toUpperCase()}${resume.lastname.substring(1)}',
+      style: pw.TextStyle(
+        fontSize: 22,
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.white,
+        font: ARIBLKFont,
+      ),
+    ));
+  }
+  if (resume.firstname.isNotEmpty || resume.lastname.isNotEmpty) {
+    widgets.addAll([
+      pw.SizedBox(height: 10),
+      pw.Divider(thickness: 1, color: PdfColors.white),
+    ]);
+  }
 
-      // Skills Summary
-      ...resume.skills.asMap().entries.map((entry) {
-        final int categoryIndex = entry.key;
-        final skillCategory = entry.value;
+  // Contact Info
+  if (resume.email.isNotEmpty) {
+    widgets.addAll([
+      pw.Row(children: [
+        pw.Image(pw.MemoryImage(emailIcon), width: 12, height: 12),
+        pw.SizedBox(width: 5),
+        pw.Expanded(
+          child: pw.Text(resume.email,
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+        ),
+      ]),
+      pw.SizedBox(height: 5),
+    ]);
+  }
 
-        final String categoryTitle = skillCategory.category.trim();
-        final List<String> skills = skillCategory.items;
-        final bool allSkillsEmpty = skills.every((s) => s.trim().isEmpty);
-        final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
+  if (resume.phoneNumber.isNotEmpty) {
+    widgets.addAll([
+      pw.Row(children: [
+        pw.Image(pw.MemoryImage(phoneIcon), width: 12, height: 12),
+        pw.SizedBox(width: 5),
+        pw.Text(resume.phoneNumber,
+            style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+      ]),
+      pw.SizedBox(height: 5),
+    ]);
+  }
 
-        if (isCategoryEmpty) return pw.SizedBox();
+  if (resume.address.isNotEmpty) {
+    widgets.addAll([
+      pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+        pw.Image(pw.MemoryImage(addressIcon), width: 12, height: 12),
+        pw.SizedBox(width: 5),
+        pw.Expanded(
+          child: pw.Text(resume.address,
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+        ),
+      ]),
+      pw.SizedBox(height: 5),
+    ]);
+  }
 
-        return pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            if (categoryTitle.isNotEmpty)
-              pw.Text(
-                categoryTitle,
-                style: pw.TextStyle(
-                  fontSize: 16,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.white,
-                ),
-              ),
-            if (categoryTitle.isNotEmpty) pw.SizedBox(height: 5),
-            ...skills.map((skillController) {
-              final skillText = skillController.trim();
-              if (skillText.isEmpty) return pw.SizedBox();
+  for (final website in resume.websites.where((w) => w.trim().isNotEmpty)) {
+    widgets.addAll([
+      pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+        pw.Image(pw.MemoryImage(wabIcon), width: 12, height: 12),
+        pw.SizedBox(width: 5),
+        pw.Expanded(
+          child: pw.Text(website.trim(),
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+        ),
+      ]),
+      pw.SizedBox(height: 5),
+    ]);
+  }
 
-              return pw.Padding(
-                padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
-                child: pw.Row(
-                  children: [
-                    pw.Container(
-                      width: 3,
-                      height: 3,
-                      margin: const pw.EdgeInsets.only(bottom: 1),
-                      decoration: pw.BoxDecoration(
-                        color: PdfColors.white,
-                        shape: pw.BoxShape.circle,
-                      ),
-                    ),
-                    pw.SizedBox(width: 5),
-                    pw.Text(
-                      skillText,
-                      style: pw.TextStyle(fontSize: 10, color: PdfColors.white),
-                    ),
-                  ],
-                ),
-              );
-            }),
-            pw.SizedBox(height: 10),
-          ],
-        );
-      }),
+  if (resume.email.isNotEmpty ||
+      resume.phoneNumber.isNotEmpty ||
+      resume.address.isNotEmpty ||
+      resume.websites.any((w) => w.trim().isNotEmpty)) {
+    widgets.addAll([
+      pw.SizedBox(height: 5),
+      pw.Divider(thickness: 1, color: PdfColors.white),
+    ]);
+  }
+
+  // Languages
+  if (languages.isNotEmpty) {
+    widgets.addAll([
+      pw.Text('Languages',
+          style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.white)),
       pw.SizedBox(height: 5),
     ]);
 
-    return widgets;
+    for (final lang in languages) {
+      final name = lang['name']!;
+      final level = lang['level']!;
+      final display = level.isNotEmpty ? '$name ($level)' : name;
+
+      widgets.add(
+        pw.Padding(
+          padding: pw.EdgeInsets.only(left: 10, bottom: 2),
+          child: pw.Row(children: [
+            pw.Container(
+              width: 3,
+              height: 3,
+              decoration:
+                  pw.BoxDecoration(shape: pw.BoxShape.circle, color: PdfColors.white),
+            ),
+            pw.SizedBox(width: 5),
+            pw.Text(display,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+          ]),
+        ),
+      );
+    }
+
+    widgets.add(pw.SizedBox(height: 10));
   }
 
-  List<pw.Widget> generateRightColumnWidgets(ResumeModel resume, pw.Font EBGaramondBoldFont, pw.Font EBGaramondFont) {
-    final certifications = <Map<String, String>>[];
-    for (final cert in resume.certifications) {
-      certifications.add({
-        'title': cert.title.trim(),
-        'issuer': cert.issuer.trim(),
-        'date': cert.date.trim(),
-      });
+  // Skills
+  for (final skillCategory in resume.skills) {
+    final title = skillCategory.category.trim();
+    final skills = skillCategory.items.where((s) => s.trim().isNotEmpty).toList();
+
+    if (title.isEmpty && skills.isEmpty) continue;
+
+    if (title.isNotEmpty) {
+      widgets.addAll([
+        pw.Text(title,
+            style: pw.TextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.white)),
+        pw.SizedBox(height: 5),
+      ]);
     }
 
-    final projects = <Map<String, String>>[];
-    for (final proj in resume.projects) {
-      projects.add({
-        'title': proj.name.trim(),
-        'description': proj.description.trim(),
-        'link': proj.link.trim(),
-        'tech': proj.tech.trim(),
-      });
+    for (final skill in skills) {
+      widgets.add(
+        pw.Padding(
+          padding: pw.EdgeInsets.only(left: 10, bottom: 2),
+          child: pw.Row(children: [
+            pw.Container(
+              width: 3,
+              height: 3,
+              decoration: pw.BoxDecoration(shape: pw.BoxShape.circle, color: PdfColors.white),
+            ),
+            pw.SizedBox(width: 5),
+            pw.Text(skill,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+          ]),
+        ),
+      );
     }
-    return [
-      // Right Column - PROFILLE & Experience & Education
-      pw.SizedBox(height: 20),
-      // PROFILLE
-      if (resume.aboutMe.isNotEmpty)
-        pw.Text('PROFILLE',
+
+    widgets.add(pw.SizedBox(height: 10));
+  }
+
+  widgets.add(pw.SizedBox(height: 5));
+
+  return widgets;
+}
+
+  List<pw.Widget> generateRightColumnWidgets(
+    ResumeModel resume,
+    pw.Font EBGaramondBoldFont,
+    pw.Font EBGaramondFont,
+  ) {
+    final widgets = <pw.Widget>[];
+
+    final certifications = resume.certifications.map((cert) => {
+              'title': cert.title.trim(),
+              'issuer': cert.issuer.trim(),
+              'date': cert.date.trim(),
+            }).toList();
+
+    final projects = resume.projects.map((proj) => {
+              'title': proj.name.trim(),
+              'description': proj.description.trim(),
+              'link': proj.link.trim(),
+              'tech': proj.tech.trim(),
+            }).toList();
+
+    widgets.add(pw.SizedBox(height: 20));
+
+    // PROFILE
+    if (resume.aboutMe.isNotEmpty) {
+      widgets.addAll([
+        pw.Text('PROFILE',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
-      if (resume.aboutMe.isNotEmpty) ...[
         pw.SizedBox(height: 5),
-        pw.Text(resume.aboutMe, style: pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+        pw.Text(resume.aboutMe,
+            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
         pw.SizedBox(height: 10),
         pw.Divider(thickness: 1, color: PdfColors.grey),
-      ],
+      ]);
+    }
 
-      // Education
-      if (resume.educationList.isNotEmpty &&
-          resume.educationList.any((edu) =>
-              edu.startDate.trim().isNotEmpty ||
-              edu.endDate.trim().isNotEmpty ||
-              edu.school.trim().isNotEmpty ||
-              edu.degree.trim().isNotEmpty)) ...[
+    // EDUCATION
+    if (resume.educationList.any((edu) =>
+        edu.startDate.trim().isNotEmpty ||
+        edu.endDate.trim().isNotEmpty ||
+        edu.school.trim().isNotEmpty ||
+        edu.degree.trim().isNotEmpty)) {
+      widgets.addAll([
         pw.Text('Education',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
         pw.SizedBox(height: 5),
-        ...resume.educationList.asMap().entries.map((entry) {
-          int index = entry.key;
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(children: [
-                if (resume.educationList[index].school.isNotEmpty)
-                  pw.Text(resume.educationList[index].school,
-                      style: pw.TextStyle(
-                          fontSize: 14,
-                          fontWeight: pw.FontWeight.bold,
-                          font: EBGaramondBoldFont)),
-                pw.SizedBox(width: 5),
-                if (resume.educationList[index].startDate.trim().isNotEmpty || resume.educationList[index].endDate.trim().isNotEmpty)
-                  pw.Text(
-                    resume.educationList[index].startDate.trim().isNotEmpty && resume.educationList[index].endDate.trim().isNotEmpty
-                        ? '${resume.educationList[index].startDate.trim()} - ${resume.educationList[index].endDate.trim()}'
-                        : resume.educationList[index].startDate.trim().isNotEmpty
-                            ? resume.educationList[index].startDate.trim()
-                            : resume.educationList[index].endDate.trim(),
-                    style: pw.TextStyle(fontSize: 8, color: PdfColors.grey),
-                  ),
-                pw.SizedBox(width: 5),
-              ]),
-              if (resume.educationList[index].degree.isNotEmpty)
-                pw.Text(resume.educationList[index].degree,
-                    style: pw.TextStyle(
-                        fontSize: 13,
-                        color: PdfColors.grey900,
-                        font: EBGaramondFont)),
-              pw.SizedBox(height: 10),
-            ],
-          );
-        }),
-      ],
+      ]);
 
-      if (resume.educationList.isNotEmpty &&
-          resume.educationList.any((edu) =>
-              edu.startDate.trim().isNotEmpty ||
-              edu.endDate.trim().isNotEmpty ||
-              edu.school.trim().isNotEmpty ||
-              edu.degree.trim().isNotEmpty))
-        pw.Divider(thickness: 1, color: PdfColors.grey),
+      for (final edu in resume.educationList) {
+        if (edu.school.trim().isEmpty && edu.degree.trim().isEmpty) continue;
 
-      // Work Experience
-      if (resume.experiences.any((work) =>
-          work.company.trim().isNotEmpty ||
-          work.description.trim().isNotEmpty ||
-          work.startDate.trim().isNotEmpty ||
-          work.endDate.trim().isNotEmpty ||
-          work.position.trim().isNotEmpty)) ...[
+        final duration = (edu.startDate.trim().isNotEmpty ||
+                edu.endDate.trim().isNotEmpty)
+            ? '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}'
+            : '';
+
+        if (edu.school.isNotEmpty) {
+          widgets.add(pw.Text(edu.school,
+              style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                  font: EBGaramondBoldFont)));
+        }
+
+        if (duration.isNotEmpty) {
+          widgets.add(pw.Text(duration,
+              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
+        }
+
+        if (edu.degree.isNotEmpty) {
+          widgets.add(pw.Text(edu.degree,
+              style: pw.TextStyle(
+                  fontSize: 13,
+                  color: PdfColors.grey900,
+                  font: EBGaramondFont)));
+        }
+
+        widgets.add(pw.SizedBox(height: 10));
+      }
+
+      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+    }
+
+    // EXPERIENCE
+    if (resume.experiences.any((exp) =>
+        exp.company.trim().isNotEmpty ||
+        exp.description.trim().isNotEmpty ||
+        exp.startDate.trim().isNotEmpty ||
+        exp.endDate.trim().isNotEmpty ||
+        exp.position.trim().isNotEmpty)) {
+      widgets.addAll([
         pw.Text('Work Experience',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
         pw.SizedBox(height: 5),
-        ...resume.experiences.map((work) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(children: [
-                pw.Text(work.company,
-                    style: pw.TextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.bold,
-                        font: EBGaramondBoldFont)),
-                pw.SizedBox(width: 5),
-                pw.Text(
-                  '${work.startDate} - ${work.endDate.isEmpty ? 'PRESENT' : work.endDate}',
-                  style: pw.TextStyle(fontSize: 8, color: PdfColors.grey),
-                ),
-              ]),
-              pw.Text(work.position,
-                  style: pw.TextStyle(
-                      fontSize: 12,
-                      fontWeight: pw.FontWeight.normal,
-                      color: PdfColors.grey900,
-                      font: EBGaramondFont)),
-              pw.SizedBox(width: 5),
-              pw.Text(work.description,
-                  style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-              pw.SizedBox(height: 10),
-            ],
-          );
-        }),
-        pw.Divider(thickness: 1, color: PdfColors.grey),
-      ],
+      ]);
 
-      //Project
-      if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) ...[
+      for (final work in resume.experiences) {
+        final duration = '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
+
+        widgets.addAll([
+          pw.Text(work.company,
+              style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                  font: EBGaramondBoldFont)),
+          pw.Text(duration,
+              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+          if (work.position.trim().isNotEmpty)
+            pw.Text(work.position,
+                style: pw.TextStyle(
+                    fontSize: 12,
+                    color: PdfColors.grey900,
+                    font: EBGaramondFont)),
+          if (work.description.trim().isNotEmpty)
+            pw.Text(work.description,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+          pw.SizedBox(height: 10),
+        ]);
+      }
+
+      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+    }
+
+    // PROJECTS
+    if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) {
+      widgets.addAll([
         pw.Text('Projects',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
         pw.SizedBox(height: 5),
-        ...projects.map((project) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              if (project['title']!.isNotEmpty)
-                pw.Text(project['title']!,
-                    style: pw.TextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.bold,
-                        font: EBGaramondBoldFont)),
-              if (project['tech']!.isNotEmpty)
-                pw.Text('${project['tech']}',
-                    style:
-                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-              if (project['description']!.isNotEmpty)
-                pw.Text(project['description']!,
-                    style:
-                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-              if (project['link']!.isNotEmpty)
-                pw.Text('${project['link']}',
-                    style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
-              pw.SizedBox(height: 10),
-            ],
-          );
-        }),
-        pw.Divider(thickness: 1, color: PdfColors.grey),
-      ],
-      // Certifications
-      if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) ...[
+      ]);
+
+      for (final p in projects) {
+        widgets.addAll([
+          if (p['title']!.isNotEmpty)
+            pw.Text(p['title']!,
+                style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    font: EBGaramondBoldFont)),
+          if (p['tech']!.isNotEmpty)
+            pw.Text(p['tech']!,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+          if (p['description']!.isNotEmpty)
+            pw.Text(p['description']!,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+          if (p['link']!.isNotEmpty)
+            pw.Text(p['link']!,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
+          pw.SizedBox(height: 10),
+        ]);
+      }
+
+      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+    }
+
+    // CERTIFICATIONS
+    if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) {
+      widgets.addAll([
         pw.Text('Certifications',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
         pw.SizedBox(height: 5),
-        ...certifications.map((cert) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(children: [
-                if (cert['title']!.isNotEmpty)
-                  pw.Text(cert['title']!,
-                      style: pw.TextStyle(
-                          fontSize: 14,
-                          fontWeight: pw.FontWeight.bold,
-                          font: EBGaramondBoldFont)),
-                pw.SizedBox(width: 5),
-                if (cert['date']!.isNotEmpty)
-                  pw.Text('${cert['date']}',
-                      style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-                pw.SizedBox(width: 5),
-              ]),
-              if (cert['issuer']!.isNotEmpty)
-                pw.Text('${cert['issuer']}',
-                    style:
-                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-              pw.SizedBox(height: 10),
-            ],
-          );
-        }),
-        pw.Divider(thickness: 1, color: PdfColors.grey),
-      ]
-         
-    ];
+      ]);
+
+      for (final c in certifications) {
+        widgets.addAll([
+          if (c['title']!.isNotEmpty)
+            pw.Text(c['title']!,
+                style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    font: EBGaramondBoldFont)),
+          if (c['date']!.isNotEmpty)
+            pw.Text(c['date']!,
+                style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+          if (c['issuer']!.isNotEmpty)
+            pw.Text(c['issuer']!,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+          pw.SizedBox(height: 10),
+        ]);
+      }
+
+      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+    }
+
+    return widgets;
   }
 
   double estimateWidgetHeight(pw.Widget widget) {
@@ -513,21 +442,53 @@ class ResumeTemplate1Generator {
     }
 
     if (widget is pw.Text) {
-      final text = (widget as dynamic).text;
-      final lines = text.toString().split('\n').length;
-      return 14.0 * lines;
+      try {
+        final text = (widget as dynamic).text.toString();
+        final style = (widget as dynamic).style;
+        final fontSize = style?.fontSize ?? 12.0;
+        final lines = text.split('\n').length;
+        return fontSize * lines + 4;
+      } catch (_) {
+        return 16.0;
+      }
     }
 
-    if (widget is pw.Divider) return 5;
-    if (widget is pw.Row) return 20;
-    if (widget is pw.Column) return 25;
-    if (widget is pw.Image) return 100;
+    if (widget is pw.Row) {
+      try {
+        final children = (widget as dynamic).children;
+        final heights = children.map(estimateWidgetHeight).toList();
+        return heights.reduce((a, b) => a > b ? a : b) + 4;
+      } catch (_) {
+        return 20.0;
+      }
+    }
 
-    return 20;
+    if (widget is pw.Column) {
+      try {
+        final children = (widget as dynamic).children;
+        return children.fold<double>(
+            0.0, (sum, child) => sum + estimateWidgetHeight(child));
+      } catch (_) {
+        return 40.0;
+      }
+    }
+
+    if (widget is pw.Padding) {
+      try {
+        final child = (widget as dynamic).child;
+        final padding = (widget as dynamic).padding as pw.EdgeInsets;
+        return estimateWidgetHeight(child) + padding.top + padding.bottom;
+      } catch (_) {
+        return 20.0;
+      }
+    }
+
+    if (widget is pw.Divider) return 8;
+
+    return 20.0;
   }
 
-  List<List<pw.Widget>> paginateWidgets(
-      List<pw.Widget> widgets, double maxHeightPerPage) {
+  List<List<pw.Widget>> paginateWidgets( List<pw.Widget> widgets, double maxHeightPerPage) {
     final List<List<pw.Widget>> pages = [];
     List<pw.Widget> currentPage = [];
     double currentHeight = 0;
@@ -574,9 +535,17 @@ class ResumeTemplate1Generator {
     final leftColumnWidgets = generateLeftColumnWidgets( resume, ARIBLKFont, emailIcon, phoneIcon, addressIcon, wabIcon);
     final rightColumnWidgets = generateRightColumnWidgets( resume, EBGaramondBoldFont, EBGaramondFont);
 
-    final leftPages = paginateWidgets(leftColumnWidgets, 700.0);
-    final rightPages = paginateWidgets(rightColumnWidgets, 700.0);
+    final maxHeight = 1000.0;
+    final leftPages = paginateWidgets(leftColumnWidgets, maxHeight);
+    final rightPages = paginateWidgets(rightColumnWidgets, maxHeight);
     final totalPages = max(leftPages.length, rightPages.length);
+
+    while (leftPages.length < totalPages) {
+      leftPages.add([]);
+    }
+    while (rightPages.length < totalPages) {
+      rightPages.add([]);
+    }
 
     for (int i = 0; i < totalPages; i++) {
       final isFirstPage = i == 0;
@@ -617,7 +586,18 @@ class ResumeTemplate1Generator {
             )
           : null;
 
-      final leftWidgets = i < leftPages.length ? leftPages[i] : [];
+      final leftContent = <pw.Widget>[
+        if (profileImageWidget != null) ...[
+          profileImageWidget,
+          pw.SizedBox(height: 10),
+        ],
+        ...((i < leftPages.length) ? leftPages[i] : []),
+      ];
+      final List<pw.Widget> rightContent = i < rightPages.length
+          ? rightPages[i]
+          : (i == 0 && rightPages.isNotEmpty
+              ? rightPages[0].sublist(rightPages[0].length)
+              : []);
 
       pdf.addPage(
         pw.Page(
@@ -626,7 +606,7 @@ class ResumeTemplate1Generator {
           build: (context) => pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Left Column - Profile & Skills
+              // Left Column with Gradient Background
               pw.Container(
                 width: 200,
                 child: pw.Stack(
@@ -664,26 +644,20 @@ class ResumeTemplate1Generator {
                       padding: pw.EdgeInsets.all(10),
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          if (profileImageWidget != null) ...[
-                            profileImageWidget,
-                            pw.SizedBox(height: 10),
-                          ],
-                          ...leftWidgets,
-                        ],
+                        children: leftContent,
                       ),
                     ),
                   ],
                 ),
               ),
 
-              // Right Column - PROFILLE & Experience & Education
+              // Right Column
               pw.Container(
-                padding: pw.EdgeInsets.only(left: 20, right: 20),
+                padding: pw.EdgeInsets.only(left: 20, right: 20, top: 20),
                 width: PdfPageFormat.a4.width - 200,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: i < rightPages.length ? rightPages[i] : [],
+                  children: rightContent,
                 ),
               ),
             ],

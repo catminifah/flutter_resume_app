@@ -6,10 +6,10 @@ class DotIndicator extends StatelessWidget {
   final double dotSize;
 
   const DotIndicator({
-    Key? key,
+    super.key,
     required this.isActive,
     this.dotSize = 12,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

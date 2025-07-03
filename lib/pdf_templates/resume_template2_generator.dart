@@ -512,7 +512,7 @@ class ResumeTemplate2Generator {
     final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
     final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
     final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
-    final EBGaramond_Bold = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final ebgaramondBold = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
 
     final PdfColor backgroundColor = PdfColor(0, 0, 0);
 

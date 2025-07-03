@@ -7,10 +7,10 @@ class TwinklingStarIcon extends StatefulWidget {
   final List<Color> colorPool;
 
   const TwinklingStarIcon({
-    Key? key,
+    super.key,
     this.size = 30,
     this.colorPool = const [Colors.pink, Colors.yellow, Colors.lightBlueAccent],
-  }) : super(key: key);
+  });
 
   @override
   State<TwinklingStarIcon> createState() => _TwinklingStarIconState();

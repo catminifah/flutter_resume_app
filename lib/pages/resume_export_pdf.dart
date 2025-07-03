@@ -12,7 +12,7 @@ import 'package:share_plus/share_plus.dart';
 class ResumeExportPDF extends StatefulWidget {
   final Uint8List? pdfBytes;
 
-  const ResumeExportPDF({Key? key, this.pdfBytes}) : super(key: key);
+  const ResumeExportPDF({super.key, this.pdfBytes});
 
   @override
   State<ResumeExportPDF> createState() => _ResumeExportPDFState();

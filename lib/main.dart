@@ -35,14 +35,6 @@ class ResumeApp extends StatelessWidget {
       builder: (context, child) {
         return Consumer<ThemeProvider>(
           builder: (context, themeProvider, _) {
-            if (themeProvider.currentTheme == null) {
-              return const MaterialApp(
-                home: Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                ),
-              );
-            }
-
             return MaterialApp(
               title: 'Star Resume',
               debugShowCheckedModeBanner: false,

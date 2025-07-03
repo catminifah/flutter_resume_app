@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ResumePreviewScreen extends StatefulWidget {
-  const ResumePreviewScreen({Key? key}) : super(key: key);
+  const ResumePreviewScreen({super.key});
 
   @override
   _ResumePreviewScreenState createState() => _ResumePreviewScreenState();

@@ -7,7 +7,7 @@ import 'package:flutter_resume_app/theme/dynamic_background.dart';
 import 'package:twinkling_stars/twinkling_stars.dart';
 
 class ResumeTipsScreen extends StatefulWidget {
-  const ResumeTipsScreen({Key? key}) : super(key: key);
+  const ResumeTipsScreen({super.key});
 
   @override
   _ResumeTipsScreen createState() => _ResumeTipsScreen();

@@ -17,7 +17,7 @@ class SparkleBurstEffect extends StatefulWidget {
   final EffectPosition effectPosition;
 
   const SparkleBurstEffect({
-    Key? key,
+    super.key,
     required this.center,
     this.radius = 40,
     this.sparkleCount = 15,
@@ -27,7 +27,7 @@ class SparkleBurstEffect extends StatefulWidget {
     this.duration = const Duration(milliseconds: 800),
     this.effectPosition = EffectPosition.center,
     this.onComplete,
-  }) : super(key: key);
+  });
 
   @override
   _SparkleBurstEffectState createState() => _SparkleBurstEffectState();
