@@ -189,81 +189,93 @@ class ResumeTemplate1Generator {
 
   // Skills
   for (final skillCategory in resume.skills) {
-    final title = skillCategory.category.trim();
-    final skills = skillCategory.items.where((s) => s.trim().isNotEmpty).toList();
+      final title = skillCategory.category.trim();
+      final skills =
+          skillCategory.items.where((s) => s.trim().isNotEmpty).toList();
 
-    if (title.isEmpty && skills.isEmpty) continue;
+      if (title.isEmpty && skills.isEmpty) continue;
 
-    if (title.isNotEmpty) {
-      widgets.addAll([
-        pw.Text(title,
-            style: pw.TextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.white)),
-        pw.SizedBox(height: 5),
-      ]);
+      if (title.isNotEmpty) {
+        widgets.addAll([
+          pw.Text(title,
+              style: pw.TextStyle(
+                  fontSize: 16,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.white)),
+          pw.SizedBox(height: 5),
+        ]);
+      }
+
+      for (final skill in skills) {
+        widgets.add(
+          pw.Padding(
+            padding: pw.EdgeInsets.only(left: 10, bottom: 2),
+            child: pw.Row(children: [
+              pw.Container(
+                width: 3,
+                height: 3,
+                decoration: pw.BoxDecoration(
+                    shape: pw.BoxShape.circle, color: PdfColors.white),
+              ),
+              pw.SizedBox(width: 5),
+              pw.Text(skill,
+                  style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+            ]),
+          ),
+        );
+      }
+
+      widgets.add(pw.SizedBox(height: 10));
     }
 
-    for (final skill in skills) {
-      widgets.add(
-        pw.Padding(
-          padding: pw.EdgeInsets.only(left: 10, bottom: 2),
-          child: pw.Row(children: [
-            pw.Container(
-              width: 3,
-              height: 3,
-              decoration: pw.BoxDecoration(shape: pw.BoxShape.circle, color: PdfColors.white),
-            ),
-            pw.SizedBox(width: 5),
-            pw.Text(skill,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
-          ]),
-        ),
+    widgets.add(pw.SizedBox(height: 5));
+
+    return widgets;
+  }
+
+  List<pw.Widget> splitTextToParagraphs(
+    String text, {
+    double fontSize = 10,
+    PdfColor color = PdfColors.grey800,
+    pw.Font? font,
+  }) {
+    const int maxLength = 100;
+    final paragraphs = <pw.Widget>[];
+
+    for (int i = 0; i < text.length; i += maxLength) {
+      final end = (i + maxLength > text.length) ? text.length : i + maxLength;
+      final chunk = text.substring(i, end);
+      paragraphs.add(
+        pw.Text(chunk,
+            style: pw.TextStyle(fontSize: fontSize, color: color, font: font)),
       );
     }
 
-    widgets.add(pw.SizedBox(height: 10));
+    return paragraphs;
   }
 
-  widgets.add(pw.SizedBox(height: 5));
-
-  return widgets;
-}
-
-  List<pw.Widget> generateRightColumnWidgets(
+  Map<String, List<pw.Widget>> generateRightColumnWidgets(
     ResumeModel resume,
     pw.Font EBGaramondBoldFont,
     pw.Font EBGaramondFont,
   ) {
-    final widgets = <pw.Widget>[];
-
-    final certifications = resume.certifications.map((cert) => {
-              'title': cert.title.trim(),
-              'issuer': cert.issuer.trim(),
-              'date': cert.date.trim(),
-            }).toList();
-
-    final projects = resume.projects.map((proj) => {
-              'title': proj.name.trim(),
-              'description': proj.description.trim(),
-              'link': proj.link.trim(),
-              'tech': proj.tech.trim(),
-            }).toList();
-
-    widgets.add(pw.SizedBox(height: 20));
+    final profileSection = <pw.Widget>[];
+    final educationSection = <pw.Widget>[];
+    final experienceSection = <pw.Widget>[];
+    final projectSection = <pw.Widget>[];
+    final certificationSection = <pw.Widget>[];
 
     // PROFILE
     if (resume.aboutMe.isNotEmpty) {
-      widgets.addAll([
+      profileSection.addAll([
         pw.Text('PROFILE',
             style: pw.TextStyle(
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue)),
         pw.SizedBox(height: 5),
-        pw.Text(resume.aboutMe,
-            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey)),
+        ...splitTextToParagraphs(resume.aboutMe,
+            font: EBGaramondFont, fontSize: 10, color: PdfColors.grey),
         pw.SizedBox(height: 10),
         pw.Divider(thickness: 1, color: PdfColors.grey),
       ]);
@@ -275,7 +287,7 @@ class ResumeTemplate1Generator {
         edu.endDate.trim().isNotEmpty ||
         edu.school.trim().isNotEmpty ||
         edu.degree.trim().isNotEmpty)) {
-      widgets.addAll([
+      educationSection.addAll([
         pw.Text('Education',
             style: pw.TextStyle(
                 fontSize: 16,
@@ -287,13 +299,11 @@ class ResumeTemplate1Generator {
       for (final edu in resume.educationList) {
         if (edu.school.trim().isEmpty && edu.degree.trim().isEmpty) continue;
 
-        final duration = (edu.startDate.trim().isNotEmpty ||
-                edu.endDate.trim().isNotEmpty)
-            ? '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}'
-            : '';
+        final duration =
+            '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}';
 
         if (edu.school.isNotEmpty) {
-          widgets.add(pw.Text(edu.school,
+          educationSection.add(pw.Text(edu.school,
               style: pw.TextStyle(
                   fontSize: 14,
                   fontWeight: pw.FontWeight.bold,
@@ -301,22 +311,22 @@ class ResumeTemplate1Generator {
         }
 
         if (duration.isNotEmpty) {
-          widgets.add(pw.Text(duration,
+          educationSection.add(pw.Text(duration,
               style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
         }
 
         if (edu.degree.isNotEmpty) {
-          widgets.add(pw.Text(edu.degree,
+          educationSection.add(pw.Text(edu.degree,
               style: pw.TextStyle(
                   fontSize: 13,
                   color: PdfColors.grey900,
                   font: EBGaramondFont)));
         }
 
-        widgets.add(pw.SizedBox(height: 10));
+        educationSection.add(pw.SizedBox(height: 10));
       }
 
-      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+      educationSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
     }
 
     // EXPERIENCE
@@ -326,7 +336,7 @@ class ResumeTemplate1Generator {
         exp.startDate.trim().isNotEmpty ||
         exp.endDate.trim().isNotEmpty ||
         exp.position.trim().isNotEmpty)) {
-      widgets.addAll([
+      experienceSection.addAll([
         pw.Text('Work Experience',
             style: pw.TextStyle(
                 fontSize: 16,
@@ -336,35 +346,50 @@ class ResumeTemplate1Generator {
       ]);
 
       for (final work in resume.experiences) {
-        final duration = '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
+        final duration =
+            '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
 
-        widgets.addAll([
-          pw.Text(work.company,
+        experienceSection.add(pw.Text(work.company,
+            style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.bold,
+                font: EBGaramondBoldFont)));
+
+        experienceSection.add(pw.Text(duration,
+            style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
+
+        if (work.position.trim().isNotEmpty) {
+          experienceSection.add(pw.Text(work.position,
               style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.bold,
-                  font: EBGaramondBoldFont)),
-          pw.Text(duration,
-              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-          if (work.position.trim().isNotEmpty)
-            pw.Text(work.position,
-                style: pw.TextStyle(
-                    fontSize: 12,
-                    color: PdfColors.grey900,
-                    font: EBGaramondFont)),
-          if (work.description.trim().isNotEmpty)
-            pw.Text(work.description,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-          pw.SizedBox(height: 10),
-        ]);
+                  fontSize: 12,
+                  color: PdfColors.grey900,
+                  font: EBGaramondFont)));
+        }
+
+        if (work.description.trim().isNotEmpty) {
+          experienceSection.addAll([
+            ...splitTextToParagraphs(work.description,
+                fontSize: 10, color: PdfColors.grey800),
+          ]);
+          experienceSection.add(pw.SizedBox(height: 10));
+        }
       }
 
-      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+      experienceSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
     }
 
     // PROJECTS
+    final projects = resume.projects
+        .map((proj) => {
+              'title': proj.name.trim(),
+              'description': proj.description.trim(),
+              'link': proj.link.trim(),
+              'tech': proj.tech.trim(),
+            })
+        .toList();
+
     if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) {
-      widgets.addAll([
+      projectSection.addAll([
         pw.Text('Projects',
             style: pw.TextStyle(
                 fontSize: 16,
@@ -374,32 +399,49 @@ class ResumeTemplate1Generator {
       ]);
 
       for (final p in projects) {
-        widgets.addAll([
-          if (p['title']!.isNotEmpty)
+        if (p['title']!.isNotEmpty) {
+          projectSection.add(
             pw.Text(p['title']!,
                 style: pw.TextStyle(
                     fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                     font: EBGaramondBoldFont)),
-          if (p['tech']!.isNotEmpty)
-            pw.Text(p['tech']!,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-          if (p['description']!.isNotEmpty)
-            pw.Text(p['description']!,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-          if (p['link']!.isNotEmpty)
-            pw.Text(p['link']!,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
-          pw.SizedBox(height: 10),
-        ]);
+          );
+        }
+
+        if (p['tech']!.isNotEmpty) {
+          projectSection.add(pw.Text(p['tech']!,
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)));
+        }
+
+        if (p['description']!.isNotEmpty) {
+          projectSection.addAll([
+            ...splitTextToParagraphs(p['description']!,
+                fontSize: 10, color: PdfColors.grey800),
+          ]);
+        }
+
+        if (p['link']!.isNotEmpty) {
+          projectSection.add(pw.Text(p['link']!,
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)));
+          projectSection.add(pw.SizedBox(height: 10));
+        }
       }
 
-      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+      projectSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
     }
 
     // CERTIFICATIONS
+    final certifications = resume.certifications
+        .map((cert) => {
+              'title': cert.title.trim(),
+              'issuer': cert.issuer.trim(),
+              'date': cert.date.trim(),
+            })
+        .toList();
+
     if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) {
-      widgets.addAll([
+      certificationSection.addAll([
         pw.Text('Certifications',
             style: pw.TextStyle(
                 fontSize: 16,
@@ -409,28 +451,38 @@ class ResumeTemplate1Generator {
       ]);
 
       for (final c in certifications) {
-        widgets.addAll([
-          if (c['title']!.isNotEmpty)
-            pw.Text(c['title']!,
-                style: pw.TextStyle(
-                    fontSize: 14,
-                    fontWeight: pw.FontWeight.bold,
-                    font: EBGaramondBoldFont)),
-          if (c['date']!.isNotEmpty)
-            pw.Text(c['date']!,
-                style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-          if (c['issuer']!.isNotEmpty)
-            pw.Text(c['issuer']!,
-                style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
-          pw.SizedBox(height: 10),
-        ]);
+        if (c['title']!.isNotEmpty) {
+          certificationSection.add(pw.Text(c['title']!,
+              style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                  font: EBGaramondBoldFont)));
+        }
+
+        if (c['date']!.isNotEmpty) {
+          certificationSection.add(pw.Text(c['date']!,
+              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
+        }
+
+        if (c['issuer']!.isNotEmpty) {
+          certificationSection.add(pw.Text(c['issuer']!,
+              style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)));
+          certificationSection.add(pw.SizedBox(height: 10));
+        }
       }
 
-      widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey));
+      certificationSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
     }
 
-    return widgets;
+    return {
+      'profile': profileSection,
+      'education': educationSection,
+      'experience': experienceSection,
+      'projects': projectSection,
+      'certifications': certificationSection,
+    };
   }
+
 
   double estimateWidgetHeight(pw.Widget widget) {
     if (widget is pw.SizedBox) {
@@ -446,8 +498,8 @@ class ResumeTemplate1Generator {
         final text = (widget as dynamic).text.toString();
         final style = (widget as dynamic).style;
         final fontSize = style?.fontSize ?? 12.0;
-        final lines = text.split('\n').length;
-        return fontSize * lines + 4;
+        final lineCount = (text.length / 80).ceil();
+        return fontSize * lineCount + 4;
       } catch (_) {
         return 16.0;
       }
@@ -496,8 +548,11 @@ class ResumeTemplate1Generator {
     for (var widget in widgets) {
       final double estimatedHeight = estimateWidgetHeight(widget);
 
-      if (currentHeight + estimatedHeight > maxHeightPerPage &&
-          currentPage.isNotEmpty) {
+      if (estimatedHeight > maxHeightPerPage) {
+        print('⚠️ Widget estimated too tall for a single page: $estimatedHeight > $maxHeightPerPage');
+      }
+
+      if (currentHeight + estimatedHeight > maxHeightPerPage && currentPage.isNotEmpty) {
         pages.add(currentPage);
         currentPage = [];
         currentHeight = 0;
@@ -535,10 +590,28 @@ class ResumeTemplate1Generator {
     final leftColumnWidgets = generateLeftColumnWidgets( resume, ARIBLKFont, emailIcon, phoneIcon, addressIcon, wabIcon);
     final rightColumnWidgets = generateRightColumnWidgets( resume, EBGaramondBoldFont, EBGaramondFont);
 
+    final profileSection = rightColumnWidgets['profile']!;
+    final remainingWidgets = [
+      ...rightColumnWidgets['education']!,
+      ...rightColumnWidgets['experience']!,
+      ...rightColumnWidgets['projects']!,
+      ...rightColumnWidgets['certifications']!,
+    ];
+
+    final profileHeight = profileSection.fold<double>(
+      0.0, (sum, w) => sum + estimateWidgetHeight(w),
+    );
+
     final maxHeight = 1000.0;
     final leftPages = paginateWidgets(leftColumnWidgets, maxHeight);
-    final rightPages = paginateWidgets(rightColumnWidgets, maxHeight);
+    final rightPages = paginateWidgets(remainingWidgets, maxHeight - profileHeight);
     final totalPages = max(leftPages.length, rightPages.length);
+
+    if (rightPages.isNotEmpty) {
+      rightPages[0].insertAll(0, profileSection);
+    } else {
+      rightPages.add([...profileSection]);
+    }
 
     while (leftPages.length < totalPages) {
       leftPages.add([]);
@@ -548,6 +621,9 @@ class ResumeTemplate1Generator {
     }
 
     for (int i = 0; i < totalPages; i++) {
+      print('>>> Rendering page $i');
+      print('   Left: ${leftPages[i].length} widgets');
+      print('   Right: ${rightPages[i].length} widgets');
       final isFirstPage = i == 0;
 
       final profileImageWidget = (isFirstPage && resume.profileImage != null)
@@ -593,11 +669,7 @@ class ResumeTemplate1Generator {
         ],
         ...((i < leftPages.length) ? leftPages[i] : []),
       ];
-      final List<pw.Widget> rightContent = i < rightPages.length
-          ? rightPages[i]
-          : (i == 0 && rightPages.isNotEmpty
-              ? rightPages[0].sublist(rightPages[0].length)
-              : []);
+      final List<pw.Widget> rightContent = i < rightPages.length ? rightPages[i] : [];
 
       pdf.addPage(
         pw.Page(
