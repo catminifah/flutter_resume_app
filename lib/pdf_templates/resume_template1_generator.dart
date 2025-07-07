@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle, Uint8List, ByteData;
 import 'package:flutter_resume_app/models/resume_model.dart';
+import 'package:flutter_resume_app/pdf_templates/pdf_utils.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -21,13 +22,10 @@ class ResumeTemplate1Generator {
 }) {
   final widgets = <pw.Widget>[];
 
-  final languages = resume.languages
-      .map((lang) => {
-            'name': lang.language.trim(),
-            'level': lang.proficiency.trim(),
-          })
-      .where((lang) => lang['name']!.isNotEmpty || lang['level']!.isNotEmpty)
-      .toList();
+  final languages = resume.languages.map((lang) => {
+    'name': lang.language.trim(),
+    'level': lang.proficiency.trim(),
+  }).where((lang) => lang['name']!.isNotEmpty || lang['level']!.isNotEmpty).toList();
 
   // Profile Image
   if (showProfileImage && resume.profileImage != null) {
@@ -214,8 +212,7 @@ class ResumeTemplate1Generator {
               pw.Container(
                 width: 3,
                 height: 3,
-                decoration: pw.BoxDecoration(
-                    shape: pw.BoxShape.circle, color: PdfColors.white),
+                decoration: pw.BoxDecoration( shape: pw.BoxShape.circle, color: PdfColors.white),
               ),
               pw.SizedBox(width: 5),
               pw.Text(skill,
@@ -233,7 +230,7 @@ class ResumeTemplate1Generator {
     return widgets;
   }
 
-  List<pw.Widget> splitTextToParagraphs(
+  /*List<pw.Widget> splitTextToParagraphs(
     String text, {
     double fontSize = 10,
     PdfColor color = PdfColors.grey800,
@@ -252,7 +249,7 @@ class ResumeTemplate1Generator {
     }
 
     return paragraphs;
-  }
+  }*/
 
   Map<String, List<pw.Widget>> generateRightColumnWidgets(
     ResumeModel resume,
@@ -299,8 +296,7 @@ class ResumeTemplate1Generator {
       for (final edu in resume.educationList) {
         if (edu.school.trim().isEmpty && edu.degree.trim().isEmpty) continue;
 
-        final duration =
-            '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}';
+        final duration = '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}';
 
         if (edu.school.isNotEmpty) {
           educationSection.add(pw.Text(edu.school,
@@ -379,14 +375,12 @@ class ResumeTemplate1Generator {
     }
 
     // PROJECTS
-    final projects = resume.projects
-        .map((proj) => {
+    final projects = resume.projects.map((proj) => {
               'title': proj.name.trim(),
               'description': proj.description.trim(),
               'link': proj.link.trim(),
               'tech': proj.tech.trim(),
-            })
-        .toList();
+            }).toList();
 
     if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) {
       projectSection.addAll([
@@ -432,13 +426,11 @@ class ResumeTemplate1Generator {
     }
 
     // CERTIFICATIONS
-    final certifications = resume.certifications
-        .map((cert) => {
+    final certifications = resume.certifications.map((cert) => {
               'title': cert.title.trim(),
               'issuer': cert.issuer.trim(),
               'date': cert.date.trim(),
-            })
-        .toList();
+            }).toList();
 
     if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) {
       certificationSection.addAll([
@@ -484,7 +476,7 @@ class ResumeTemplate1Generator {
   }
 
 
-  double estimateWidgetHeight(pw.Widget widget) {
+  /*double estimateWidgetHeight(pw.Widget widget) {
     if (widget is pw.SizedBox) {
       try {
         final height = (widget as dynamic).height;
@@ -538,9 +530,9 @@ class ResumeTemplate1Generator {
     if (widget is pw.Divider) return 8;
 
     return 20.0;
-  }
+  }*/
 
-  List<List<pw.Widget>> paginateWidgets( List<pw.Widget> widgets, double maxHeightPerPage) {
+  /*List<List<pw.Widget>> paginateWidgets( List<pw.Widget> widgets, double maxHeightPerPage) {
     final List<List<pw.Widget>> pages = [];
     List<pw.Widget> currentPage = [];
     double currentHeight = 0;
@@ -549,7 +541,7 @@ class ResumeTemplate1Generator {
       final double estimatedHeight = estimateWidgetHeight(widget);
 
       if (estimatedHeight > maxHeightPerPage) {
-        print('⚠️ Widget estimated too tall for a single page: $estimatedHeight > $maxHeightPerPage');
+        print('Widget estimated too tall for a single page: $estimatedHeight > $maxHeightPerPage');
       }
 
       if (currentHeight + estimatedHeight > maxHeightPerPage && currentPage.isNotEmpty) {
@@ -567,13 +559,10 @@ class ResumeTemplate1Generator {
     }
 
     return pages;
-  }
+  }*/
 
   Future<Future<Uint8List>> generatePdfFromResume(ResumeModel resume) async {
     final pdf = pw.Document();
-
-    // final bgImageData = await rootBundle.load('images/background.jpg');
-    // final bgImageBytes = bgImageData.buffer.asUint8List();
 
     final pageWidth = PdfPageFormat.a4.width;
     final pageHeight = PdfPageFormat.a4.height;
@@ -621,9 +610,9 @@ class ResumeTemplate1Generator {
     }
 
     for (int i = 0; i < totalPages; i++) {
-      print('>>> Rendering page $i');
+      /*print('>>> Rendering page $i');
       print('   Left: ${leftPages[i].length} widgets');
-      print('   Right: ${rightPages[i].length} widgets');
+      print('   Right: ${rightPages[i].length} widgets');*/
       final isFirstPage = i == 0;
 
       final profileImageWidget = (isFirstPage && resume.profileImage != null)
@@ -697,12 +686,9 @@ class ResumeTemplate1Generator {
                           for (int i = 0; i < steps; i++) {
                             for (double y = 0; y < segmentHeight; y++) {
                               final t = y / segmentHeight;
-                              final r = colors[i].red +
-                                  t * (colors[i + 1].red - colors[i].red);
-                              final g = colors[i].green +
-                                  t * (colors[i + 1].green - colors[i].green);
-                              final b = colors[i].blue +
-                                  t * (colors[i + 1].blue - colors[i].blue);
+                              final r = colors[i].red + t * (colors[i + 1].red - colors[i].red);
+                              final g = colors[i].green + t * (colors[i + 1].green - colors[i].green);
+                              final b = colors[i].blue + t * (colors[i + 1].blue - colors[i].blue);
                               canvas
                                 ..setFillColor(PdfColor(r, g, b))
                                 ..drawRect(0, i * segmentHeight + y, size.x, 1)
