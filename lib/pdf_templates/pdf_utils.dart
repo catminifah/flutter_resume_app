@@ -99,12 +99,29 @@ List<pw.Widget> splitTextToParagraphs(
 }) {
   const int maxLength = 100;
   final paragraphs = <pw.Widget>[];
+  final buffer = StringBuffer();
+  int currentLength = 0;
 
-  for (int i = 0; i < text.length; i += maxLength) {
-    final end = (i + maxLength > text.length) ? text.length : i + maxLength;
-    final chunk = text.substring(i, end);
+  final words = RegExp(r'(\s+|[^\s]+)').allMatches(text).map((m) => m.group(0)!).toList();
+
+  for (final word in words) {
+    if (currentLength + word.length > maxLength) {
+      if (buffer.isNotEmpty) {
+        paragraphs.add(
+          pw.Text(buffer.toString().trim(),
+              style: pw.TextStyle(fontSize: fontSize, color: color, font: font)),
+        );
+        buffer.clear();
+        currentLength = 0;
+      }
+    }
+    buffer.write(word);
+    currentLength += word.length;
+  }
+  
+  if (buffer.isNotEmpty) {
     paragraphs.add(
-      pw.Text(chunk,
+      pw.Text(buffer.toString().trim(),
           style: pw.TextStyle(fontSize: fontSize, color: color, font: font)),
     );
   }

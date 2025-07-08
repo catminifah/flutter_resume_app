@@ -389,15 +389,20 @@ class ResumeTemplate2Generator {
     pdf.PdfColor backgroundColor,
   ) {
     final widgets = <pw.Widget>[];
+    final fullnameSection = <pw.Widget>[];
     final profileSection = <pw.Widget>[];
     final educationSection = <pw.Widget>[];
     final experienceSection = <pw.Widget>[];
     final projectSection = <pw.Widget>[];
     final certificationSection = <pw.Widget>[];
 
-    // Full Name
+    widgets.add(
+      pw.SizedBox(height: 20),
+    );
+
+    // Full NAME
     if (resume.firstname.isNotEmpty || resume.lastname.isNotEmpty) {
-      widgets.add(
+      fullnameSection.add(
         pw.Text(
           '${resume.firstname.toUpperCase()} ${resume.lastname.toUpperCase()}',
           style: pw.TextStyle(
@@ -408,7 +413,9 @@ class ResumeTemplate2Generator {
           softWrap: true,
         ),
       );
-      widgets.add(pw.SizedBox(height: 10));
+      fullnameSection.add(
+        pw.SizedBox(height: 10),
+      );
     }
 
     // PROFILE
@@ -446,22 +453,39 @@ class ResumeTemplate2Generator {
       ]);
 
       for (final edu in resume.educationList) {
-        final duration =
-            '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}';
+        final startDate = edu.startDate.trim();
+        final endDate = edu.endDate.trim();
+        final hasStart = startDate.isNotEmpty;
+        final hasEnd = endDate.isNotEmpty;
+        final duration = hasStart && hasEnd
+            ? '$startDate - $endDate'
+            : hasStart
+                ? startDate
+                : hasEnd
+                    ? endDate
+                    : '';
 
         educationSection.add(
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              if (edu.school.isNotEmpty)
-                pw.Text(edu.school,
-                    style: pw.TextStyle(
-                        fontSize: 14,
-                        fontWeight: pw.FontWeight.bold,
-                        font: EBGaramondBoldFont)),
-              if (duration.trim() != ' - Present')
-                pw.Text(duration,
-                    style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  if (edu.school.isNotEmpty)
+                    pw.Text(edu.school,
+                        style: pw.TextStyle(
+                            fontSize: 14,
+                            fontWeight: pw.FontWeight.bold,
+                            font: EBGaramondBoldFont)),
+                  if (duration.isNotEmpty) ...[
+                    pw.SizedBox(width: 6),
+                    pw.Text(duration,
+                        style:
+                            pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                  ],
+                ],
+              ),
               if (edu.degree.isNotEmpty)
                 pw.Text(edu.degree,
                     style: pw.TextStyle(
@@ -492,8 +516,7 @@ class ResumeTemplate2Generator {
       ]);
 
       for (final work in resume.experiences) {
-        final duration =
-            '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
+        final duration = '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
 
         experienceSection.add(
           pw.Column(
@@ -507,8 +530,7 @@ class ResumeTemplate2Generator {
                           fontWeight: pw.FontWeight.bold,
                           font: EBGaramondBoldFont)),
                 pw.SizedBox(width: 5),
-                pw.Text(duration,
-                    style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                pw.Text(duration, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
               ]),
               if (work.position.isNotEmpty)
                 pw.Text(work.position,
@@ -527,14 +549,12 @@ class ResumeTemplate2Generator {
     }
 
     // PROJECTS
-    final projects = resume.projects
-        .map((proj) => {
+    final projects = resume.projects.map((proj) => {
               'title': proj.name.trim(),
               'description': proj.description.trim(),
               'link': proj.link.trim(),
               'tech': proj.tech.trim(),
-            })
-        .toList();
+            }).toList();
 
     if (projects.any((p) => p.values.any((v) => v.isNotEmpty))) {
       projectSection.addAll([
@@ -575,13 +595,11 @@ class ResumeTemplate2Generator {
     }
 
     // CERTIFICATIONS
-    final certifications = resume.certifications
-        .map((cert) => {
+    final certifications = resume.certifications.map((cert) => {
               'title': cert.title.trim(),
               'issuer': cert.issuer.trim(),
               'date': cert.date.trim(),
-            })
-        .toList();
+            }).toList();
 
     if (certifications.any((c) => c.values.any((v) => v.isNotEmpty))) {
       certificationSection.addAll([
@@ -612,8 +630,7 @@ class ResumeTemplate2Generator {
               ]),
               if (cert['issuer']!.isNotEmpty)
                 pw.Text(cert['issuer']!,
-                    style:
-                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+                    style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
               pw.SizedBox(height: 10),
             ],
           ),
@@ -623,6 +640,7 @@ class ResumeTemplate2Generator {
 
     return {
       'widgets': widgets,
+      'fullname': fullnameSection,
       'profile': profileSection,
       'education': educationSection,
       'experience': experienceSection,
@@ -822,10 +840,7 @@ class ResumeTemplate2Generator {
               final String categoryTitle = skillCategory.category.trim();
               final List<String> skills = skillCategory.items;
               final bool allSkillsEmpty = skills.every((s) => s.trim().isEmpty);
-              final bool isCategoryEmpty =
-                  categoryTitle.isEmpty && allSkillsEmpty;
-
-              //if (isCategoryEmpty) return pw.SizedBox();
+              final bool isCategoryEmpty = categoryTitle.isEmpty && allSkillsEmpty;
 
               return pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -860,8 +875,7 @@ class ResumeTemplate2Generator {
                           pw.SizedBox(width: 5),
                           pw.Text(
                             skillText,
-                            style: pw.TextStyle(
-                                fontSize: 10, color: PdfColors.white),
+                            style: pw.TextStyle( fontSize: 10, color: PdfColors.white),
                           ),
                         ],
                       ),
@@ -910,14 +924,10 @@ class ResumeTemplate2Generator {
     final addressIcon = await loadIcon('assets/icons/address_white.png');
     final wabIcon = await loadIcon('assets/icons/web_white.png');
 
-    final ARIBLKFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
-    final EBGaramondBoldFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
-    final EBGaramondFont =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
-    final ebgaramondBold =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final ARIBLKFont = pw.Font.ttf(await rootBundle.load('assets/fonts/ARIBLK.TTF'));
+    final EBGaramondBoldFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
+    final EBGaramondFont = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond.ttf'));
+    final ebgaramondBold = pw.Font.ttf(await rootBundle.load('assets/fonts/EBGaramond-Bold.ttf'));
 
     final PdfColor backgroundColor = PdfColor(0, 0, 0);
 
@@ -925,9 +935,12 @@ class ResumeTemplate2Generator {
     final rightColumnWidgets = generateRightColumnWidgets( resume, emailIcon, phoneIcon, addressIcon, wabIcon, backgroundColor);
 
 
-    final profileSection = leftColumnWidgets['widgets']!;
+    final profileSection = [
+      ...leftColumnWidgets['widgets']!,
+      ...leftColumnWidgets['fullname']!,
+    ];
+    
     final remainingWidgets = [
-      ...leftColumnWidgets['profileSection']!,
       ...leftColumnWidgets['profile']!,
       ...leftColumnWidgets['education']!,
       ...leftColumnWidgets['experience']!,
@@ -940,8 +953,8 @@ class ResumeTemplate2Generator {
     );
 
     final maxHeight = 1000.0;
-    final leftPages = paginateWidgets(remainingWidgets, maxHeight);
-    final rightPages = paginateWidgets(rightColumnWidgets, maxHeight - profileHeight);
+    final leftPages = paginateWidgets(remainingWidgets, maxHeight - profileHeight);
+    final rightPages = paginateWidgets(rightColumnWidgets, maxHeight);
     final totalPages = max(leftPages.length, rightPages.length);
 
     if (leftPages.isNotEmpty) {

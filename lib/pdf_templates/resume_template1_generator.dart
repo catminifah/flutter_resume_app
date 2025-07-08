@@ -188,8 +188,7 @@ class ResumeTemplate1Generator {
   // Skills
   for (final skillCategory in resume.skills) {
       final title = skillCategory.category.trim();
-      final skills =
-          skillCategory.items.where((s) => s.trim().isNotEmpty).toList();
+      final skills = skillCategory.items.where((s) => s.trim().isNotEmpty).toList();
 
       if (title.isEmpty && skills.isEmpty) continue;
 
@@ -294,32 +293,49 @@ class ResumeTemplate1Generator {
       ]);
 
       for (final edu in resume.educationList) {
-        if (edu.school.trim().isEmpty && edu.degree.trim().isEmpty) continue;
+        final startDate = edu.startDate.trim();
+        final endDate = edu.endDate.trim();
+        final hasStart = startDate.isNotEmpty;
+        final hasEnd = endDate.isNotEmpty;
+        final duration = hasStart && hasEnd
+            ? '$startDate - $endDate'
+            : hasStart
+                ? startDate
+                : hasEnd
+                    ? endDate
+                    : '';
 
-        final duration = '${edu.startDate.trim()} - ${edu.endDate.trim().isEmpty ? 'Present' : edu.endDate.trim()}';
-
-        if (edu.school.isNotEmpty) {
-          educationSection.add(pw.Text(edu.school,
-              style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.bold,
-                  font: EBGaramondBoldFont)));
-        }
-
-        if (duration.isNotEmpty) {
-          educationSection.add(pw.Text(duration,
-              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
-        }
-
-        if (edu.degree.isNotEmpty) {
-          educationSection.add(pw.Text(edu.degree,
-              style: pw.TextStyle(
-                  fontSize: 13,
-                  color: PdfColors.grey900,
-                  font: EBGaramondFont)));
-        }
-
-        educationSection.add(pw.SizedBox(height: 10));
+        educationSection.add(
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  if (edu.school.isNotEmpty)
+                    pw.Text(edu.school,
+                        style: pw.TextStyle(
+                            fontSize: 14,
+                            fontWeight: pw.FontWeight.bold,
+                            font: EBGaramondBoldFont)),
+                  if (duration.isNotEmpty) ...[
+                    pw.SizedBox(width: 6),
+                    pw.Text(duration,
+                        style:
+                            pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                  ],
+                ],
+              ),
+              if (edu.degree.isNotEmpty)
+                pw.Text(edu.degree,
+                    style: pw.TextStyle(
+                        fontSize: 13,
+                        color: PdfColors.grey900,
+                        font: EBGaramondFont)),
+              pw.SizedBox(height: 10),
+            ],
+          ),
+        );
       }
 
       educationSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
@@ -342,33 +358,35 @@ class ResumeTemplate1Generator {
       ]);
 
       for (final work in resume.experiences) {
-        final duration =
-            '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
+        final duration = '${work.startDate.trim()} - ${work.endDate.trim().isEmpty ? 'Present' : work.endDate.trim()}';
 
-        experienceSection.add(pw.Text(work.company,
-            style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
-                font: EBGaramondBoldFont)));
-
-        experienceSection.add(pw.Text(duration,
-            style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
-
-        if (work.position.trim().isNotEmpty) {
-          experienceSection.add(pw.Text(work.position,
-              style: pw.TextStyle(
-                  fontSize: 12,
-                  color: PdfColors.grey900,
-                  font: EBGaramondFont)));
-        }
-
-        if (work.description.trim().isNotEmpty) {
-          experienceSection.addAll([
-            ...splitTextToParagraphs(work.description,
-                fontSize: 10, color: PdfColors.grey800),
-          ]);
-          experienceSection.add(pw.SizedBox(height: 10));
-        }
+        experienceSection.add(
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Row(children: [
+                if (work.company.isNotEmpty)
+                  pw.Text(work.company,
+                      style: pw.TextStyle(
+                          fontSize: 14,
+                          fontWeight: pw.FontWeight.bold,
+                          font: EBGaramondBoldFont)),
+                pw.SizedBox(width: 5),
+                pw.Text(duration, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+              ]),
+              if (work.position.isNotEmpty)
+                pw.Text(work.position,
+                    style: pw.TextStyle(
+                        fontSize: 12,
+                        font: EBGaramondFont,
+                        color: PdfColors.grey900)),
+              if (work.description.isNotEmpty)
+                ...splitTextToParagraphs(work.description,
+                    fontSize: 10, color: PdfColors.grey800),
+              pw.SizedBox(height: 10),
+            ],
+          ),
+        );
       }
 
       experienceSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
@@ -442,25 +460,31 @@ class ResumeTemplate1Generator {
         pw.SizedBox(height: 5),
       ]);
 
-      for (final c in certifications) {
-        if (c['title']!.isNotEmpty) {
-          certificationSection.add(pw.Text(c['title']!,
-              style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.bold,
-                  font: EBGaramondBoldFont)));
-        }
-
-        if (c['date']!.isNotEmpty) {
-          certificationSection.add(pw.Text(c['date']!,
-              style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)));
-        }
-
-        if (c['issuer']!.isNotEmpty) {
-          certificationSection.add(pw.Text(c['issuer']!,
-              style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)));
-          certificationSection.add(pw.SizedBox(height: 10));
-        }
+      for (final cert in certifications) {
+        certificationSection.add(
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Row(children: [
+                if (cert['title']!.isNotEmpty)
+                  pw.Text(cert['title']!,
+                      style: pw.TextStyle(
+                          fontSize: 14,
+                          fontWeight: pw.FontWeight.bold,
+                          font: EBGaramondBoldFont)),
+                pw.SizedBox(width: 5),
+                if (cert['date']!.isNotEmpty)
+                  pw.Text(cert['date']!,
+                      style: pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+              ]),
+              if (cert['issuer']!.isNotEmpty)
+                pw.Text(cert['issuer']!,
+                    style:
+                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+              pw.SizedBox(height: 10),
+            ],
+          ),
+        );
       }
 
       certificationSection.add(pw.Divider(thickness: 1, color: PdfColors.grey));
