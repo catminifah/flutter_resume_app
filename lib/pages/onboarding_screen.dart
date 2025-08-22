@@ -195,7 +195,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Positioned(
                       left: 0,
                       right: 0,
-                      bottom: isLandscape ? 85 : 120,
+                      bottom: isLandscape ? 5 : 150,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(

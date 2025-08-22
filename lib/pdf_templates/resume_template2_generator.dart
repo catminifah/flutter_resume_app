@@ -650,7 +650,7 @@ class ResumeTemplate2Generator {
   }
 
 
-  List<pw.Widget> generateRightColumnWidgets(
+  /*List<pw.Widget> generateRightColumnWidgets(
       ResumeModel resume,
       Uint8List emailIcon,
       Uint8List phoneIcon,
@@ -890,6 +890,241 @@ class ResumeTemplate2Generator {
         ),
       ),
     );
+
+    return widgets;
+  }*/
+
+  List<pw.Widget> generateRightColumnWidgets(
+    ResumeModel resume,
+    Uint8List emailIcon,
+    Uint8List phoneIcon,
+    Uint8List addressIcon,
+    Uint8List wabIcon,
+    pdf.PdfColor backgroundColor, {
+    bool showProfileImage = false,
+  }) {
+    final widgets = <pw.Widget>[];
+
+    // Profile Image 
+    if (showProfileImage && resume.profileImage != null) {
+      widgets.add(
+        pw.Container(
+          width: 170,
+          height: 170,
+          color: backgroundColor,
+          child: pw.Image(
+            pw.MemoryImage(resume.profileImage!),
+            fit: pw.BoxFit.cover,
+          ),
+        ),
+      );
+      widgets.add(pw.SizedBox(height: 10));
+    }
+
+    // personal information (Email / Phone / Address / Websites)
+    final contactWidgets = <pw.Widget>[];
+
+    if (resume.email.isNotEmpty) {
+      contactWidgets.add(
+        pw.Row(
+          children: [
+            pw.Image(pw.MemoryImage(emailIcon), width: 12, height: 12),
+            pw.SizedBox(width: 5),
+            pw.Expanded(
+              child: pw.Text(resume.email,
+                  style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+            ),
+          ],
+        ),
+      );
+      contactWidgets.add(pw.SizedBox(height: 5));
+    }
+
+    if (resume.phoneNumber.isNotEmpty) {
+      contactWidgets.add(
+        pw.Row(
+          children: [
+            pw.Image(pw.MemoryImage(phoneIcon), width: 12, height: 12),
+            pw.SizedBox(width: 5),
+            pw.Text(resume.phoneNumber,
+                style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+          ],
+        ),
+      );
+      contactWidgets.add(pw.SizedBox(height: 5));
+    }
+
+    if (resume.address.isNotEmpty) {
+      contactWidgets.add(
+        pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Image(pw.MemoryImage(addressIcon), width: 12, height: 12),
+            pw.SizedBox(width: 5),
+            pw.Expanded(
+              child: pw.Text(resume.address,
+                  style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+            ),
+          ],
+        ),
+      );
+      contactWidgets.add(pw.SizedBox(height: 5));
+    }
+
+    for (var website in resume.websites) {
+      if (website.trim().isNotEmpty) {
+        contactWidgets.add(
+          pw.Row(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Image(pw.MemoryImage(wabIcon), width: 12, height: 12),
+              pw.SizedBox(width: 5),
+              pw.Expanded(
+                child: pw.Text(website,
+                    style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+              ),
+            ],
+          ),
+        );
+        contactWidgets.add(pw.SizedBox(height: 5));
+      }
+    }
+
+    if (contactWidgets.isNotEmpty) {
+      widgets.add(
+        pw.Container(
+          padding: pw.EdgeInsets.all(10),
+          color: backgroundColor,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: contactWidgets,
+          ),
+        ),
+      );
+      widgets.add(pw.Divider(thickness: 1, color: PdfColors.white));
+      widgets.add(pw.SizedBox(height: 10));
+    }
+
+    // Languages
+    final languages = resume.languages
+        .map((l) => {'name': l.language.trim(), 'level': l.proficiency.trim()})
+        .where((l) => l['name']!.isNotEmpty || l['level']!.isNotEmpty)
+        .toList();
+
+    if (languages.isNotEmpty) {
+      final langWidgets = <pw.Widget>[
+        pw.Text(
+          'Languages',
+          style: pw.TextStyle(
+            fontSize: 16,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.white,
+          ),
+        ),
+        pw.SizedBox(height: 5),
+      ];
+
+      for (var lang in languages) {
+        final name = lang['name']!;
+        final level = lang['level']!;
+        langWidgets.add(
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
+            child: pw.Row(
+              children: [
+                pw.Container(
+                  width: 3,
+                  height: 3,
+                  margin: const pw.EdgeInsets.only(bottom: 1),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.white,
+                    shape: pw.BoxShape.circle,
+                  ),
+                ),
+                pw.SizedBox(width: 5),
+                pw.Text(
+                  level.isNotEmpty ? '$name ($level)' : name,
+                  style: pw.TextStyle(fontSize: 10, color: PdfColors.white),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      widgets.add(
+        pw.Container(
+          padding: pw.EdgeInsets.all(10),
+          color: backgroundColor,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: langWidgets,
+          ),
+        ),
+      );
+      widgets.add(pw.SizedBox(height: 10));
+    }
+
+    // Skills (each category is a separate container)
+    for (var skillCategory in resume.skills) {
+      final categoryTitle = skillCategory.category.trim();
+      final skills = skillCategory.items.map((e) => e.trim()).toList();
+
+      if (categoryTitle.isEmpty && skills.every((s) => s.isEmpty)) continue;
+
+      final skillWidgets = <pw.Widget>[];
+
+      if (categoryTitle.isNotEmpty) {
+        skillWidgets.add(
+          pw.Text(
+            categoryTitle,
+            style: pw.TextStyle(
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.white,
+            ),
+          ),
+        );
+        skillWidgets.add(pw.SizedBox(height: 5));
+      }
+
+      for (var skill in skills) {
+        if (skill.isEmpty) continue;
+        skillWidgets.add(
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 10, bottom: 2),
+            child: pw.Row(
+              children: [
+                pw.Container(
+                  width: 3,
+                  height: 3,
+                  margin: const pw.EdgeInsets.only(bottom: 1),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.white,
+                    shape: pw.BoxShape.circle,
+                  ),
+                ),
+                pw.SizedBox(width: 5),
+                pw.Text(skill,
+                    style: pw.TextStyle(fontSize: 10, color: PdfColors.white)),
+              ],
+            ),
+          ),
+        );
+      }
+
+      widgets.add(
+        pw.Container(
+          padding: pw.EdgeInsets.all(10),
+          color: backgroundColor,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: skillWidgets,
+          ),
+        ),
+      );
+      widgets.add(pw.SizedBox(height: 10));
+    }
 
     return widgets;
   }
