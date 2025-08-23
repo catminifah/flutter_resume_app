@@ -479,8 +479,7 @@ class ResumeTemplate1Generator {
               ]),
               if (cert['issuer']!.isNotEmpty)
                 pw.Text(cert['issuer']!,
-                    style:
-                        pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
+                    style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800)),
               pw.SizedBox(height: 10),
             ],
           ),

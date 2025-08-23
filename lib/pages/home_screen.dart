@@ -509,7 +509,9 @@ class _HomeScreen extends State<HomeScreen> {
                                 ).then((_) => setState(() {}));
                               } else if (value == 'delete') {
                                 await ResumeService.deleteResume(item.id);
-                                setState(() {});
+                                setState(() {
+                                  
+                                });
                               }
                             },
                             itemBuilder: (context) => const [
