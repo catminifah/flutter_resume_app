@@ -1,2 +1,0 @@
-D:/projectFT/flutter_resume_app/android/app/.cxx/Debug/3b2w1i1q/arm64-v8a/CMakeFiles/edit_cache.dir
-D:/projectFT/flutter_resume_app/android/app/.cxx/Debug/3b2w1i1q/arm64-v8a/CMakeFiles/rebuild_cache.dir
